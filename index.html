@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>217 Boston Road · Build Plan 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #f8fafc;
+    --surface:  #ffffff;
+    --ink:      #09090b;
+    --sub:      #3f3f46;
+    --muted:    #71717a;
+    --faint:    #a1a1aa;
+    --border:   #e4e4e7;
+    --border2:  #d4d4d8;
+
+    --critical: #dc2626;
+    --urgent:   #d97706;
+    --normal:   #059669;
+    --external: #7c3aed;
+
+    --ph0: #dc2626;
+    --ph1: #b91c1c;
+    --ph2: #1d4ed8;
+    --ph3: #047857;
+    --ph4: #b45309;
+    --ph5: #6d28d9;
+    --ph6: #065f46;
+
+    --radius: 6px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 3rem 0;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .header-left {}
+
+  .header-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.625rem;
+  }
+
+  h1 {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  h1 span { color: var(--critical); }
+
+  .header-sub {
+    font-size: 0.875rem;
+    color: var(--muted);
+    max-width: 480px;
+    font-weight: 400;
+  }
+
+  .header-pills {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .hpill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--sub);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .hpill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--critical);
+    flex-shrink: 0;
+  }
+
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .meta-row {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .meta-row strong {
+    color: var(--sub);
+    font-weight: 500;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin: 0 -3rem;
+    padding: 0 3rem;
+  }
+
+  nav::-webkit-scrollbar { display: none; }
+
+  nav button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.875rem 1rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    color: var(--muted);
+    white-space: nowrap;
+    transition: color 0.15s;
+    margin-bottom: -1px;
+  }
+
+  nav button:hover { color: var(--sub); }
+  nav button.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+  /* ── MAIN ── */
+  main { padding: 2.5rem 3rem; max-width: 1280px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .sh {
+    margin-bottom: 1.75rem;
+  }
+
+  .sh-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+  }
+
+  .sh-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* ── PHASES ── */
+  .phase {
+    margin-bottom: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .phase-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .phase-num {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .ph0 .phase-num { background: var(--ph0); }
+  .ph1 .phase-num { background: var(--ph1); }
+  .ph2 .phase-num { background: var(--ph2); }
+  .ph3 .phase-num { background: var(--ph3); }
+  .ph4 .phase-num { background: var(--ph4); }
+  .ph5 .phase-num { background: var(--ph5); }
+  .ph6 .phase-num { background: var(--ph6); }
+
+  .phase-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .phase-dates {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-left: auto;
+    font-weight: 400;
+  }
+
+  /* ── TASKS ── */
+  .tasks { padding: 0; }
+
+  .task {
+    display: grid;
+    grid-template-columns: 1fr 140px 90px;
+    gap: 1.25rem;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+
+  .task:last-child { border-bottom: none; }
+
+  .task:hover { background: #fafafa; }
+
+  .task-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .task-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 3px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .task-who {
+    font-size: 0.78rem;
+    color: var(--muted);
+    padding-top: 2px;
+    line-height: 1.4;
+  }
+
+  .flag {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .f-critical { background: #fef2f2; color: var(--critical); }
+  .f-urgent   { background: #fffbeb; color: var(--urgent);   }
+  .f-normal   { background: #f0fdf4; color: var(--normal);   }
+  .f-external { background: #f5f3ff; color: var(--external); }
+
+  /* ── GANTT ── */
+  .gantt-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .gantt-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
+  .gantt-table th {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .gantt-table th:first-child { text-align: left; padding-left: 1rem; width: 210px; }
+
+  .gantt-table td {
+    padding: 0.35rem 0.25rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .gantt-table td:first-child {
+    font-size: 0.78rem;
+    color: var(--sub);
+    font-weight: 500;
+    padding-left: 1rem;
+    white-space: nowrap;
+  }
+
+  .gantt-table tr:last-child td { border-bottom: none; }
+  .gantt-table tr:hover td { background: #fafafa; }
+
+  .bar-cell { position: relative; height: 22px; }
+
+  .bar {
+    position: absolute;
+    top: 3px;
+    height: 16px;
+    border-radius: 3px;
+    opacity: 0.82;
+  }
+
+  .bar-critical { background: var(--ph0); }
+  .bar-demo     { background: var(--ph1); }
+  .bar-struct   { background: var(--ph2); }
+  .bar-roof     { background: var(--ph3); }
+  .bar-services { background: var(--ph4); }
+  .bar-finish   { background: var(--ph6); }
+  .bar-external { background: var(--external); }
+
+  .deadline-line {
+    position: absolute;
+    top: -2px; bottom: -2px;
+    width: 2px;
+    background: var(--critical);
+    opacity: 0.5;
+    right: 0;
+  }
+
+  /* ── GANTT LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .leg-sq {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── ALERT ── */
+  .alert {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.875rem 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    font-size: 0.82rem;
+    color: #991b1b;
+    line-height: 1.55;
+    font-weight: 500;
+  }
+
+  /* ── DECISIONS ── */
+  .decision-list { display: flex; flex-direction: column; gap: 0; }
+
+  .decision {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 1.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+
+  .decision:last-child { border-bottom: none; }
+
+  .dec-n {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--border2);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    padding-top: 2px;
+  }
+
+  .dec-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 5px;
+    letter-spacing: -0.01em;
+  }
+
+  .dec-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .dec-by {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--critical);
+    white-space: nowrap;
+    padding-top: 2px;
+    text-align: right;
+  }
+
+  /* ── RISKS ── */
+  .risk-group { margin-bottom: 1.75rem; }
+
+  .risk-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.75rem;
+  }
+
+  .risk-item {
+    display: grid;
+    grid-template-columns: 4px 1fr;
+    gap: 1rem;
+    padding: 0.875rem 1rem 0.875rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .risk-item:last-child { border-bottom: none; }
+
+  .risk-bar {
+    width: 4px;
+    align-self: stretch;
+    border-radius: 2px;
+    min-height: 36px;
+  }
+
+  .rh { background: var(--critical); }
+  .rm { background: var(--urgent); }
+  .rl { background: var(--normal); }
+
+  .risk-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+    letter-spacing: -0.01em;
+  }
+
+  .risk-mit {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ── COMPARE ── */
+  .compare-intro {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    max-width: 640px;
+    line-height: 1.65;
+  }
+
+  .delta-group { margin-bottom: 2rem; }
+
+  .delta-group-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+
+  .delta-table {
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .delta-head-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .delta-head {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.625rem 1rem;
+    color: var(--muted);
+  }
+
+  .delta-head:first-child { border-right: 1px solid var(--border); }
+
+  .delta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .delta-row:last-child { border-bottom: none; }
+
+  .delta-cell {
+    padding: 0.875rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .delta-cell:first-child { border-right: 1px solid var(--border); }
+
+  .d-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--faint);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .d-existing { color: var(--muted); }
+  .d-proposed { color: var(--ink); }
+
+  .cpill {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 999px;
+    margin-left: 5px;
+    vertical-align: middle;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .cp-new    { background: #eff6ff; color: #1d4ed8; }
+  .cp-remove { background: #fef2f2; color: var(--critical); }
+  .cp-change { background: #fffbeb; color: var(--urgent); }
+
+  .compare-callout {
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--ph2);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-top: 1.5rem;
+  }
+
+  .compare-callout strong {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── CONTRACTORS ── */
+  .contractor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--border);
+  }
+
+  .cc {
+    padding: 1.125rem;
+    background: var(--surface);
+    border-left: 3px solid transparent;
+    transition: background 0.12s;
+  }
+
+  .cc:hover { background: var(--bg); }
+  .cc.cc-crit  { border-left-color: var(--critical); }
+  .cc.cc-urg   { border-left-color: var(--urgent); }
+  .cc.cc-norm  { border-left-color: var(--normal); }
+
+  .cc-role {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 3px;
+  }
+
+  .cc-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 5px;
+  }
+
+  .cc-scope {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+
+  .cc-status {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+  }
+
+  .cc-crit .cc-status  { background: #fef2f2; color: var(--critical); }
+  .cc-urg  .cc-status  { background: #fffbeb; color: var(--urgent); }
+  .cc-norm .cc-status  { background: #f0fdf4; color: var(--normal); }
+
+  /* ── DRAWINGS ── */
+  .drawings-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1.25rem;
+    height: calc(100vh - 240px);
+    min-height: 600px;
+  }
+
+  .drawings-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    overflow-y: auto;
+  }
+
+  .dwg-group-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding: 0.75rem 1rem 0.5rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+  }
+
+  .dwg-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--sub);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+    line-height: 1.35;
+  }
+
+  .dwg-btn:last-child { border-bottom: none; }
+  .dwg-btn:hover { background: var(--bg); }
+  .dwg-btn.active { background: var(--bg); color: var(--ink); font-weight: 600; border-left: 2px solid var(--ink); padding-left: calc(1rem - 2px); }
+
+  .dwg-sub {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--muted);
+    display: block;
+    margin-top: 1px;
+  }
+
+  .drawings-viewer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .viewer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+
+  .viewer-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .viewer-open {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.25rem 0.625rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: color 0.1s, border-color 0.1s;
+  }
+
+  .viewer-open:hover { color: var(--ink); border-color: var(--border2); }
+
+  #pdf-embed {
+    flex: 1;
+    width: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 1.25rem 3rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: var(--surface);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 720px) {
+    header { padding-left: 1.25rem; padding-right: 1.25rem; }
+    nav { margin: 0 -1.25rem; padding: 0 1.25rem; }
+    main, footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .header-top { flex-direction: column; gap: 1rem; }
+    .header-meta { text-align: left; }
+    .task { grid-template-columns: 1fr; gap: 0.5rem; }
+    .decision { grid-template-columns: 44px 1fr; }
+    .dec-by { grid-column: 2; text-align: left; }
+    .delta-row { grid-template-columns: 1fr; }
+    .delta-cell:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .delta-head-row { grid-template-columns: 1fr; }
+    .delta-head:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .drawings-layout { grid-template-columns: 1fr; height: auto; }
+    .drawings-sidebar { max-height: 240px; }
+    #pdf-embed { height: 500px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="header-left">
+      <div class="header-eyebrow">Job 25100 · Draw &amp; Plan · London W7 2AA</div>
+      <h1>217 Boston Road<br><span>Build Plan 2026</span></h1>
+      <p class="header-sub">Loft conversion &amp; first floor renovation — strategic programme from mobilisation to completion.</p>
+      <div class="header-pills">
+        <span class="hpill"><span class="hpill-dot"></span>Roof watertight target: Oct 2026</span>
+        <span class="hpill" style="--dot-c:#1d4ed8"><span class="hpill-dot" style="background:#1d4ed8"></span>Loft + 1st floor scope</span>
+        <span class="hpill" style="--dot-c:#059669"><span class="hpill-dot" style="background:#059669"></span>45.17 m³ new volume</span>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-row"><strong>Drawings</strong> PGA001–004 + EGA002–004</div>
+      <div class="meta-row"><strong>Architect</strong> Draw &amp; Plan</div>
+      <div class="meta-row"><strong>Issued</strong> 24/03/2026</div>
+      <div class="meta-row"><strong>Plan updated</strong> May 2026</div>
+    </div>
+  </div>
+
+  <nav>
+    <button class="active" onclick="show('phases', this)">Phases &amp; Tasks</button>
+    <button onclick="show('gantt', this)">Timeline</button>
+    <button onclick="show('drawings', this)">Drawings</button>
+    <button onclick="show('compare', this)">Existing vs Proposed</button>
+    <button onclick="show('decisions', this)">Decisions</button>
+    <button onclick="show('risks', this)">Risks</button>
+    <button onclick="show('contractors', this)">Contractors</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ===== PHASES ===== -->
+<div class="section active" id="phases">
+  <div class="sh">
+    <div class="sh-title">Phases &amp; tasks</div>
+    <p class="sh-desc">Full programme from mobilisation through to second fix — organised by construction sequence.</p>
+  </div>
+
+  <div class="phase ph0">
+    <div class="phase-head">
+      <span class="phase-num">Phase 0 · Now</span>
+      <span class="phase-title">Mobilisation &amp; procurement</span>
+      <span class="phase-dates">May – Jun 2026</span>
+    </div>
+    <div class="tasks">
+      <div class="task"><div><div class="task-name">Appoint main contractor</div><div class="task-note">Decide MC vs. self-manage trades. MC strongly recommended given steel + roofing overlap. This determines how everything else runs.</div></div><div class="task-who">You / shortlist</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Confirm structural engineer drawings</div><div class="task-note">Steel beam schedule, spreader plate details, chimney breast removal spec — all needed before ordering fabricated steel.</div></div><div class="task-who">Engineer</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Order structural steelwork</div><div class="task-note">4–6 week fabrication lead time. On critical path — order the day drawings are issued. Do not wait.</div></div><div class="task-who">Fabricator</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Book scaffolding contractor</div><div class="task-note">Full wrap — front, rear, side alley. Single poles opposite 217a/b. Coordinate neighbour access. Lifts for repointing + Oriel window.</div></div><div class="task-who">Scaffold co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Appoint aluminium window supplier</div><div class="task-note">Dormer windows ×2, Juliette door ×1 (double), gable end window ×1. Custom items — 8–12 week lead time typical.</div></div><div class="task-who">You / supplier</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Appoint aluminium guttering contractor</div><div class="task-note">Cast aluminium gutters and downpipes — specialist trade, coordinate with roofing completion.</div></div><div class="task-who">Specialist co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Appoint repointing contractor</div><div class="task-note">Front, rear, side; red paint removal (rear); carbon cleaning (front). Must work while scaffold is up.</div></div><div class="task-who">Specialist co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Order Velux rooflights &amp; flat rooflight</div><div class="task-note">3× front pitched, 2× kitchen pitched, 1× loft flat roof. Confirm sizes against drawings before ordering.</div></div><div class="task-who">MC</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Arrange living situation during roof demolition</div><div class="task-note">Roof strip exposes entire house. Decide if staying on ground floor or temporary accommodation. Plan 1st floor protection before works start.</div></div><div class="task-who">You</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Order Rosemary clay tiles</div><div class="task-note">Check stock and batch availability — clay tiles can have lead times. Recover chimney bricks separately for garden wall reuse.</div></div><div class="task-who">MC / roofer</div><div><span class="flag f-urgent">Urgent</span></div></div>
+    </div>
+  </div>
+
+  <div class="phase ph1">
+    <div class="phase-head">
+      <span class="phase-num">Phase 1</span>
+      <span class="phase-title">Demolition &amp; soft strip</span>
+      <span class="phase-dates">Jun 2026 · ~2 weeks</span>
+    </div>
+    <div class="tasks">
+      <div class="task"><div><div class="task-name">Erect scaffolding</div><div class="task-note">First site activity. All trades that need scaffold must be coordinated around its programme.</div></div><div class="task-who">Scaffold co.</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Remove two chimney stacks</div><div class="task-note">Rear + front/alleyway side. Recover bricks for garden wall reuse. Both stacks shown on EGA003 existing elevations.</div></div><div class="task-who">MC / demolition</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Remove chimney breast (GF dining room)</div><div class="task-note">Open up housing for pipework. Structural check + propping required before removal. Engineer to specify support.</div></div><div class="task-who">MC / engineer</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Soft strip — 1st floor bathroom</div><div class="task-note">Ceiling, flooring, wall tiles. Expose and assess water damage from historic leaks.</div></div><div class="task-who">MC</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Soft strip — rear bedroom + corner dining room ceiling</div><div class="task-note">Expose water damage. Assess extent before structural works begin above.</div></div><div class="task-who">MC</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Skip hire &amp; waste management</div><div class="task-note">Road permit if skip on public highway. Plan brick recovery route separate from general waste.</div></div><div class="task-who">MC</div><div><span class="flag f-normal">Normal</span></div></div>
+    </div>
+  </div>
+
+  <div class="phase ph2">
+    <div class="phase-head">
+      <span class="phase-num">Phase 2</span>
+      <span class="phase-title">Loft structural works — steels, joists &amp; floors</span>
+      <span class="phase-dates">Jun – Jul 2026 · ~3–4 weeks</span>
+    </div>
+    <div class="tasks">
+      <div class="task"><div><div class="task-name">Install load-bearing spreader plates</div><div class="task-note">In walls to carry structural steelwork. Per engineer's drawings — do not deviate.</div></div><div class="task-who">MC / steelwork</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Fit steel beams &amp; columns</div><div class="task-note">Per engineer's drawings including triple timber trims. Existing loft has basic collar-tie roof — significant structural upgrade required.</div></div><div class="task-who">MC / steelwork</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Remove intrusive loft timbers &amp; strengthen roof supports</div><div class="task-note">Existing loft currently open with eaves storage. Remove redundant structure; retain and reinforce front gable with decorative tiles.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Lay new structural floor joists (loft)</div><div class="task-note">Existing loft floor is lightweight — new joists for habitable floor loading. Check/replace water-damaged ceiling joists at 1st floor simultaneously.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Lay marine ply subfloor throughout loft</div><div class="task-note">¾ inch marine grade. Board eaves storage areas (floor + eaves boarding).</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Repair 1st floor subfloor &amp; floorboards</div><div class="task-note">Under stairs, rear bedroom, anywhere lifted. Secure lifted boards generally. Replace missing sections.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
+    </div>
+  </div>
+
+  <div class="phase ph3">
+    <div class="phase-head">
+      <span class="phase-num">Phase 3 · ⚠ Weather critical</span>
+      <span class="phase-title">Loft external shell — dormer, gable &amp; roof</span>
+      <span class="phase-dates">Jul – Sep 2026 · ~6–8 weeks</span>
+    </div>
+    <div class="tasks">
+      <div class="task"><div><div class="task-name">Build up gable wall to ridge height</div><div class="task-note">Existing gable stops below ridge — new brickwork to receive gable end window per drawings. Obscure glazed, non-opening below 1.7m FFL.</div></div><div class="task-who">MC / bricklayer</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Form box dormer structure to rear</div><div class="task-note">New structure to rear — no dormer exists currently. Plan: 2086 × 2979mm, length 7759mm. Structural walls for Juliette door ×1 double + windows ×2.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Dormer flat roof — 3-layer torch-on felt</div><div class="task-note">Complete flat roof before dormer openings are formed. Critical sequence — never leave openings unprotected overnight.</div></div><div class="task-who">Roofer</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Strip existing roof tiles &amp; replace with Rosemary clay</div><div class="task-note">Existing tiles fully replaced. New ridges. Add bird spikes. This is the moment the house becomes watertight — hard deadline end of September.</div></div><div class="task-who">Roofer</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Install 3× Velux to front pitched roof</div><div class="task-note">Coordinate with tiling programme — Velux go in as tiling progresses around them.</div></div><div class="task-who">Roofer / Velux</div><div><span class="flag f-critical">Critical</span></div></div>
+      <div class="task"><div><div class="task-name">Install 1× flat rooflight in loft</div><div class="task-note">Before flat roof is finished. Coordinate sequence carefully.</div></div><div class="task-who">Roofer</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Install 2× Velux to kitchen pitched roof</div><div class="task-note">Ground floor kitchen roof. Coordinate with ground floor phase later, but roof access is now while scaffold is up.</div></div><div class="task-who">Roofer</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Loft insulation</div><div class="task-note">Pitched roof, rear dormer, dormer flat roof &amp; around rooflight openings. Once roof is watertight.</div></div><div class="task-who">MC / insulator</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Repair/replace fascia boards — paint black</div><div class="task-note">Including repainting original decorative timber in front gable. External materials: finestration matching timber (PGA003). While scaffold is accessible.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Oriel window replacement</div><div class="task-note">Existing Oriel on front elevation — replace while scaffold is in place. Don't miss this opportunity.</div></div><div class="task-who">MC / window co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Install aluminium dormer windows, Juliette doors &amp; gable window</div><div class="task-note">By external supplier. Coordinate with dormer structure completion. Must be weathertight before scaffold comes down.</div></div><div class="task-who">Window supplier</div><div><span class="flag f-external">External</span></div></div>
+      <div class="task"><div><div class="task-name">Install cast aluminium gutters &amp; downpipes</div><div class="task-note">By specialist contractor. Follows roofing completion. Coordinate with fascia/scaffold programme.</div></div><div class="task-who">Gutter specialist</div><div><span class="flag f-external">External</span></div></div>
+      <div class="task"><div><div class="task-name">Brickwork repointing — front, rear &amp; side</div><div class="task-note">Remove red paint (rear); clean carbon (front); repoint all elevations. Must be completed before scaffold down.</div></div><div class="task-who">Repointing contractor</div><div><span class="flag f-external">External</span></div></div>
+    </div>
+  </div>
+
+  <div class="phase ph4">
+    <div class="phase-head">
+      <span class="phase-num">Phase 4</span>
+      <span class="phase-title">First fix — mechanical, electrical &amp; plumbing</span>
+      <span class="phase-dates">Aug – Oct 2026 · parallel where possible</span>
+    </div>
+    <div class="tasks">
+      <div class="task"><div><div class="task-name">Mains pipe upgrade — moling from drive to house</div><div class="task-note">Specialist moling contractor. Plan access and timing — disruptive. May need advance notice to Thames Water.</div></div><div class="task-who">Plumber / moling co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Install new unvented cylinder</div><div class="task-note">Pressure test each floor. Resolve leaks. Lift floorboards as required.</div></div><div class="task-who">Plumber</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Extend boiler flue to roof level</div><div class="task-note">External boiler shed flue extension. Coordinate with roofing/scaffold — easiest done while scaffold still up.</div></div><div class="task-who">Plumber / roofer</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">1st fix plumbing — loft bathroom &amp; 1st floor kitchenette</div><div class="task-note">Hot/cold runs concealed as much as possible. Waste extensions. Underground drains (alley + rear). Radiator pipework.</div></div><div class="task-who">Plumber</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">1st fix electrical — house-wide wiring upgrade</div><div class="task-note">New circuits: loft power/lighting/smoke alarms; 1st floor kitchenette; all back to existing fuse board.</div></div><div class="task-who">Electrician</div><div><span class="flag f-urgent">Urgent</span></div></div>
+      <div class="task"><div><div class="task-name">Relocate rear living room radiator</div><div class="task-note">Ground floor — coordinate with 1st fix plumbing programme.</div></div><div class="task-who">Plumber</div><div><span class="flag f-normal">Normal</span></div></div>
+    </div>
+  </div>
+
+  <div class="phase ph5">
+    <div class="phase-head">
+      <span class="phase-num">Phase 5</span>
+      <span class="phase-title">Partitions, waterproofing &amp; plastering</span>
+      <span class="phase-dates">Sep – Oct 2026</span>
+    </div>
+    <div class="tasks">
+      <div class="task"><div><div class="task-name">Loft dormer partition walls</div><div class="task-note">Bedroom 5, Lounge, Bathroom, WC, Hallway, Store per loft plan (PGA002). After steelwork and before plaster.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Waterproof bathroom subfloors (~20m² total)</div><div class="task-note">Loft bathroom + 1st floor bathroom. Before tiling.</div></div><div class="task-who">MC / tiler</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Plaster skim — loft walls &amp; ceilings</div><div class="task-note">All new loft rooms. Also: 1st floor bathroom, rear bedroom, stairs to loft, hallway, stairwell, GF hallway ceiling, GF dining room ceiling, around new kitchen rooflight, former chimney wall.</div></div><div class="task-who">Plasterer</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Protect &amp; repair existing decorative plaster/cornicing</div><div class="task-note">Retain where possible. Replace any sections damaged during works. Brief all trades before they start.</div></div><div class="task-who">Plasterer / specialist</div><div><span class="flag f-normal">Normal</span></div></div>
+    </div>
+  </div>
+
+  <div class="phase ph6">
+    <div class="phase-head">
+      <span class="phase-num">Phase 6</span>
+      <span class="phase-title">Second fix &amp; finishes</span>
+      <span class="phase-dates">Oct – Dec 2026</span>
+    </div>
+    <div class="tasks">
+      <div class="task"><div><div class="task-name">2nd fix plumbing — sanitary ware, radiators, UFH</div><div class="task-note">Loft bathroom &amp; WC; walk-in shower (1st floor); electric underfloor heating mats in both bathrooms. Sanitary ware supplied by client.</div></div><div class="task-who">Plumber</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Bathroom tiling — loft &amp; 1st floor</div><div class="task-note">Tiling spec TBC by client. Confirm before plasterer finishes so tile thickness/substrate can be coordinated.</div></div><div class="task-who">Tiler</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">2nd fix electrical</div><div class="task-note">Sockets, lighting points, switches, extractor fans with timers, 3× mains smoke detectors (1 per level) with battery backup.</div></div><div class="task-who">Electrician</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Hang fire doors — loft &amp; stairwell</div><div class="task-note">1× single + 1× double FD30 to loft rooms; 8× FD30 to stairwell (Building Regs compliance). Confirm spec with Building Control.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Eaves access hatches (×2–3)</div><div class="task-note">To eaves storage areas per loft plan (PGA002).</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Skirtings &amp; architraves — loft &amp; 1st floor new areas</div><div class="task-note">Style TBC — decide by September so profile can be sourced and cut.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Strike scaffolding</div><div class="task-note">Only when ALL external works are confirmed complete — repointing, gutters, windows, Oriel, fascias. Don't rush this.</div></div><div class="task-who">Scaffold co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GANTT ===== -->
+<div class="section" id="gantt">
+  <div class="sh">
+    <div class="sh-title">Programme timeline</div>
+    <p class="sh-desc">Indicative Gantt — weeks approximate. Adjust with contractor once appointed.</p>
+  </div>
+
+  <div class="alert">
+    ⚠ The roof must be fully watertight — tiles replaced, flat roof felted, Velux installed — by end of September 2026. The red line marks the deadline.
+  </div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-sq" style="background:var(--ph0)"></div>Mobilisation</div>
+    <div class="leg"><div class="leg-sq" style="background:var(--ph1)"></div>Demolition</div>
+    <div class="leg"><div class="leg-sq" style="background:var(--ph2)"></div>Structural</div>
+    <div class="leg"><div class="leg-sq" style="background:var(--ph3)"></div>Roof / shell</div>
+    <div class="leg"><div class="leg-sq" style="background:var(--ph4)"></div>MEP services</div>
+    <div class="leg"><div class="leg-sq" style="background:var(--ph6)"></div>Finishes</div>
+    <div class="leg"><div class="leg-sq" style="background:var(--external)"></div>External specialists</div>
+  </div>
+
+  <div class="gantt-wrap">
+    <table class="gantt-table">
+      <thead>
+        <tr>
+          <th>Work package</th>
+          <th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
+        </tr>
+      </thead>
+      <tbody id="gantt-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== DRAWINGS ===== -->
+<div class="section" id="drawings">
+  <div class="sh">
+    <div class="sh-title">Architectural drawings</div>
+    <p class="sh-desc">All issued drawings — proposed (PGA) and existing (EGA). Select a drawing to view.</p>
+  </div>
+
+  <div class="drawings-layout">
+    <div class="drawings-sidebar">
+      <div class="dwg-group-label">Proposed · PGA</div>
+      <button class="dwg-btn active" onclick="loadPdf(this, '25100 217 Boston Road-PGA001.pdf', 'PGA001 — Ground Floor &amp; First Floor Plans')">
+        PGA001
+        <span class="dwg-sub">Ground floor + first floor plans</span>
+      </button>
+      <button class="dwg-btn" onclick="loadPdf(this, '25100 217 Boston Road-PGA002.pdf', 'PGA002 — Loft Plan &amp; Roof Plan')">
+        PGA002
+        <span class="dwg-sub">Loft plan + roof plan</span>
+      </button>
+      <button class="dwg-btn" onclick="loadPdf(this, '25100 217 Boston Road-PGA003.pdf', 'PGA003 — Proposed Elevations')">
+        PGA003
+        <span class="dwg-sub">Front, rear &amp; flank elevations</span>
+      </button>
+      <button class="dwg-btn" onclick="loadPdf(this, '25100 217 Boston Road-PGA004.pdf', 'PGA004 — Proposed Section')">
+        PGA004
+        <span class="dwg-sub">Typical section</span>
+      </button>
+      <div class="dwg-group-label">Existing · EGA</div>
+      <button class="dwg-btn" onclick="loadPdf(this, '25100 217 Boston Road-EGA002.pdf', 'EGA002 — Existing Loft &amp; Roof Plan')">
+        EGA002
+        <span class="dwg-sub">Existing loft + roof plan</span>
+      </button>
+      <button class="dwg-btn" onclick="loadPdf(this, '25100 217 Boston Road-EGA003.pdf', 'EGA003 — Existing Elevations')">
+        EGA003
+        <span class="dwg-sub">Existing front, rear &amp; flank elevations</span>
+      </button>
+      <button class="dwg-btn" onclick="loadPdf(this, '25100 217 Boston Road-EGA004.pdf', 'EGA004 — Existing Section')">
+        EGA004
+        <span class="dwg-sub">Existing typical section</span>
+      </button>
+      <div class="dwg-group-label">Other</div>
+      <button class="dwg-btn" onclick="loadPdf(this, '25100 217 Boston Road-PDE001.pdf', 'PDE001')">
+        PDE001
+        <span class="dwg-sub">Design / planning document</span>
+      </button>
+      <button class="dwg-btn" onclick="loadPdf(this, '25100 217 Boston Road-PSP001.pdf', 'PSP001')">
+        PSP001
+        <span class="dwg-sub">Structural / party wall document</span>
+      </button>
+    </div>
+
+    <div class="drawings-viewer">
+      <div class="viewer-bar">
+        <span class="viewer-title" id="viewer-title">PGA001 — Ground Floor &amp; First Floor Plans</span>
+        <a class="viewer-open" id="viewer-link" href="25100 217 Boston Road-PGA001.pdf" target="_blank">Open in new tab ↗</a>
+      </div>
+      <embed id="pdf-embed" src="25100 217 Boston Road-PGA001.pdf" type="application/pdf">
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMPARE ===== -->
+<div class="section" id="compare">
+  <div class="sh">
+    <div class="sh-title">Existing vs proposed</div>
+    <p class="sh-desc">Analysis from existing drawings (EGA002–004, Dec 2025) vs. proposed drawings (PGA001–004, Mar 2026).</p>
+  </div>
+
+  <p class="compare-intro">Understanding what changes highlights the demolition scope, structural complexity, and coordination requirements. Roof volume increases from uninhabitable storage to 45.17m³ of habitable loft space — Bedroom 5, Lounge, Bathroom, WC, Hallway and Store.</p>
+
+  <div class="delta-group">
+    <div class="delta-group-title">Loft level — key changes</div>
+    <div class="delta-table">
+      <div class="delta-head-row">
+        <div class="delta-head">Existing (EGA002–004)</div>
+        <div class="delta-head">Proposed (PGA002–004)</div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Loft use</div><div class="d-existing">Uninhabitable storage / eaves storage. Basic collar-tie roof structure. Single stair access.</div></div>
+        <div class="delta-cell"><div class="d-label">Loft use</div><div class="d-proposed">Fully habitable — Bedroom 5, Lounge, Bathroom, WC, Hallway, Store. <span class="cpill cp-new">New</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Roof form (rear)</div><div class="d-existing">Plain hipped/pitched roof to rear. No dormer. Two chimney stacks visible on flank elevation (EGA003).</div></div>
+        <div class="delta-cell"><div class="d-label">Roof form (rear)</div><div class="d-proposed">New box dormer to rear — 2086 × 2979mm plan, 7759mm length. Juliette door + 2 windows. Gable built to ridge. <span class="cpill cp-new">New structure</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Chimney stacks</div><div class="d-existing">Two stacks present — rear + front/alleyway side, shown on EGA003 existing elevations and loft plan.</div></div>
+        <div class="delta-cell"><div class="d-label">Chimney stacks</div><div class="d-proposed">Both removed. Bricks recovered for garden wall reuse. <span class="cpill cp-remove">Remove</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Roof windows (front)</div><div class="d-existing">No Velux or rooflights to front elevation.</div></div>
+        <div class="delta-cell"><div class="d-label">Roof windows (front)</div><div class="d-proposed">3× Velux to front pitched elevation. <span class="cpill cp-new">New</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Flat roof section</div><div class="d-existing">Existing flat roof area to rear/side — existing felt covering per EGA002 roof plan.</div></div>
+        <div class="delta-cell"><div class="d-label">Flat roof section</div><div class="d-proposed">Retained and re-felted (3-layer torch-on). New flat rooflight added. <span class="cpill cp-change">Upgrade</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Roof volume</div><div class="d-existing">N/A — uninhabitable, no habitable volume calculated.</div></div>
+        <div class="delta-cell"><div class="d-label">Roof volume</div><div class="d-proposed">Hip: 21.06m³ + Dormer: 24.11m³ = <strong>45.17m³ total</strong> (PGA003). <span class="cpill cp-new">New calc</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Floor structure</div><div class="d-existing">Lightweight loft floor (not designed for habitable loading). Existing joists evident in EGA004 section.</div></div>
+        <div class="delta-cell"><div class="d-label">Floor structure</div><div class="d-proposed">New structural steel + floor joists throughout. Marine ply subfloor. Spreader plates in walls. <span class="cpill cp-new">Full rebuild</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Gable window</div><div class="d-existing">No gable window — existing gable terminates below ridge level.</div></div>
+        <div class="delta-cell"><div class="d-label">Gable window</div><div class="d-proposed">New window 1500 × 1500mm — obscure glazed, non-opening below 1.7m FFL (PGA003). <span class="cpill cp-new">New</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="delta-group">
+    <div class="delta-group-title">First floor — key changes</div>
+    <div class="delta-table">
+      <div class="delta-head-row">
+        <div class="delta-head">Existing</div>
+        <div class="delta-head">Proposed</div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Room layout</div><div class="d-existing">Bedrooms 2, 3, 4; Bathroom; Hallway; Landing. Standard layout.</div></div>
+        <div class="delta-cell"><div class="d-label">Room layout</div><div class="d-proposed">Bedrooms 2, 3, 4 retained. Bathroom refurbished. New Store/Kitchenette added (PGA001). <span class="cpill cp-new">New room</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Bathroom</div><div class="d-existing">Existing bathroom — water-damaged, to be stripped.</div></div>
+        <div class="delta-cell"><div class="d-label">Bathroom</div><div class="d-proposed">Full refurbishment. Walk-in shower. Electric UFH mat. Retiled. <span class="cpill cp-change">Refurb</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Kitchenette / utility</div><div class="d-existing">No kitchenette at first floor level.</div></div>
+        <div class="delta-cell"><div class="d-label">Kitchenette / utility</div><div class="d-proposed">New Store/Kitchenette — "final design to kitchen supplier" noted on PGA001. Plumbing + electrical provisions. <span class="cpill cp-new">New</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="delta-group">
+    <div class="delta-group-title">External envelope — key changes</div>
+    <div class="delta-table">
+      <div class="delta-head-row">
+        <div class="delta-head">Existing</div>
+        <div class="delta-head">Proposed</div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Brickwork</div><div class="d-existing">Red paint on rear. Carbon deposits on front. Pointing deteriorated.</div></div>
+        <div class="delta-cell"><div class="d-label">Brickwork</div><div class="d-proposed">Full repoint all elevations. Paint removed (rear). Carbon cleaned (front). Walls: matching brick (PGA003). <span class="cpill cp-change">Restore</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Gutters &amp; downpipes</div><div class="d-existing">Existing gutters — condition unknown, likely original.</div></div>
+        <div class="delta-cell"><div class="d-label">Gutters &amp; downpipes</div><div class="d-proposed">Full replacement — cast aluminium by specialist contractor. <span class="cpill cp-change">Replace</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Oriel window (front)</div><div class="d-existing">Existing Oriel window on front elevation — prominent original feature (EGA003).</div></div>
+        <div class="delta-cell"><div class="d-label">Oriel window (front)</div><div class="d-proposed">Replacement works while scaffold is in place. Finestration: matching timber (PGA003). <span class="cpill cp-change">Replace</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Roof tiles</div><div class="d-existing">Existing tiles — condition and type TBC from survey.</div></div>
+        <div class="delta-cell"><div class="d-label">Roof tiles</div><div class="d-proposed">Full replacement with Rosemary clay. Roof: matching tile (PGA003). <span class="cpill cp-change">Replace</span></div></div>
+      </div>
+      <div class="delta-row">
+        <div class="delta-cell"><div class="d-label">Fascias</div><div class="d-existing">Existing timber fascias — condition unknown.</div></div>
+        <div class="delta-cell"><div class="d-label">Fascias</div><div class="d-proposed">Repair/replace and paint black. Retain decorative gable timber and repaint. <span class="cpill cp-change">Restore</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="compare-callout">
+    <strong>Key insight from comparing the drawings</strong>
+    The existing section (EGA004) and proposed section (PGA004) show the same ground/first floor structural arrangement — confirming the ground floor is not structurally affected in this phase. The primary structural complexity is entirely at loft level: adding habitable floor loading to what was a lightweight roof space, removing two chimney stacks, building a new rear dormer, and rebuilding the gable wall to ridge height. Roof volume calculation (PGA003) confirms 45.17m³ addition — hip: 21.06m³, dormer: 24.11m³. The 1st floor works are largely cosmetic/services: strip, repair, new bathroom, new kitchenette.
+  </div>
+</div>
+
+<!-- ===== DECISIONS ===== -->
+<div class="section" id="decisions">
+  <div class="sh">
+    <div class="sh-title">Decisions needed</div>
+    <p class="sh-desc">These are blocking items — delay on any of them delays the build.</p>
+  </div>
+
+  <div class="decision-list">
+    <div class="decision">
+      <div class="dec-n">01</div>
+      <div>
+        <div class="dec-title">Main contractor vs. self-manage trades</div>
+        <div class="dec-desc">A single MC takes programme responsibility and coordinates all trades, at a premium. Self-managing saves money but requires daily site presence and significant construction knowledge. Given the overlap of steelwork, roofing, and MEP, a MC is strongly recommended. If self-managing, you need a very experienced site manager.</div>
+      </div>
+      <div class="dec-by">End of May 2026</div>
+    </div>
+    <div class="decision">
+      <div class="dec-n">02</div>
+      <div>
+        <div class="dec-title">Appoint aluminium window supplier &amp; place order</div>
+        <div class="dec-desc">Dormer windows ×2, Juliette door ×1 double, gable end window ×1 — all custom aluminium. Lead times of 8–12 weeks are standard. If not ordered by mid-June, they won't arrive before the dormer needs closing in, leaving openings exposed through autumn.</div>
+      </div>
+      <div class="dec-by">Mid-June 2026</div>
+    </div>
+    <div class="decision">
+      <div class="dec-n">03</div>
+      <div>
+        <div class="dec-title">Living arrangements during roof demolition</div>
+        <div class="dec-desc">The roof strip phase exposes the entire house. The first floor bedrooms directly below need sheeting and protection. Decide whether the household stays on the ground floor or relocates temporarily. The contractor can move faster if they don't need to protect occupied rooms below.</div>
+      </div>
+      <div class="dec-by">Before Phase 1 starts</div>
+    </div>
+    <div class="decision">
+      <div class="dec-n">04</div>
+      <div>
+        <div class="dec-title">1st floor kitchenette design &amp; supplier</div>
+        <div class="dec-desc">PGA001 notes "final design to kitchen supplier" — the kitchenette layout directly drives plumbing rough-in positions and electrical socket locations. Both need to be in place before 1st fix is complete. A late decision here means lifting floors or replastering.</div>
+      </div>
+      <div class="dec-by">July 2026</div>
+    </div>
+    <div class="decision">
+      <div class="dec-n">05</div>
+      <div>
+        <div class="dec-title">Electrical socket &amp; lighting schedule (loft)</div>
+        <div class="dec-desc">The electrician needs a confirmed layout for 1st fix across all loft rooms: Bedroom 5, Lounge, Bathroom, WC, Hallway, Store. Changes after boarding-out are very costly. Finalise the layout before first fix starts.</div>
+      </div>
+      <div class="dec-by">August 2026</div>
+    </div>
+    <div class="decision">
+      <div class="dec-n">06</div>
+      <div>
+        <div class="dec-title">Bathroom sanitary ware &amp; tile specification</div>
+        <div class="dec-desc">Sanitary ware is client-supply. Tiling spec also needs confirming. Both affect plumbing rough-in positions, waterproofing substrate, and tile quantities. Specify and procure early — don't leave this until second fix or you'll be waiting on delivery.</div>
+      </div>
+      <div class="dec-by">August 2026</div>
+    </div>
+    <div class="decision">
+      <div class="dec-n">07</div>
+      <div>
+        <div class="dec-title">Skirting &amp; architrave profile</div>
+        <div class="dec-desc">Style TBC in the scope document. Needs to be decided before second fix carpentry so the correct profile can be sourced, delivered, and cut. Bespoke profiles take longer to source than standard stock.</div>
+      </div>
+      <div class="dec-by">September 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RISKS ===== -->
+<div class="section" id="risks">
+  <div class="sh">
+    <div class="sh-title">Risks &amp; mitigations</div>
+    <p class="sh-desc">Ranked by severity — monitor regularly and escalate early.</p>
+  </div>
+
+  <div class="risk-group">
+    <div class="risk-label">High — address immediately</div>
+    <div class="risk-item"><div class="risk-bar rh"></div><div><div class="risk-name">Steel lead time slippage</div><div class="risk-mit">Order structural steelwork the moment engineer's drawings are issued. Do not wait for MC appointment if drawings are ready. 4–6 week fabrication lead time is non-negotiable and sits on the critical path.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rh"></div><div><div class="risk-name">Roof not watertight before October</div><div class="risk-mit">Treat 30 Sep as a hard deadline. Have temporary roofing membrane (Monarflex/tarpaulins) on standby from day one of roof demolition. Never leave the stripped roof unprotected overnight.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rh"></div><div><div class="risk-name">Unknown extent of water damage</div><div class="risk-mit">The existing drawings and scope both reference water damage from roof leaks. Until strip-out is complete you won't know the full extent. Build 10–15% cost contingency and 2 weeks programme buffer specifically for remedial works.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rh"></div><div><div class="risk-name">Window lead time — dormer left open</div><div class="risk-mit">Aluminium windows on 8–12 week lead time. If the dormer structure is complete but windows haven't arrived, you need temporary hoarding or a membrane solution. Do not leave openings unprotected. Appoint supplier now.</div></div></div>
+  </div>
+
+  <div class="risk-group">
+    <div class="risk-label">Medium — monitor actively</div>
+    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Trade availability in summer peak</div><div class="risk-mit">Good structural carpenters, roofers, and plumbers book out 6–8 weeks ahead in summer. Appoint all key trades now. Availability is as important as price — ask each contractor for their earliest start date.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Scaffolding coordination with neighbours</div><div class="risk-mit">Flank elevation shows semi-detached neighbour (EGA003). Notify 217a and 217b in writing before scaffold is erected. Check if a Party Wall Agreement is needed — chimney removal especially.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Mains moling disruption</div><div class="risk-mit">Moling from drive to house will disrupt supply. Coordinate timing when you have alternative water access. Thames Water may require advance notice — check before booking contractor.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Rosemary clay tile supply</div><div class="risk-mit">Clay tiles can have batch lead times and colour variation between batches. Order all tiles at once. Confirm availability before demolition starts — you can't strip the old roof without new tiles on order.</div></div></div>
+  </div>
+
+  <div class="risk-group">
+    <div class="risk-label">Lower — monitor as programme develops</div>
+    <div class="risk-item"><div class="risk-bar rl"></div><div><div class="risk-name">Skip road permit delays</div><div class="risk-mit">Apply for Council road permit as soon as MC is appointed. Ealing can take 2–3 weeks. Don't let waste management hold up site clearance.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rl"></div><div><div class="risk-name">Decorative cornicing damage</div><div class="risk-mit">Photograph and document all existing cornicing before works begin. Brief every trade. Protect sections adjacent to work areas. Specialist cornice restorers are available but expensive — prevention is far cheaper.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rl"></div><div><div class="risk-name">Building Control sign-off</div><div class="risk-mit">Building Regs apply to structural works, fire doors, electrical upgrade, and drainage changes. Notify Building Control before works start and agree inspection stages. Get sign-off stage by stage — don't assume at completion.</div></div></div>
+  </div>
+</div>
+
+<!-- ===== CONTRACTORS ===== -->
+<div class="section" id="contractors">
+  <div class="sh">
+    <div class="sh-title">Contractor tracker</div>
+    <p class="sh-desc">All trades required. Get 2–3 quotes for each. Ask for earliest start date alongside price.</p>
+  </div>
+
+  <div class="contractor-grid">
+    <div class="cc cc-crit"><div class="cc-role">Lead</div><div class="cc-name">Main contractor</div><div class="cc-scope">Coordinates all main works — structural, roofing, carpentry, plastering, programme management.</div><span class="cc-status">Decide now</span></div>
+    <div class="cc cc-crit"><div class="cc-role">Structural</div><div class="cc-name">Structural engineer</div><div class="cc-scope">Steel beam schedule, spreader plate spec, chimney breast removal, site inspections during structural works.</div><span class="cc-status">Confirm drawings now</span></div>
+    <div class="cc cc-crit"><div class="cc-role">Structural</div><div class="cc-name">Steel fabricator</div><div class="cc-scope">Supply structural steelwork per engineer's drawings. 4–6 week lead time — order immediately on drawings issue.</div><span class="cc-status">Order ASAP</span></div>
+    <div class="cc cc-crit"><div class="cc-role">External</div><div class="cc-name">Aluminium window supplier</div><div class="cc-scope">Dormer windows ×2, Juliette door ×1 double, gable end window ×1 (1500 × 1500mm). Supply and install. 8–12 week lead time.</div><span class="cc-status">Appoint urgently</span></div>
+    <div class="cc cc-crit"><div class="cc-role">External</div><div class="cc-name">Scaffolding contractor</div><div class="cc-scope">Full wrap — front, rear, side alley. Lifts for repointing + Oriel. Boiler access. Neighbour coordination.</div><span class="cc-status">Book now</span></div>
+    <div class="cc cc-urg"><div class="cc-role">External</div><div class="cc-name">Aluminium guttering specialist</div><div class="cc-scope">Cast aluminium gutters and downpipes — full replacement. Must follow roofing completion.</div><span class="cc-status">Appoint soon</span></div>
+    <div class="cc cc-urg"><div class="cc-role">External</div><div class="cc-name">Repointing contractor</div><div class="cc-scope">Front, rear, side. Red paint removal (rear). Carbon cleaning (front). Must work while scaffold is up.</div><span class="cc-status">Appoint soon</span></div>
+    <div class="cc cc-urg"><div class="cc-role">Services</div><div class="cc-name">Plumber</div><div class="cc-scope">Mains upgrade (moling), unvented cylinder, 1st &amp; 2nd fix throughout, drainage extensions, UFH.</div><span class="cc-status">Appoint soon</span></div>
+    <div class="cc cc-urg"><div class="cc-role">Services</div><div class="cc-name">Electrician</div><div class="cc-scope">House-wide wiring upgrade, 1st &amp; 2nd fix, smoke detectors (1 per level), extractor fans.</div><span class="cc-status">Appoint soon</span></div>
+    <div class="cc cc-norm"><div class="cc-role">Finishes</div><div class="cc-name">Plasterer</div><div class="cc-scope">Loft + 1st floor skim finish; house-wide repairs; cornicing protection and replacement.</div><span class="cc-status">Appoint Phase 4</span></div>
+    <div class="cc cc-norm"><div class="cc-role">Finishes</div><div class="cc-name">Tiler</div><div class="cc-scope">Waterproofing subfloors (~20m²); tiling loft + 1st floor bathrooms to client spec.</div><span class="cc-status">Appoint Phase 5</span></div>
+    <div class="cc cc-urg"><div class="cc-role">Specialist</div><div class="cc-name">Moling contractor</div><div class="cc-scope">Mains pipe upgrade from drive to house. Coordinate with water board — advance notice may be required.</div><span class="cc-status">Appoint soon</span></div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <span>217 Boston Road · London W7 2AA · Job 25100</span>
+  <span>Drawings: Draw &amp; Plan · 24/03/2026</span>
+  <span>Plan updated: May 2026</span>
+</footer>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function loadPdf(btn, filename, title) {
+  document.querySelectorAll('.dwg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pdf-embed').src = filename;
+  document.getElementById('viewer-title').innerHTML = title;
+  document.getElementById('viewer-link').href = filename;
+}
+
+const rows = [
+  { name: 'Mobilisation & orders',    cls: 'bar-critical',  s: 0,   e: 1.5 },
+  { name: 'Scaffolding',              cls: 'bar-struct',    s: 0.5, e: 6.5 },
+  { name: 'Steel order → delivery',   cls: 'bar-critical',  s: 0,   e: 2.5 },
+  { name: 'Demolition & strip-out',   cls: 'bar-demo',      s: 1,   e: 2   },
+  { name: 'Steelwork & floor joists', cls: 'bar-struct',    s: 2,   e: 3.5 },
+  { name: 'Gable wall build-up',      cls: 'bar-struct',    s: 2.5, e: 4   },
+  { name: 'Dormer structure',         cls: 'bar-struct',    s: 3,   e: 5   },
+  { name: 'Roofing — tiles & flat',   cls: 'bar-roof',      s: 3.5, e: 5   },
+  { name: 'Velux installs',           cls: 'bar-roof',      s: 4,   e: 5.5 },
+  { name: 'Loft insulation',          cls: 'bar-roof',      s: 4.5, e: 6   },
+  { name: 'Aluminium windows',        cls: 'bar-external',  s: 4.5, e: 5.5 },
+  { name: 'Repointing',               cls: 'bar-external',  s: 2,   e: 5   },
+  { name: 'Guttering',                cls: 'bar-external',  s: 5,   e: 6   },
+  { name: '1st fix plumbing',         cls: 'bar-services',  s: 3,   e: 5.5 },
+  { name: '1st fix electrical',       cls: 'bar-services',  s: 3,   e: 5.5 },
+  { name: 'Loft partitions',          cls: 'bar-struct',    s: 5,   e: 6   },
+  { name: 'Plastering (house-wide)',   cls: 'bar-services',  s: 5.5, e: 7   },
+  { name: '2nd fix MEP + tiling',     cls: 'bar-finish',    s: 6.5, e: 7.5 },
+  { name: 'Fire doors + carpentry',   cls: 'bar-finish',    s: 7,   e: 8   },
+  { name: 'Strike scaffold',          cls: 'bar-demo',      s: 6,   e: 6.5 },
+];
+
+const tbody = document.getElementById('gantt-body');
+rows.forEach(r => {
+  const tr = document.createElement('tr');
+  const td0 = document.createElement('td');
+  td0.textContent = r.name;
+  tr.appendChild(td0);
+  for (let m = 0; m < 8; m++) {
+    const td = document.createElement('td');
+    td.style.minWidth = '58px';
+    const wrap = document.createElement('div');
+    wrap.className = 'bar-cell';
+    if (r.e > m && r.s < m + 1) {
+      const bar = document.createElement('div');
+      bar.className = 'bar ' + r.cls;
+      bar.style.left  = Math.max(0, (r.s - m)) * 100 + '%';
+      bar.style.right = Math.max(0, (m + 1 - r.e)) * 100 + '%';
+      wrap.appendChild(bar);
+    }
+    if (m === 4) {
+      const line = document.createElement('div');
+      line.className = 'deadline-line';
+      line.title = 'Roof watertight deadline';
+      wrap.appendChild(line);
+    }
+    td.appendChild(wrap);
+    tr.appendChild(td);
+  }
+  tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>
