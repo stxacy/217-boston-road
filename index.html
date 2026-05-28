@@ -799,6 +799,181 @@
     background: var(--surface);
   }
 
+  /* ── BUDGET ── */
+  .budget-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+
+  .bsum-card {
+    background: var(--surface);
+    padding: 1.375rem 1.25rem;
+  }
+
+  .bsum-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .bsum-val {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .bsum-note { font-size: 0.72rem; color: var(--muted); }
+
+  .bsum-low  .bsum-val { color: var(--normal); }
+  .bsum-mid  .bsum-val { color: var(--ink); }
+  .bsum-high .bsum-val { color: var(--critical); }
+  .bsum-cont .bsum-val { color: var(--urgent); }
+
+  .budget-table-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+    margin-bottom: 1.75rem;
+  }
+
+  .budget-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+
+  .budget-table th {
+    font-size: 0.67rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.625rem 1rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .budget-table th:not(:first-child):not(:last-child) { text-align: right; }
+  .budget-table th:last-child { text-align: left; padding-left: 0.75rem; }
+
+  .budget-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .budget-table tr:last-child td { border-bottom: none; }
+
+  .budget-table td:nth-child(2),
+  .budget-table td:nth-child(3),
+  .budget-table td:nth-child(4) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .budget-table td:nth-child(5) {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .bt-phase {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bt-name { font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .bt-note-sm { font-size: 0.72rem; color: var(--muted); line-height: 1.45; }
+
+  .bt-low  { color: var(--normal); font-size: 0.82rem; }
+  .bt-mid  { color: var(--ink); font-weight: 600; font-size: 0.85rem; }
+  .bt-high { color: var(--muted); font-size: 0.82rem; }
+
+  .budget-table tr:hover td { background: #fafafa; }
+  .bt-phase:hover td { background: var(--bg) !important; }
+
+  .bt-total td {
+    background: var(--bg) !important;
+    font-weight: 600;
+    border-top: 2px solid var(--border2) !important;
+  }
+
+  .bt-cont td {
+    background: #fffbeb !important;
+    font-weight: 600;
+  }
+
+  .bt-cont .bt-low  { color: var(--urgent); }
+  .bt-cont .bt-mid  { color: var(--urgent); }
+  .bt-cont .bt-high { color: var(--urgent); }
+
+  .bt-grand td {
+    background: var(--ink) !important;
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-top: none !important;
+  }
+
+  .bt-grand td:nth-child(5) { color: rgba(255,255,255,0.55) !important; font-size: 0.72rem; }
+
+  .supply-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+
+  .supply-item {
+    background: var(--surface);
+    padding: 1rem 1.125rem;
+  }
+
+  .supply-who {
+    font-size: 0.63rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--external);
+    margin-bottom: 3px;
+  }
+
+  .supply-who.excl { color: var(--muted); }
+
+  .supply-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 3px;
+    letter-spacing: -0.01em;
+  }
+
+  .supply-note { font-size: 0.75rem; color: var(--muted); line-height: 1.45; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 720px) {
     header { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -816,6 +991,8 @@
     .drawings-layout { grid-template-columns: 1fr; height: auto; }
     .drawings-sidebar { max-height: 240px; }
     #pdf-embed { height: 500px; }
+    .budget-summary { grid-template-columns: 1fr 1fr; }
+    .budget-table th:last-child, .budget-table td:nth-child(5) { display: none; }
   }
 </style>
 </head>
@@ -831,6 +1008,7 @@
         <span class="hpill"><span class="hpill-dot"></span>Roof watertight target: Oct 2026</span>
         <span class="hpill" style="--dot-c:#1d4ed8"><span class="hpill-dot" style="background:#1d4ed8"></span>Loft + 1st floor scope</span>
         <span class="hpill" style="--dot-c:#059669"><span class="hpill-dot" style="background:#059669"></span>45.17 m³ new volume</span>
+        <a class="hpill" href="3d.html" style="text-decoration:none;--dot-c:#7c3aed"><span class="hpill-dot" style="background:#7c3aed"></span>3D Model ↗</a>
       </div>
     </div>
     <div class="header-meta">
@@ -849,6 +1027,7 @@
     <button onclick="show('decisions', this)">Decisions</button>
     <button onclick="show('risks', this)">Risks</button>
     <button onclick="show('contractors', this)">Contractors</button>
+    <button onclick="show('budget', this)">Budget</button>
   </nav>
 </header>
 
@@ -973,10 +1152,10 @@
       <span class="phase-dates">Oct – Dec 2026</span>
     </div>
     <div class="tasks">
-      <div class="task"><div><div class="task-name">2nd fix plumbing — sanitary ware, radiators, UFH</div><div class="task-note">Loft bathroom &amp; WC; walk-in shower (1st floor); electric underfloor heating mats in both bathrooms. Sanitary ware supplied by client.</div></div><div class="task-who">Plumber</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">2nd fix plumbing — sanitary ware, radiators, UFH</div><div class="task-note">Loft bathroom &amp; WC; walk-in shower (1st floor); electric underfloor heating mats in both bathrooms. Sanitary ware and heated towel rails client-supplied (Davina to procure).</div></div><div class="task-who">Plumber</div><div><span class="flag f-normal">Normal</span></div></div>
       <div class="task"><div><div class="task-name">Bathroom tiling — loft &amp; 1st floor</div><div class="task-note">Tiling spec TBC by client. Confirm before plasterer finishes so tile thickness/substrate can be coordinated.</div></div><div class="task-who">Tiler</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">2nd fix electrical</div><div class="task-note">Sockets, lighting points, switches, extractor fans with timers, 3× mains smoke detectors (1 per level) with battery backup.</div></div><div class="task-who">Electrician</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Hang fire doors — loft &amp; stairwell</div><div class="task-note">1× single + 1× double FD30 to loft rooms; 8× FD30 to stairwell (Building Regs compliance). Confirm spec with Building Control.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">2nd fix electrical</div><div class="task-note">House-wide upgrade to current standards. Loft bedroom: 4× double sockets, 6× light points, 2× switches. Loft lounge: 8× double sockets, 12× light points, 4× switches. Loft bathroom: 4× light points, 1× switch, extractor fan with timer &amp; isolator. Loft WC: 2× light points. Loft hall: 1× light point (2-way switching). 1st floor bedroom: 2× double sockets, 6× light points, 1× switch. 1st floor bathroom: reinstate lights, fix extractor. 3× mains-linked smoke detectors with battery backup (1 per level).</div></div><div class="task-who">Electrician</div><div><span class="flag f-normal">Normal</span></div></div>
+      <div class="task"><div><div class="task-name">Hang fire doors — loft &amp; stairwell</div><div class="task-note">2× single + 1× double, 4-panel grained FD30 (half-hour) to loft rooms, WC and bathroom; 8× FD30 to stairwell (Building Regs compliance). Confirm spec with Building Control.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
       <div class="task"><div><div class="task-name">Eaves access hatches (×2–3)</div><div class="task-note">To eaves storage areas per loft plan (PGA002).</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
       <div class="task"><div><div class="task-name">Skirtings &amp; architraves — loft &amp; 1st floor new areas</div><div class="task-note">Style TBC — decide by September so profile can be sourced and cut.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
       <div class="task"><div><div class="task-name">Strike scaffolding</div><div class="task-note">Only when ALL external works are confirmed complete — repointing, gutters, windows, Oriel, fascias. Don't rush this.</div></div><div class="task-who">Scaffold co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
@@ -1306,6 +1485,293 @@
     <div class="cc cc-norm"><div class="cc-role">Finishes</div><div class="cc-name">Tiler</div><div class="cc-scope">Waterproofing subfloors (~20m²); tiling loft + 1st floor bathrooms to client spec.</div><span class="cc-status">Appoint Phase 5</span></div>
     <div class="cc cc-urg"><div class="cc-role">Specialist</div><div class="cc-name">Moling contractor</div><div class="cc-scope">Mains pipe upgrade from drive to house. Coordinate with water board — advance notice may be required.</div><span class="cc-status">Appoint soon</span></div>
   </div>
+</div>
+
+
+<!-- ===== BUDGET ===== -->
+<div class="section" id="budget">
+  <div class="sh">
+    <div class="sh-title">Cost estimate</div>
+    <p class="sh-desc">London 2026 market rates based on confirmed scope from contractor brief. Mid column is the planning figure. All figures ex-VAT.</p>
+  </div>
+
+  <div class="budget-summary">
+    <div class="bsum-card bsum-low">
+      <div class="bsum-label">Low estimate</div>
+      <div class="bsum-val">£237k</div>
+      <div class="bsum-note">Best case — minimal water damage, smooth programme</div>
+    </div>
+    <div class="bsum-card bsum-mid">
+      <div class="bsum-label">Mid estimate · Use for planning</div>
+      <div class="bsum-val">£326k</div>
+      <div class="bsum-note">Realistic London 2026 mid-market with 15% contingency</div>
+    </div>
+    <div class="bsum-card bsum-high">
+      <div class="bsum-label">High estimate</div>
+      <div class="bsum-val">£417k</div>
+      <div class="bsum-note">If water damage is extensive and programme runs long</div>
+    </div>
+    <div class="bsum-card bsum-cont">
+      <div class="bsum-label">+ VAT (20%) on mid</div>
+      <div class="bsum-val">+£65k</div>
+      <div class="bsum-note">Contractor will be VAT-registered at this value — confirm</div>
+    </div>
+  </div>
+
+  <div class="alert">
+    ⚠ 15% contingency is built into all totals above. Water damage extent is the biggest unknown — cannot be quantified until strip-out is complete. These figures cover contractor costs only; client-supplied items (sanitary ware, tiles, kitchen units, flooring, decoration) are additional.
+  </div>
+
+  <div class="budget-table-wrap">
+    <table class="budget-table">
+      <thead>
+        <tr>
+          <th style="width:36%">Work package</th>
+          <th>Low</th>
+          <th>Mid</th>
+          <th>High</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr><td class="bt-phase" colspan="5">Professional fees</td></tr>
+        <tr>
+          <td><div class="bt-name">Structural engineer</div><div class="bt-note-sm">Drawings, calc pack, site inspections</div></td>
+          <td class="bt-low">£3,000</td><td class="bt-mid">£4,000</td><td class="bt-high">£5,000</td>
+          <td>Outside MC contract — appoint directly</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Party Wall surveyor</div><div class="bt-note-sm">217a &amp; 217b — chimney removal triggers the Act</div></td>
+          <td class="bt-low">£2,000</td><td class="bt-mid">£3,000</td><td class="bt-high">£4,000</td>
+          <td>May need agreed surveyor for each neighbour</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Building Control</div><div class="bt-note-sm">Full plans submission + stage inspections</div></td>
+          <td class="bt-low">£1,500</td><td class="bt-mid">£2,000</td><td class="bt-high">£2,500</td>
+          <td>Ealing Council or Approved Inspector</td>
+        </tr>
+
+        <tr><td class="bt-phase" colspan="5">Demolition &amp; soft strip</td></tr>
+        <tr>
+          <td><div class="bt-name">Demolition, soft strip &amp; skips</div><div class="bt-note-sm">1st floor bathroom, rear bedroom &amp; dining ceiling; chimney stacks ×2; chimney breast GF; brick recovery for garden wall; skip permits</div></td>
+          <td class="bt-low">£9,500</td><td class="bt-mid">£12,500</td><td class="bt-high">£16,500</td>
+          <td>Road permit from Ealing required for skip — apply early</td>
+        </tr>
+
+        <tr><td class="bt-phase" colspan="5">Structural works</td></tr>
+        <tr>
+          <td><div class="bt-name">Scaffolding</div><div class="bt-note-sm">Full wrap ~6 months; single poles to 217a/b; lifts for repointing, Oriel window &amp; boiler access</div></td>
+          <td class="bt-low">£12,000</td><td class="bt-mid">£13,500</td><td class="bt-high">£15,000</td>
+          <td>First site activity — book now</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Structural steelwork</div><div class="bt-note-sm">Beam fabrication + erection; spreader plates; triple timber trims; per engineer's drawings</div></td>
+          <td class="bt-low">£8,000</td><td class="bt-mid">£11,500</td><td class="bt-high">£15,000</td>
+          <td>4–6 week fabrication lead time — order on drawing issue</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Internal floor structure</div><div class="bt-note-sm">Loft structural joists; marine ply subfloor ¾"; water damage repair (loft floor + 1st floor ceiling joists); floorboard repairs; eaves boarding</div></td>
+          <td class="bt-low">£6,500</td><td class="bt-mid">£8,500</td><td class="bt-high">£11,000</td>
+          <td>Water damage extent unknown until strip — high range if widespread</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Loft partitions</div><div class="bt-note-sm">All new loft room walls per PGA002: Bedroom 5, Lounge, Bathroom, WC, Hallway, Store</div></td>
+          <td class="bt-low">£5,000</td><td class="bt-mid">£7,000</td><td class="bt-high">£9,000</td>
+          <td>After steelwork, before 1st fix MEP</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Box dormer structure</div><div class="bt-note-sm">Rear dormer — 7759mm wide, structural walls for Juliette door ×1 double + windows ×2</div></td>
+          <td class="bt-low">£14,000</td><td class="bt-mid">£19,500</td><td class="bt-high">£25,000</td>
+          <td>Structural carpentry + timber frame</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Gable wall build-up</div><div class="bt-note-sm">Brickwork to ridge height; retain front gable with decorative tiles and reinforce</div></td>
+          <td class="bt-low">£7,000</td><td class="bt-mid">£10,500</td><td class="bt-high">£14,000</td>
+          <td>Matching brick per PGA003</td>
+        </tr>
+
+        <tr><td class="bt-phase" colspan="5">Roofing</td></tr>
+        <tr>
+          <td><div class="bt-name">Rosemary clay tiles + ridges</div><div class="bt-note-sm">Full replacement of all pitched roof tiles; bird spikes; recover chimney bricks for garden wall</div></td>
+          <td class="bt-low">£18,000</td><td class="bt-mid">£24,000</td><td class="bt-high">£30,000</td>
+          <td>Hard deadline: watertight by 30 Sep 2026</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Flat roof — 3-layer torch-on felt</div><div class="bt-note-sm">Dormer flat roof; complete before dormer openings formed</div></td>
+          <td class="bt-low">£3,500</td><td class="bt-mid">£4,750</td><td class="bt-high">£6,000</td>
+          <td>Never leave openings unprotected overnight</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Roof insulation</div><div class="bt-note-sm">Pitched roof, rear dormer, dormer flat roof, around all rooflight openings</div></td>
+          <td class="bt-low">£4,500</td><td class="bt-mid">£6,000</td><td class="bt-high">£8,000</td>
+          <td>Once roof is watertight</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Velux ×5 + flat rooflight ×1</div><div class="bt-note-sm">3× front pitched, 2× GF kitchen pitched, 1× loft flat roof</div></td>
+          <td class="bt-low">£10,500</td><td class="bt-mid">£13,250</td><td class="bt-high">£16,000</td>
+          <td>Confirm sizes vs drawings before ordering</td>
+        </tr>
+
+        <tr><td class="bt-phase" colspan="5">External envelope</td></tr>
+        <tr>
+          <td><div class="bt-name">Aluminium windows + Juliette door</div><div class="bt-note-sm">Dormer windows ×2, Juliette ×1 (double), gable end window ×1 (1500×1500mm) — all custom aluminium</div></td>
+          <td class="bt-low">£15,500</td><td class="bt-mid">£21,750</td><td class="bt-high">£28,000</td>
+          <td>8–12 week lead time — appoint supplier immediately</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Oriel window replacement</div><div class="bt-note-sm">Front elevation; matching timber per PGA003; while scaffold is up</div></td>
+          <td class="bt-low">£5,000</td><td class="bt-mid">£7,500</td><td class="bt-high">£10,000</td>
+          <td>Don't miss the scaffold window — won't come back</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Fascias + decorative timber</div><div class="bt-note-sm">Repair/replace + paint black; repaint front gable decorative timber</div></td>
+          <td class="bt-low">£2,500</td><td class="bt-mid">£3,500</td><td class="bt-high">£4,500</td>
+          <td>While scaffold accessible</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Repointing + cleaning</div><div class="bt-note-sm">Front, rear &amp; side elevations; red paint removal (rear); carbon cleaning (front)</div></td>
+          <td class="bt-low">£11,500</td><td class="bt-mid">£16,250</td><td class="bt-high">£22,000</td>
+          <td>Specialist contractor; must complete before scaffold comes down</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Cast aluminium gutters + downpipes</div><div class="bt-note-sm">Full replacement by specialist contractor; follows roofing completion</div></td>
+          <td class="bt-low">£6,000</td><td class="bt-mid">£9,000</td><td class="bt-high">£12,000</td>
+          <td>Coordinate with fascia + scaffold programme</td>
+        </tr>
+
+        <tr><td class="bt-phase" colspan="5">Plumbing &amp; heating</td></tr>
+        <tr>
+          <td><div class="bt-name">Mains pipe upgrade (moling)</div><div class="bt-note-sm">Drive to house; specialist moling contractor; Thames Water advance notice may be required</div></td>
+          <td class="bt-low">£3,500</td><td class="bt-mid">£4,750</td><td class="bt-high">£6,000</td>
+          <td>Disruptive — plan timing carefully</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Unvented cylinder</div><div class="bt-note-sm">Supply + install; pressure testing; resolve any leaks</div></td>
+          <td class="bt-low">£3,500</td><td class="bt-mid">£4,750</td><td class="bt-high">£6,000</td>
+          <td>G3 qualified plumber required</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Boiler flue extension</div><div class="bt-note-sm">External boiler shed flue to roof level</div></td>
+          <td class="bt-low">£800</td><td class="bt-mid">£1,150</td><td class="bt-high">£1,500</td>
+          <td>Easiest done while scaffold is up</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">1st fix plumbing</div><div class="bt-note-sm">Hot/cold to loft bathroom + 1st floor kitchenette; waste extensions; underground drains (alley + rear); radiator pipework for new areas; relocate rear living room radiator</div></td>
+          <td class="bt-low">£7,000</td><td class="bt-mid">£10,000</td><td class="bt-high">£13,000</td>
+          <td>Concealed runs as much as possible</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Bathroom waterproofing</div><div class="bt-note-sm">Loft + 1st floor bathrooms (~20m²)</div></td>
+          <td class="bt-low">£1,500</td><td class="bt-mid">£2,000</td><td class="bt-high">£2,500</td>
+          <td>Before tiling</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">2nd fix plumbing</div><div class="bt-note-sm">Fit sanitary ware (client-supplied by Davina), heated towel rails, radiators; walk-in shower 1st floor; UFH electric mats ×2 bathrooms</div></td>
+          <td class="bt-low">£4,000</td><td class="bt-mid">£5,500</td><td class="bt-high">£7,000</td>
+          <td>Sanitary ware + heated towel rails by Davina</td>
+        </tr>
+
+        <tr><td class="bt-phase" colspan="5">Electrical (1st &amp; 2nd fix)</td></tr>
+        <tr>
+          <td><div class="bt-name">Electrical — house-wide upgrade + loft</div><div class="bt-note-sm">New circuits to fuse board; loft bedroom, lounge, bathroom, WC, hall; 1st floor bedroom + bathroom; 3× mains-linked smoke detectors; extractor fans; UFH mats (supply in plumbing above)</div></td>
+          <td class="bt-low">£12,500</td><td class="bt-mid">£17,500</td><td class="bt-high">£22,500</td>
+          <td>Full socket/lighting schedule to be confirmed — see Phases tab</td>
+        </tr>
+
+        <tr><td class="bt-phase" colspan="5">Finishes</td></tr>
+        <tr>
+          <td><div class="bt-name">Plastering</div><div class="bt-note-sm">All loft rooms; 1st floor bathroom + rear bedroom; GF hallway + stairwell + dining room ceiling replacement; around kitchen rooflight; former chimney wall; cornicing protection + repair</div></td>
+          <td class="bt-low">£13,000</td><td class="bt-mid">£17,500</td><td class="bt-high">£22,000</td>
+          <td>GF hallway + dining ceilings are full replacements, not repairs</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Bathroom tiling</div><div class="bt-note-sm">Loft bathroom + 1st floor bathroom; spec to be confirmed by Davina</div></td>
+          <td class="bt-low">£4,000</td><td class="bt-mid">£6,000</td><td class="bt-high">£8,000</td>
+          <td>Labour only — tiles are client-supply (see below)</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">Fire doors</div><div class="bt-note-sm">2× single + 1× double, 4-panel grained FD30 to loft rooms, WC &amp; bathroom; 8× FD30 to stairwell</div></td>
+          <td class="bt-low">£8,000</td><td class="bt-mid">£11,500</td><td class="bt-high">£15,000</td>
+          <td>Confirm exact spec with Building Control</td>
+        </tr>
+        <tr>
+          <td><div class="bt-name">2nd fix carpentry</div><div class="bt-note-sm">Eaves access hatches ×2–3; skirtings + architraves to loft + new 1st floor areas; style TBC</div></td>
+          <td class="bt-low">£3,000</td><td class="bt-mid">£4,500</td><td class="bt-high">£6,000</td>
+          <td>Profile must be decided by Sep 2026 to source and cut</td>
+        </tr>
+
+        <!-- Subtotal -->
+        <tr class="bt-total">
+          <td><strong>Subtotal (ex-contingency, ex-VAT)</strong></td>
+          <td class="bt-low"><strong>£206,300</strong></td>
+          <td class="bt-mid"><strong>£283,150</strong></td>
+          <td class="bt-high"><strong>£363,000</strong></td>
+          <td></td>
+        </tr>
+        <tr class="bt-cont">
+          <td><strong>Contingency 15%</strong></td>
+          <td class="bt-low"><strong>£30,945</strong></td>
+          <td class="bt-mid"><strong>£42,473</strong></td>
+          <td class="bt-high"><strong>£54,450</strong></td>
+          <td style="color:var(--urgent);font-size:0.72rem">Primarily for water damage remediation + programme risk</td>
+        </tr>
+        <tr class="bt-grand">
+          <td><strong>Total estimate (ex-VAT)</strong></td>
+          <td><strong>£237,245</strong></td>
+          <td><strong>£325,623</strong></td>
+          <td><strong>£417,450</strong></td>
+          <td>VAT at 20% adds ~£65k on mid figure</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Client-supplied items -->
+  <div class="sh">
+    <div class="sh-title">Client-supplied items</div>
+    <p class="sh-desc">Not included in contractor cost above — procure separately. Budget these on top of the estimate.</p>
+  </div>
+
+  <div class="supply-grid">
+    <div class="supply-item">
+      <div class="supply-who">By Davina</div>
+      <div class="supply-name">Sanitary ware — loft bathroom &amp; WC</div>
+      <div class="supply-note">WC pan, basin, bath or shower tray, taps. Budget £2,000–£6,000+ depending on spec. Must be specified before 1st fix plumbing starts.</div>
+    </div>
+    <div class="supply-item">
+      <div class="supply-who">By Davina</div>
+      <div class="supply-name">Heated towel rails</div>
+      <div class="supply-note">Loft bathroom + WC. Budget £300–£800 per rail. Confirm BTU output with plumber before ordering.</div>
+    </div>
+    <div class="supply-item">
+      <div class="supply-who">By Davina</div>
+      <div class="supply-name">Bathroom tiles — both bathrooms</div>
+      <div class="supply-note">Spec TBC — tile choice drives cost significantly. Budget £800–£3,000+ per room for tiles. Must confirm before waterproofing so substrate can be coordinated.</div>
+    </div>
+    <div class="supply-item">
+      <div class="supply-who">Client decision</div>
+      <div class="supply-name">1st floor kitchenette units &amp; appliances</div>
+      <div class="supply-note">PGA001 notes "final design to kitchen supplier". Confirm layout by July 2026 — drives plumbing rough-in positions and socket locations.</div>
+    </div>
+    <div class="supply-item">
+      <div class="supply-who excl">Not in scope</div>
+      <div class="supply-name">Flooring — loft &amp; 1st floor</div>
+      <div class="supply-note">Carpet, engineered wood etc. not included. Budget £3,000–£8,000 depending on area and spec.</div>
+    </div>
+    <div class="supply-item">
+      <div class="supply-who excl">Not in scope</div>
+      <div class="supply-name">Internal decoration / painting</div>
+      <div class="supply-note">Painting throughout loft + all affected 1st floor and GF areas. Budget £4,000–£8,000 for a decorator once plastering dries.</div>
+    </div>
+  </div>
+
+  <div class="compare-callout">
+    <strong>What this estimate excludes</strong>
+    VAT (20% on all contractor works — at £300k+ contract value the MC will be VAT registered). Architect CA/inspection fees if Draw &amp; Plan continue in a contract administration role. Ground floor works beyond chimney breast removal and ceiling repairs. Any Thames Water adoption or reinstatement fees for the moling connection. Planning application fees (verify PD status with Draw &amp; Plan — the rear dormer size may require full planning). Furniture and soft furnishings.
+  </div>
+
 </div>
 
 </main>

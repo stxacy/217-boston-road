@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>217 Boston Road · 3D Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f8fafc;--surface:#fff;--ink:#09090b;--sub:#3f3f46;--muted:#71717a;--border:#e4e4e7;--radius:6px;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#0f172a;font-family:'Inter',system-ui,sans-serif;overflow:hidden;height:100vh;}
+  #header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(255,255,255,.96);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+    padding:0 1.5rem;height:48px;display:flex;align-items:center;gap:.75rem;
+  }
+  #header a{font-size:.75rem;color:var(--muted);text-decoration:none;font-weight:500;}
+  #header a:hover{color:var(--ink);}
+  .sep{color:var(--border);}
+  #header h2{font-size:.875rem;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+  .badge{
+    margin-left:auto;font-size:.65rem;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--muted);
+    background:var(--bg);border:1px solid var(--border);
+    border-radius:999px;padding:.2rem .625rem;
+  }
+  #controls{
+    position:fixed;top:60px;right:14px;z-index:100;
+    background:rgba(255,255,255,.96);backdrop-filter:blur(8px);
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:.875rem;width:188px;display:flex;flex-direction:column;gap:.875rem;
+  }
+  .ctrl-section{display:flex;flex-direction:column;gap:.3rem;}
+  .ctrl-label{font-size:.62rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+  .ctrl-btn{
+    display:flex;align-items:center;gap:.5rem;
+    font-family:'Inter',sans-serif;font-size:.775rem;font-weight:500;
+    color:var(--sub);background:none;border:1px solid var(--border);border-radius:4px;
+    padding:.35rem .6rem;cursor:pointer;transition:all .1s;text-align:left;width:100%;
+  }
+  .ctrl-btn:hover{background:var(--bg);}
+  .ctrl-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .ctrl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  #legend{
+    position:fixed;bottom:14px;left:14px;z-index:100;
+    background:rgba(255,255,255,.96);border:1px solid var(--border);
+    border-radius:var(--radius);padding:.7rem .875rem;
+    display:flex;flex-direction:column;gap:.35rem;
+  }
+  .leg-row{display:flex;align-items:center;gap:.5rem;font-size:.7rem;color:var(--muted);font-weight:500;}
+  .leg-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+  #hint{position:fixed;bottom:14px;right:14px;z-index:100;font-size:.68rem;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif;text-align:right;line-height:1.6;}
+  .room-label{
+    font-family:'Inter',sans-serif;font-size:9px;font-weight:600;
+    color:rgba(255,255,255,.92);background:rgba(0,0,0,.55);
+    padding:2px 5px;border-radius:3px;pointer-events:none;white-space:nowrap;
+  }
+  #canvas-wrap{position:fixed;top:0;left:0;right:0;bottom:0;}
+  #loading{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;font-size:.875rem;z-index:200;}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <a href="index.html">← Build Plan</a>
+  <span class="sep">/</span>
+  <h2>217 Boston Road · 3D Model</h2>
+  <span class="badge">PGA drawing data</span>
+</div>
+
+<div id="controls">
+  <div class="ctrl-section">
+    <div class="ctrl-label">Floor</div>
+    <button class="ctrl-btn active" onclick="setFloor('all',this)">All floors</button>
+    <button class="ctrl-btn" onclick="setFloor('gf',this)">Ground floor</button>
+    <button class="ctrl-btn" onclick="setFloor('ff',this)">First floor</button>
+    <button class="ctrl-btn" onclick="setFloor('loft',this)">Loft</button>
+  </div>
+  <div class="ctrl-section">
+    <div class="ctrl-label">Layers</div>
+    <button class="ctrl-btn active" onclick="toggleLayer('structure',this)"><span class="ctrl-dot" style="background:#94a3b8"></span>Structure</button>
+    <button class="ctrl-btn active" onclick="toggleLayer('rooms',this)"><span class="ctrl-dot" style="background:#818cf8"></span>Rooms</button>
+    <button class="ctrl-btn active" onclick="toggleLayer('plumbing',this)"><span class="ctrl-dot" style="background:#22d3ee"></span>Plumbing</button>
+    <button class="ctrl-btn active" onclick="toggleLayer('electrical',this)"><span class="ctrl-dot" style="background:#fbbf24"></span>Electrical</button>
+  </div>
+</div>
+
+<div id="legend">
+  <div class="leg-row"><div class="leg-sq" style="background:#64748b"></div>Shell / structure</div>
+  <div class="leg-row"><div class="leg-sq" style="background:#818cf8"></div>Room layout</div>
+  <div class="leg-row"><div class="leg-sq" style="background:#22d3ee"></div>Plumbing routes</div>
+  <div class="leg-row"><div class="leg-sq" style="background:#fbbf24"></div>Electrical circuits</div>
+</div>
+
+<div id="hint">Orbit: drag &nbsp;·&nbsp; Zoom: scroll &nbsp;·&nbsp; Pan: right-drag</div>
+<div id="loading">Loading…</div>
+<div id="canvas-wrap"></div>
+
+<!-- Three.js r132 — classic global build, works from file:// -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/renderers/CSS2DRenderer.js"></script>
+
+<script>
+// ─── SCENE ───────────────────────────────────────────────────────────────────
+var scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0f172a);
+scene.fog = new THREE.FogExp2(0x0f172a, 0.016);
+
+var camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(20, 14, 20);
+
+var renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(devicePixelRatio);
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+
+var labelRenderer = new THREE.CSS2DRenderer();
+labelRenderer.setSize(innerWidth, innerHeight);
+labelRenderer.domElement.style.cssText = 'position:absolute;top:0;pointer-events:none;';
+
+var wrap = document.getElementById('canvas-wrap');
+wrap.appendChild(renderer.domElement);
+wrap.appendChild(labelRenderer.domElement);
+
+var orbit = new THREE.OrbitControls(camera, renderer.domElement);
+orbit.target.set(0, 4, 0);
+orbit.enableDamping = true;
+orbit.dampingFactor = 0.07;
+orbit.minDistance = 4;
+orbit.maxDistance = 55;
+orbit.update();
+
+// ─── LIGHTING ────────────────────────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+var sun = new THREE.DirectionalLight(0xfff8e8, 1.3);
+sun.position.set(18, 30, 12);
+sun.castShadow = true;
+scene.add(sun);
+var fill = new THREE.DirectionalLight(0xc8d8ff, 0.35);
+fill.position.set(-10, 6, -10);
+scene.add(fill);
+
+// ─── GROUND ──────────────────────────────────────────────────────────────────
+var gnd = new THREE.Mesh(
+  new THREE.PlaneGeometry(80, 80),
+  new THREE.MeshLambertMaterial({ color: 0x0a1120 })
+);
+gnd.rotation.x = -Math.PI/2;
+gnd.position.y = -0.01;
+scene.add(gnd);
+scene.add(new THREE.GridHelper(60, 60, 0x1e2d45, 0x1e2d45));
+
+// ─── DIMENSIONS — from PGA/EGA architectural drawings (Job 25100) ────────────
+var HW  = 4.775;         // half width = 9.55m (PGA003: 3304+3281+2964=9549mm)
+var DHW = 3.88;          // dormer half-width = 7.759m/2 — 0.896m setback each flank
+var HD  = 4.775;         // half depth = 9.55m/2 (scan-confirmed)
+var GFH = 2.991;         // GF ceiling height (measured: 9'9¾")
+var FFH = 3.150;         // FF ceiling height (measured: 10'4")
+var LF  = GFH + FFH;     // loft floor y = 5.55
+var EAV = LF  + 1.20;    // eaves y = 6.75 (1200mm knee wall PGA004)
+var RDG = EAV + 2.166;   // ridge y = 8.916 (Victorian ~31° pitch)
+var DD  = 2.979;         // dormer depth front-to-back (PGA003)
+var DH  = 2.086;         // dormer external wall height
+var DZF = HD - DD;       // dormer front face z = 1.796
+
+// ─── MATERIALS ───────────────────────────────────────────────────────────────
+function lm(color, opacity) {
+  opacity = opacity === undefined ? 1 : opacity;
+  return new THREE.MeshLambertMaterial({
+    color: color,
+    transparent: opacity < 1,
+    opacity: opacity,
+    side: THREE.DoubleSide,
+    depthWrite: opacity > 0.45
+  });
+}
+function em(color, opacity) {
+  opacity = opacity === undefined ? 1 : opacity;
+  return new THREE.LineBasicMaterial({ color: color, transparent: opacity < 1, opacity: opacity });
+}
+var glassMat = lm(0x93c5fd, 0.38);
+var frameMat = lm(0xb0bccf, 0.95);
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function mkPipe(grp, ax, ay, az, bx, by, bz, r, mat) {
+  var a = new THREE.Vector3(ax, ay, az);
+  var b = new THREE.Vector3(bx, by, bz);
+  var dir = b.clone().sub(a);
+  var len = dir.length();
+  if (len < 0.01) return;
+  var m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 7), mat);
+  m.position.copy(a).lerp(b, 0.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.normalize());
+  grp.add(m);
+}
+
+function mkBox(grp, x, y, z, w, h, d, mat, floor) {
+  var geo = new THREE.BoxGeometry(w, h, d);
+  var m = new THREE.Mesh(geo, mat);
+  m.position.set(x, y, z);
+  if (floor) m.userData.floor = floor;
+  grp.add(m);
+  return { geo: geo, mesh: m };
+}
+
+function mkEdges(grp, geo, x, y, z, mat, floor) {
+  var l = new THREE.LineSegments(new THREE.EdgesGeometry(geo), mat);
+  l.position.set(x, y, z);
+  if (floor) l.userData.floor = floor;
+  grp.add(l);
+}
+
+function mkLabel(text, x, y, z, floor) {
+  var el = document.createElement('div');
+  el.className = 'room-label';
+  el.textContent = text;
+  var obj = new THREE.CSS2DObject(el);
+  obj.position.set(x, y, z);
+  if (floor) obj.userData.floor = floor;
+  return obj;
+}
+
+function bufGeo(verts, indices) {
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(verts), 3));
+  geo.setIndex(indices);
+  geo.computeVertexNormals();
+  return geo;
+}
+
+// ─── GROUPS ──────────────────────────────────────────────────────────────────
+var G = {
+  structure:  new THREE.Group(),
+  rooms:      new THREE.Group(),
+  plumbing:   new THREE.Group(),
+  electrical: new THREE.Group()
+};
+Object.keys(G).forEach(function(k){ scene.add(G[k]); });
+
+function addS(obj, floor) {
+  if (floor) obj.userData.floor = floor;
+  G.structure.add(obj);
+}
+
+function addR(obj, floor) {
+  if (floor) obj.userData.floor = floor;
+  G.rooms.add(obj);
+}
+
+// ─── STRUCTURE ───────────────────────────────────────────────────────────────
+function buildLevel(yBase, h, floor) {
+  // Slab
+  var slabGeo = new THREE.BoxGeometry(HW*2, 0.14, HD*2);
+  var slab = new THREE.Mesh(slabGeo, lm(0x475569, 0.8));
+  slab.position.set(0, yBase+0.07, 0);
+  addS(slab, floor);
+
+  // 4 walls [cx, cz, w, d]
+  [[0,-HD,HW*2,0.28],[0,HD,HW*2,0.28],[-HW,0,0.28,HD*2],[HW,0,0.28,HD*2]].forEach(function(p){
+    var wgeo = new THREE.BoxGeometry(p[2], h, p[3]);
+    var wall = new THREE.Mesh(wgeo, lm(0x8ca0b8, 0.22));
+    wall.position.set(p[0], yBase+h/2, p[1]);
+    addS(wall, floor);
+    var wl = new THREE.LineSegments(new THREE.EdgesGeometry(wgeo), em(0x4a6080, 0.4));
+    wl.position.copy(wall.position);
+    addS(wl, floor);
+  });
+}
+
+buildLevel(0,   GFH, 'gf');
+buildLevel(GFH, FFH, 'ff');
+buildLevel(LF,  1.2, 'loft');
+
+// ── REAR KITCHEN EXTENSION (single-storey, projects behind main rear wall) ───
+var extW = 4.5, extD = 3.0, extH = 2.6;
+var extX = -HW + extW/2;              // left edge flush with main left wall
+var extZ = HD + extD/2;               // box centre behind rear wall
+var extGeo = new THREE.BoxGeometry(extW, extH, extD);
+var extMesh = new THREE.Mesh(extGeo, lm(0x8ca0b8, 0.22));
+extMesh.position.set(extX, extH/2, extZ);
+addS(extMesh, 'gf');
+var extLines = new THREE.LineSegments(new THREE.EdgesGeometry(extGeo), em(0x4a6080, 0.5));
+extLines.position.copy(extMesh.position);
+addS(extLines, 'gf');
+// Flat roof on extension
+var extRGeo = new THREE.BoxGeometry(extW, 0.12, extD);
+var extRMesh = new THREE.Mesh(extRGeo, lm(0x1e293b, 0.95));
+extRMesh.position.set(extX, extH + 0.06, extZ);
+addS(extRMesh, 'gf');
+var extRLines = new THREE.LineSegments(new THREE.EdgesGeometry(extRGeo), em(0x64748b, 0.7));
+extRLines.position.copy(extRMesh.position);
+addS(extRLines, 'gf');
+
+// ── PITCHED ROOF — front slope + rear stub + gable ends ──────────────────────
+var roofMat = lm(0x2d3f55, 0.93);
+
+// Front slope: eaves(z=-HD,y=EAV) → ridge(z=0,y=RDG)
+var fgeo = bufGeo(
+  [-HW,EAV,-HD, HW,EAV,-HD, HW,RDG,0, -HW,RDG,0],
+  [0,2,1, 0,3,2]
+);
+var fSlope = new THREE.Mesh(fgeo, roofMat);
+addS(fSlope, 'loft');
+
+// Rear slope — central section above dormer + full-height flanks outside dormer
+var rStubY = LF + DH;   // = dormerTY
+// Central section (between dormer flanks)
+var rgeo = bufGeo(
+  [-DHW,RDG,0, DHW,RDG,0, DHW,rStubY,DZF, -DHW,rStubY,DZF],
+  [0,1,2, 0,2,3]
+);
+addS(new THREE.Mesh(rgeo, lm(0x2d3f55, 0.93)), 'loft');
+// Left flank — full rear slope from ridge to rear eave (outside dormer)
+var lfgeo = bufGeo(
+  [-HW,RDG,0, -DHW,RDG,0, -DHW,EAV,HD, -HW,EAV,HD],
+  [0,1,2, 0,2,3]
+);
+addS(new THREE.Mesh(lfgeo, lm(0x2d3f55, 0.93)), 'loft');
+// Right flank — full rear slope from ridge to rear eave (outside dormer)
+var rfgeo = bufGeo(
+  [DHW,RDG,0, HW,RDG,0, HW,EAV,HD, DHW,EAV,HD],
+  [0,1,2, 0,2,3]
+);
+addS(new THREE.Mesh(rfgeo, lm(0x2d3f55, 0.93)), 'loft');
+
+// Gable ends — pentagon profile (gables at x=±HW, beyond dormer setback — no dormer notch)
+// v0:loft-floor-front  v1:front-eaves  v2:ridge  v3:rear-eaves  v4:loft-floor-rear
+[-HW, HW].forEach(function(x){
+  var ggeo = bufGeo(
+    [x,LF,-HD,  x,EAV,-HD,  x,RDG,0,  x,EAV,HD,  x,LF,HD],
+    [0,1,2, 0,2,3, 0,3,4]
+  );
+  addS(new THREE.Mesh(ggeo, lm(0x2d3f55, 0.93)), 'loft');
+});
+
+// ── BOX DORMER (rear, full width) ────────────────────────────────────────────
+var dormerCZ = HD - DD/2;
+var dormerBY = LF;
+var dormerTY = dormerBY + DH;
+
+// Dormer body — DHW*2 = 7.759m wide, set back 0.896m from each flank
+var dGeo = new THREE.BoxGeometry(DHW*2, DH, DD);
+var dMesh = new THREE.Mesh(dGeo, lm(0x7a8fa8, 0.28));
+dMesh.position.set(0, dormerBY+DH/2, dormerCZ);
+addS(dMesh, 'loft');
+var dLines = new THREE.LineSegments(new THREE.EdgesGeometry(dGeo), em(0x8ca0c0, 0.6));
+dLines.position.copy(dMesh.position);
+addS(dLines, 'loft');
+
+// Dormer flat roof
+var drGeo = new THREE.BoxGeometry(DHW*2, 0.12, DD);
+var drMesh = new THREE.Mesh(drGeo, lm(0x1e293b, 0.95));
+drMesh.position.set(0, dormerTY+0.06, dormerCZ);
+addS(drMesh, 'loft');
+addS(new THREE.LineSegments(new THREE.EdgesGeometry(drGeo), em(0x64748b, 0.7)), 'loft');
+G.structure.children[G.structure.children.length-1].position.copy(drMesh.position);
+
+// ── JULIETTE DOOR (rear face, LEFT side per PGA drawings) ────────────────────
+var rearZ = HD + 0.02;
+var juliW = 1.50, juliH = 2.10;
+var juliX = -2.7;  // left of dormer (scaled for HW=4.775)
+var juliGeo = new THREE.BoxGeometry(juliW, juliH, 0.06);
+var juli = new THREE.Mesh(juliGeo, lm(0x93c5fd, 0.42));
+juli.position.set(juliX, dormerBY+juliH/2+0.05, rearZ);
+addS(juli, 'loft');
+addS(new THREE.LineSegments(new THREE.EdgesGeometry(juliGeo), em(0xc0c8d8, 0.9)), 'loft');
+G.structure.children[G.structure.children.length-1].position.copy(juli.position);
+// Centre mullion
+var mull = new THREE.Mesh(new THREE.BoxGeometry(0.05, juliH, 0.08), frameMat.clone());
+mull.position.copy(juli.position);
+addS(mull, 'loft');
+
+// Juliette guard rail
+var railZ = rearZ + 0.14;
+var rBar = new THREE.Mesh(new THREE.BoxGeometry(juliW+0.1, 0.05, 0.05), lm(0x94a3b8, 0.9));
+rBar.position.set(juliX, dormerBY+0.9, railZ);
+addS(rBar, 'loft');
+var bBar = new THREE.Mesh(new THREE.BoxGeometry(juliW+0.1, 0.05, 0.05), lm(0x94a3b8, 0.9));
+bBar.position.set(juliX, dormerBY+0.05, railZ);
+addS(bBar, 'loft');
+[-0.65, 0, 0.65].forEach(function(rx){
+  var post = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.92,6), lm(0x94a3b8, 0.9));
+  post.position.set(juliX+rx, dormerBY+0.46, railZ);
+  addS(post, 'loft');
+});
+
+// ── 2× REAR WINDOWS right of Juliette (1200×1200mm) ─────────────────────────
+var winW = 1.20, winH = 1.20;
+var winY = dormerBY + 0.9 + winH/2;
+[0.6, 2.3].forEach(function(wx){
+  var wGeo = new THREE.BoxGeometry(winW, winH, 0.06);
+  var win = new THREE.Mesh(wGeo, lm(0x93c5fd, 0.40));
+  win.position.set(wx, winY, rearZ);
+  addS(win, 'loft');
+  addS(new THREE.LineSegments(new THREE.EdgesGeometry(wGeo), em(0xc0c8d8, 0.9)), 'loft');
+  G.structure.children[G.structure.children.length-1].position.copy(win.position);
+  // Cross bars
+  [new THREE.BoxGeometry(0.04,winH,0.08), new THREE.BoxGeometry(winW,0.04,0.08)].forEach(function(bg){
+    var bar = new THREE.Mesh(bg, frameMat.clone());
+    bar.position.copy(win.position);
+    addS(bar, 'loft');
+  });
+});
+
+// ── FLAT ROOFLIGHT (in dormer flat roof) ─────────────────────────────────────
+var rlGeo = new THREE.BoxGeometry(0.9, 0.09, 0.9); // PGA002: 90×90 flat roof window
+var rl = new THREE.Mesh(rlGeo, lm(0x93c5fd, 0.5));
+rl.position.set(-1.2, dormerTY+0.07, dormerCZ);
+addS(rl, 'loft');
+addS(new THREE.LineSegments(new THREE.EdgesGeometry(rlGeo), em(0x7dd3fc, 0.85)), 'loft');
+G.structure.children[G.structure.children.length-1].position.copy(rl.position);
+
+// ── 3× VELUX on front slope ───────────────────────────────────────────────────
+var pitchAngle = Math.atan2(RDG-EAV, HD);
+var tParam = 0.38;
+var velZ = -HD + HD*tParam;
+var velY = EAV + (RDG-EAV)*tParam;
+var velGeo = new THREE.BoxGeometry(0.80, 0.07, 1.20); // PGA001: 80×120 roof window
+[-2.8, 0, 2.8].forEach(function(vx){
+  var vel = new THREE.Mesh(velGeo.clone(), lm(0x7dd3fc, 0.55));
+  vel.position.set(vx, velY, velZ);
+  vel.rotation.x = -pitchAngle;
+  addS(vel, 'loft');
+  var vf = new THREE.LineSegments(new THREE.EdgesGeometry(velGeo), em(0x7dd3fc, 0.9));
+  vf.position.copy(vel.position);
+  vf.rotation.x = -pitchAngle;
+  addS(vf, 'loft');
+});
+
+// ── GABLE END WINDOW (1500×1500mm, raised gable right flank) ─────────────────
+var gwGeo = new THREE.BoxGeometry(0.07, 1.5, 1.5);
+var gw = new THREE.Mesh(gwGeo, lm(0x7dd3fc, 0.45));
+gw.position.set(HW, RDG-0.85, 0);
+addS(gw, 'loft');
+addS(new THREE.LineSegments(new THREE.EdgesGeometry(gwGeo), em(0x7dd3fc, 0.85)), 'loft');
+G.structure.children[G.structure.children.length-1].position.copy(gw.position);
+
+// ─── ROOMS ───────────────────────────────────────────────────────────────────
+var RC = { bedroom:0x818cf8, living:0xf472b6, kitchen:0xfbbf24, bathroom:0x34d399, hall:0x94a3b8, wc:0x6ee7b7, store:0xa78bfa, porch:0xcbd5e1 };
+var yBases = { gf:0, ff:GFH, loft:LF };
+
+var ROOMS = [
+  // ── GROUND FLOOR — measured dimensions from survey report (ft→m) ─────────────
+  // GF ceiling: 9'9¾" = 2.991m  |  house footprint 9.55m × 9.55m + 3m extension
+  {f:'gf', l:'Study',         x:-2.6,  z:-2.65, w:3.347, d:3.499, h:GFH,  c:RC.living  },
+  {f:'gf', l:'Porch',         x: 2.1,  z:-4.32, w:1.384, d:0.914, h:GFH,  c:RC.porch   },
+  {f:'gf', l:'Living Room 1', x: 2.5,  z:-1.90, w:3.765, d:5.190, h:GFH,  c:RC.living  },
+  {f:'gf', l:'Hallway',       x:-0.2,  z:-2.15, w:2.40,  d:3.855, h:GFH,  c:RC.hall    },
+  {f:'gf', l:'Other',         x:-3.8,  z: 0.30, w:1.378, d:1.887, h:GFH,  c:RC.store   },
+  {f:'gf', l:'Kitchen',       x: 1.8,  z: 3.10, w:3.633, d:7.112, h:GFH,  c:RC.kitchen },
+  {f:'gf', l:'Living Room',   x:-2.5,  z: 2.40, w:3.722, d:4.877, h:GFH,  c:RC.living  },
+  // ── FIRST FLOOR — measured dimensions from survey report (ft→m) ──────────────
+  // FF ceiling: 10'4" = 3.150m
+  {f:'ff', l:'Bedroom 1',     x: 2.5,  z:-2.30, w:4.724, d:3.454, h:FFH,  c:RC.bedroom },
+  {f:'ff', l:'Bedroom 2',     x:-2.3,  z:-2.30, w:3.829, d:4.325, h:FFH,  c:RC.bedroom },
+  {f:'ff', l:'Bedroom 3',     x:-2.6,  z: 2.00, w:3.347, d:3.683, h:FFH,  c:RC.bedroom },
+  {f:'ff', l:'Laundry Room',  x: 2.0,  z: 2.50, w:2.096, d:4.007, h:FFH,  c:RC.store   },
+  {f:'ff', l:'Stairway',      x: 0.2,  z:-0.50, w:5.696, d:3.035, h:FFH,  c:RC.hall    },
+  {f:'ff', l:'Bathroom',      x: 3.5,  z: 0.80, w:1.772, d:3.105, h:FFH,  c:RC.bathroom},
+  {f:'ff', l:'Other',         x: 0.5,  z:-4.10, w:1.315, d:0.356, h:FFH,  c:RC.store   },
+  // ── LOFT — PGA002 names; widths from PGA002 (Lounge=3582mm, Bed5=3714mm)
+  // WC confirmed 1811×2100mm; internal head height 2000mm (PGA004 section)
+  {f:'loft',l:'Lounge',           x:-2.4,  z: 3.3,  w:3.582,d:2.7,  h:2.00, c:RC.living  },
+  {f:'loft',l:'Bedroom 5',        x: 2.3,  z: 3.3,  w:3.714,d:2.7,  h:2.00, c:RC.bedroom },
+  {f:'loft',l:'Hallway',          x: 0,    z: 1.6,  w:0.9,  d:2.0,  h:1.90, c:RC.hall    },
+  {f:'loft',l:'Bathroom',         x:-2.5,  z: 1.8,  w:2.8,  d:2.4,  h:2.00, c:RC.bathroom},
+  {f:'loft',l:'WC',               x: 3.0,  z: 2.3,  w:1.811,d:2.1,  h:2.00, c:RC.wc      },
+  {f:'loft',l:'Bedroom 6',        x:-3.0,  z:-2.2,  w:2.8,  d:3.0,  h:1.60, c:RC.bedroom },
+  {f:'loft',l:'Eaves Store',      x: 1.5,  z:-2.4,  w:3.2,  d:2.0,  h:1.40, c:RC.store   },
+];
+
+ROOMS.forEach(function(r){
+  var yb = yBases[r.f];
+  var rh = r.h * 0.90;
+  var geo = new THREE.BoxGeometry(r.w, rh, r.d);
+  var fill = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color:r.c, transparent:true, opacity:0.10, depthWrite:false }));
+  fill.position.set(r.x, yb+rh/2, r.z);
+  fill.userData.floor = r.f;
+  G.rooms.add(fill);
+  var el = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color:r.c, transparent:true, opacity:0.6 }));
+  el.position.copy(fill.position);
+  el.userData.floor = r.f;
+  G.rooms.add(el);
+  var lbl = mkLabel(r.l, r.x, yb+rh*0.62, r.z, r.f);
+  G.rooms.add(lbl);
+});
+
+// ─── PLUMBING ────────────────────────────────────────────────────────────────
+// All routes are orthogonal — vertical stacks hug wall corners,
+// horizontal branches run just above slab (y+0.12) or below ceiling (y-0.35).
+var pm   = lm(0x22d3ee, 0.9);   // mains / soil stack
+var pb   = lm(0x67e8f9, 0.8);   // branch supplies
+var prad = lm(0x06b6d4, 0.6);   // heating
+
+var rmX = -HW+0.15,  rmZ = -HD+0.25;  // rising main:  left × front wall interior
+var ssX = -HW+0.15,  ssZ =  HD-0.25;  // soil stack:   left × rear  wall interior
+var hX  =  HW-0.15;                    // heating loop: right wall interior
+
+// ── MAINS ENTRY & RISING MAIN ────────────────────────────────────────────────
+mkPipe(G.plumbing, rmX,-0.8,-HD-2.5, rmX,-0.8,rmZ,  0.04, pm.clone()); // below street
+mkPipe(G.plumbing, rmX,-0.8,rmZ,     rmX,0.06,rmZ,   0.04, pm.clone()); // up through slab
+mkPipe(G.plumbing, rmX,0.06,rmZ,     rmX,LF+1.1,rmZ, 0.04, pm.clone()); // rising main, left wall
+
+// ── GF SUPPLY BRANCHES (just above slab, inside walls) ───────────────────────
+mkPipe(G.plumbing, rmX,0.12,rmZ,  rmX,0.12,ssZ,  0.022, pb.clone()); // south→north along left wall
+mkPipe(G.plumbing, rmX,0.12,1.6, -3.0,0.12,1.6,  0.022, pb.clone()); // branch to GF WC
+mkPipe(G.plumbing, rmX,0.12,ssZ, extX,0.12,ssZ,  0.022, pb.clone()); // branch east to kitchen ext
+
+// ── FF SUPPLY BRANCHES ───────────────────────────────────────────────────────
+mkPipe(G.plumbing, rmX,GFH+0.12,rmZ, rmX,GFH+0.12,ssZ,  0.022, pb.clone()); // along left wall
+mkPipe(G.plumbing, rmX,GFH+0.12,2.1, hX, GFH+0.12,2.1,  0.022, pb.clone()); // across to FF bath
+
+// ── LOFT SUPPLY ──────────────────────────────────────────────────────────────
+mkPipe(G.plumbing, rmX,LF+0.12,rmZ, ssX,LF+0.12,2.8, 0.022, pb.clone()); // along left then to bath
+
+// ── SOIL & VENT STACK (left × rear corner, full height) ──────────────────────
+mkPipe(G.plumbing, ssX,-0.6,ssZ, ssX,RDG+0.5,ssZ, 0.04, pm.clone());
+
+// Waste branches into stack — run along left wall just above each slab
+mkPipe(G.plumbing, -3.0,0.12,1.6,          ssX,0.12,1.6,         0.022, pb.clone()); // GF WC waste
+mkPipe(G.plumbing, ssX,0.12,1.6,           ssX,0.12,ssZ,         0.022, pb.clone()); // → stack
+mkPipe(G.plumbing, hX, GFH+0.12,2.1,       ssX,GFH+0.12,2.1,    0.022, pb.clone()); // FF bath
+mkPipe(G.plumbing, ssX,GFH+0.12,2.1,       ssX,GFH+0.12,ssZ,    0.022, pb.clone()); // → stack
+mkPipe(G.plumbing, ssX,LF+0.12,2.8,        ssX,LF+0.12,ssZ,     0.022, pb.clone()); // loft bath → stack
+
+// ── UNVENTED CYLINDER (FF, boxing against left wall) ─────────────────────────
+var cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.28,1.1,12), pm.clone());
+cyl.position.set(rmX+0.45, GFH+0.65, -HD+1.3);
+G.plumbing.add(cyl);
+mkPipe(G.plumbing, rmX,GFH+0.12,rmZ,    rmX,GFH+0.12,-HD+1.3, 0.022, pb.clone()); // cold feed
+mkPipe(G.plumbing, rmX,GFH+0.12,-HD+1.3, rmX+0.45,GFH+0.12,-HD+1.3, 0.022, pb.clone());
+
+// ── BOILER (kitchen extension, against rear wall) ─────────────────────────────
+var boil = new THREE.Mesh(new THREE.BoxGeometry(0.45,0.55,0.25), pm.clone());
+var boilZ = HD + extD - 0.2;
+boil.position.set(extX, extH-0.95, boilZ);
+G.plumbing.add(boil);
+mkPipe(G.plumbing, extX,extH-0.7,boilZ, extX,RDG+0.6,boilZ, 0.06, pb.clone()); // flue, above roof
+mkPipe(G.plumbing, extX,0.12,boilZ, hX,0.12,HD-0.5, 0.022, prad.clone());       // flow underfloor to riser
+
+// ── HEATING LOOP (right wall, below ceiling each floor) ──────────────────────
+mkPipe(G.plumbing, hX,GFH-0.35,-HD+0.5, hX,GFH-0.35,HD-0.5, 0.022, prad.clone()); // GF header
+mkPipe(G.plumbing, hX,LF -0.35,-HD+0.5, hX,LF -0.35,HD-0.5, 0.022, prad.clone()); // FF header
+mkPipe(G.plumbing, hX,GFH-0.35,HD-0.5,  hX,LF -0.35,HD-0.5, 0.022, prad.clone()); // inter-floor riser
+mkPipe(G.plumbing, rmX,LF+0.35,rmZ,     hX, LF+0.35,rmZ,    0.022, prad.clone()); // loft loop
+
+// ─── ELECTRICAL ──────────────────────────────────────────────────────────────
+// Cables run in wall/ceiling chases — tight to wall faces, never floating mid-room.
+var ew = lm(0xfbbf24, 0.9);   // power circuits
+var el = lm(0xfde68a, 0.72);  // lighting circuits
+
+// Consumer unit — hallway, right wall near front door
+var cu = new THREE.Mesh(new THREE.BoxGeometry(0.38,0.28,0.10), ew.clone());
+cu.position.set(HW-0.15, 1.4, -HD+0.8);
+G.electrical.add(cu);
+
+// ── RING MAINS — perimeter chase at ceiling level, each floor ─────────────────
+[GFH-0.12, LF-0.12, LF+DH-0.12].forEach(function(y){
+  var pts = [[-HW+0.15,-HD+0.15],[HW-0.15,-HD+0.15],[HW-0.15,HD-0.15],[-HW+0.15,HD-0.15]];
+  for (var i=0;i<4;i++){
+    var a=pts[i], b=pts[(i+1)%4];
+    mkPipe(G.electrical, a[0],y,a[1], b[0],y,b[1], 0.012, ew.clone());
+  }
+});
+
+// ── RISER — right front corner, up through all floors ────────────────────────
+mkPipe(G.electrical, HW-0.15,0.0,  -HD+0.15, HW-0.15,GFH-0.12,-HD+0.15, 0.012, ew.clone());
+mkPipe(G.electrical, HW-0.15,GFH,  -HD+0.15, HW-0.15,LF-0.12, -HD+0.15, 0.012, ew.clone());
+mkPipe(G.electrical, HW-0.15,LF,   -HD+0.15, HW-0.15,LF+DH-0.12,-HD+0.15,0.012, ew.clone());
+
+// ── LIGHTING CIRCUITS — just below ceiling, along front + rear + left walls ──
+[GFH-0.04, LF-0.04, LF+DH-0.04].forEach(function(y){
+  mkPipe(G.electrical, -HW+0.15,y,-HD+0.15, HW-0.15,y,-HD+0.15, 0.008, el.clone()); // front wall
+  mkPipe(G.electrical, -HW+0.15,y, HD-0.15, HW-0.15,y, HD-0.15, 0.008, el.clone()); // rear wall
+  mkPipe(G.electrical, -HW+0.15,y,-HD+0.15,-HW+0.15,y, HD-0.15, 0.008, el.clone()); // left wall
+});
+
+// ── SMOKE DETECTORS — ceiling centre each floor ───────────────────────────────
+[GFH-0.02, LF-0.02, LF+0.85].forEach(function(y){
+  var sm = new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.055,0.03,10), ew.clone());
+  sm.position.set(0, y, 0);
+  G.electrical.add(sm);
+});
+
+// ── EXTRACTORS — bathroom ceilings ────────────────────────────────────────────
+[[-1.8,GFH-0.02,2.2],[-2.5,LF+DH-0.02,2.8]].forEach(function(p){
+  var ex = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.05,10), ew.clone());
+  ex.position.set(p[0],p[1],p[2]);
+  G.electrical.add(ex);
+});
+
+// ─── FLOOR / LAYER CONTROLS ───────────────────────────────────────────────────
+var currentFloor = 'all';
+var layerOn = { structure:true, rooms:true, plumbing:true, electrical:true };
+
+window.setFloor = function(floor, btn) {
+  currentFloor = floor;
+  document.querySelectorAll('#controls .ctrl-section:first-child .ctrl-btn')
+    .forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  applyVis();
+};
+
+window.toggleLayer = function(layer, btn) {
+  layerOn[layer] = !layerOn[layer];
+  btn.classList.toggle('active', layerOn[layer]);
+  applyVis();
+};
+
+function applyVis() {
+  G.structure.visible  = layerOn.structure;
+  G.rooms.visible      = layerOn.rooms;
+  G.plumbing.visible   = layerOn.plumbing;
+  G.electrical.visible = layerOn.electrical;
+
+  if (currentFloor === 'all') {
+    [G.structure, G.rooms].forEach(function(g){
+      g.traverse(function(o){ o.visible = true; });
+    });
+    return;
+  }
+  [G.structure, G.rooms].forEach(function(g){
+    g.traverse(function(o){
+      if (!o.userData.floor) return;
+      o.visible = (o.userData.floor === currentFloor);
+    });
+  });
+}
+
+// ─── RENDER LOOP ─────────────────────────────────────────────────────────────
+document.getElementById('loading').style.display = 'none';
+
+(function loop(){
+  requestAnimationFrame(loop);
+  orbit.update();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+})();
+
+window.addEventListener('resize', function(){
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  labelRenderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
