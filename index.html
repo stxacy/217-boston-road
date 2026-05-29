@@ -974,6 +974,151 @@
 
   .supply-note { font-size: 0.75rem; color: var(--muted); line-height: 1.45; }
 
+  /* ── QUOTES COMPARISON ── */
+  .quotes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+
+  .qcard {
+    background: var(--surface);
+    padding: 1.375rem 1.25rem;
+  }
+
+  .qcard-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .qcard-val {
+    font-size: 1.875rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .qcard-note { font-size: 0.72rem; color: var(--muted); line-height: 1.45; }
+
+  .qc-s2b  .qcard-val { color: var(--ph2); }
+  .qc-muka .qcard-val { color: var(--normal); }
+  .qc-est  .qcard-val { color: var(--ink); }
+  .qc-gap  .qcard-val { color: var(--critical); }
+
+  .ct-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+    margin-bottom: 1.75rem;
+  }
+
+  .ct {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+
+  .ct th {
+    font-size: 0.67rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.625rem 1rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .ct th:nth-child(2),
+  .ct th:nth-child(3),
+  .ct th:nth-child(4) { text-align: right; }
+  .ct th:nth-child(5) { text-align: left; }
+
+  .ct td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .ct tr:last-child td { border-bottom: none; }
+  .ct tr:hover td { background: #fafafa; }
+
+  .ct td:nth-child(2),
+  .ct td:nth-child(3) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    font-size: 0.82rem;
+  }
+
+  .ct-name { font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .ct-sub  { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+
+  .ct td.gap-ok   { text-align: right; white-space: nowrap; font-weight: 600; font-size: 0.8rem; background: #f0fdf4; color: #166534; }
+  .ct td.gap-warn { text-align: right; white-space: nowrap; font-weight: 600; font-size: 0.8rem; background: #fffbeb; color: #92400e; }
+  .ct td.gap-crit { text-align: right; white-space: nowrap; font-weight: 600; font-size: 0.8rem; background: #fef2f2; color: #991b1b; }
+  .ct td.gap-note { text-align: right; white-space: nowrap; font-weight: 500; font-size: 0.72rem; background: #eff6ff; color: #1e40af; }
+
+  .ct-group {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .qflag {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 999px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .qf-spec    { background: #fef3c7; color: #92400e; }
+  .qf-missing { background: #fef2f2; color: #991b1b; }
+  .qf-extra   { background: #eff6ff; color: #1e40af; }
+  .qf-ok      { background: #f0fdf4; color: #166534; }
+
+  .ct-total td {
+    background: var(--bg) !important;
+    font-weight: 600;
+    border-top: 2px solid var(--border2) !important;
+  }
+
+  .ct-total td:nth-child(2),
+  .ct-total td:nth-child(3) { text-align: right; }
+
+  .ct-grand td {
+    background: var(--ink) !important;
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+
+  .ct-grand td:nth-child(2),
+  .ct-grand td:nth-child(3) { text-align: right; }
+  .ct-grand td.gap-crit { background: var(--critical) !important; color: #fff !important; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 720px) {
     header { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -993,6 +1138,8 @@
     #pdf-embed { height: 500px; }
     .budget-summary { grid-template-columns: 1fr 1fr; }
     .budget-table th:last-child, .budget-table td:nth-child(5) { display: none; }
+    .quotes-grid { grid-template-columns: 1fr 1fr; }
+    .ct th:nth-child(5), .ct td:nth-child(5) { display: none; }
   }
 </style>
 </head>
@@ -1028,6 +1175,7 @@
     <button onclick="show('risks', this)">Risks</button>
     <button onclick="show('contractors', this)">Contractors</button>
     <button onclick="show('budget', this)">Budget</button>
+    <button onclick="show('quotes', this)">Quotes</button>
   </nav>
 </header>
 
@@ -1451,7 +1599,7 @@
   <div class="risk-group">
     <div class="risk-label">Medium — monitor actively</div>
     <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Trade availability in summer peak</div><div class="risk-mit">Good structural carpenters, roofers, and plumbers book out 6–8 weeks ahead in summer. Appoint all key trades now. Availability is as important as price — ask each contractor for their earliest start date.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Scaffolding coordination with neighbours</div><div class="risk-mit">Flank elevation shows semi-detached neighbour (EGA003). Notify 217a and 217b in writing before scaffold is erected. Check if a Party Wall Agreement is needed — chimney removal especially.</div></div></div>
+    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Scaffolding coordination with neighbours</div><div class="risk-mit">Flank elevation shows semi-detached neighbour (EGA003). Notify 217a and 217b in writing before scaffold is erected. Party Wall Agreement confirmed not required.</div></div></div>
     <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Mains moling disruption</div><div class="risk-mit">Moling from drive to house will disrupt supply. Coordinate timing when you have alternative water access. Thames Water may require advance notice — check before booking contractor.</div></div></div>
     <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Rosemary clay tile supply</div><div class="risk-mit">Clay tiles can have batch lead times and colour variation between batches. Order all tiles at once. Confirm availability before demolition starts — you can't strip the old roof without new tiles on order.</div></div></div>
   </div>
@@ -1488,32 +1636,404 @@
 </div>
 
 
+<!-- ===== QUOTES ===== -->
+<div class="section" id="quotes">
+  <div class="sh">
+    <div class="sh-title">Quote comparison</div>
+    <p class="sh-desc">Two quotes received so far vs market estimate. Space 2 Build covers most of the build; Muka Brickwork is a specialist repointing contractor.</p>
+  </div>
+
+  <div class="quotes-grid">
+    <div class="qcard qc-s2b">
+      <div class="qcard-label">Space 2 Build — full build</div>
+      <div class="qcard-val">£122k</div>
+      <div class="qcard-note">Ex-VAT · 11 Feb 2026 · Includes stairs + flooring not in scope</div>
+    </div>
+    <div class="qcard qc-muka">
+      <div class="qcard-label">Muka Brickwork — repointing only</div>
+      <div class="qcard-val">£16,350</div>
+      <div class="qcard-note">Ex-VAT · 19 Mar 2026 · Cash price — bank transfer adds 20%</div>
+    </div>
+    <div class="qcard qc-est">
+      <div class="qcard-label">Market estimate (mid)</div>
+      <div class="qcard-val">£280k</div>
+      <div class="qcard-note">Ealing W7 2026 rates · Ex-contingency, ex-VAT · Party wall removed</div>
+    </div>
+    <div class="qcard qc-gap">
+      <div class="qcard-label">S2B gap vs estimate</div>
+      <div class="qcard-val">−£158k</div>
+      <div class="qcard-note">S2B is 56% below market — significant variation risk</div>
+    </div>
+  </div>
+
+  <div class="alert">
+    ⚠ Space 2 Build's £122k quote strips out ~£14k of items outside the architect's scope (stairs, flooring, balustrades). Their in-scope total is ~£107k — still £176k short of the market estimate. 9 critical gaps identified below.
+  </div>
+
+  <!-- Space 2 Build vs market estimate -->
+  <div class="sh" style="margin-bottom:1rem">
+    <div class="sh-title">Space 2 Build vs market estimate — line by line</div>
+    <p class="sh-desc">S2B quote mapped to each work package. Gap column shows shortfall against market mid.</p>
+  </div>
+
+  <div class="ct-wrap">
+    <table class="ct">
+      <thead>
+        <tr>
+          <th style="width:33%">Work package</th>
+          <th>S2B quote</th>
+          <th>Market mid</th>
+          <th>Gap</th>
+          <th>Issue</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr><td class="ct-group" colspan="5">Professional fees</td></tr>
+        <tr>
+          <td><div class="ct-name">Structural engineer</div><div class="ct-sub">Already appointed &amp; paid — outside MC scope</div></td>
+          <td style="text-align:right;color:var(--muted)">—</td>
+          <td style="text-align:right;color:var(--muted)">—</td>
+          <td class="gap-note">Done</td>
+          <td><span class="qflag qf-ok">Complete</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Building Control</div><div class="ct-sub">Full plans submission + stage inspections — not in S2B quote</div></td>
+          <td style="text-align:right;color:var(--muted)">—</td>
+          <td>£2,000</td>
+          <td class="gap-crit">−£2,000</td>
+          <td><span class="qflag qf-missing">Missing</span></td>
+        </tr>
+
+        <tr><td class="ct-group" colspan="5">Demolition &amp; soft strip</td></tr>
+        <tr>
+          <td><div class="ct-name">Demolition, soft strip &amp; skips</div><div class="ct-sub">Chimney stacks, breast, bathrooms, joist repairs</div></td>
+          <td>£8,600</td>
+          <td>£12,500</td>
+          <td class="gap-warn">−£3,900</td>
+          <td><span class="qflag qf-ok">Plausible</span></td>
+        </tr>
+
+        <tr><td class="ct-group" colspan="5">Structural works</td></tr>
+        <tr>
+          <td><div class="ct-name">Scaffolding</div><div class="ct-sub">Full wrap ~6 months, lifts, neighbour access</div></td>
+          <td>£3,500</td>
+          <td>£13,500</td>
+          <td class="gap-crit">−£10,000</td>
+          <td><span class="qflag qf-spec">Severely low</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Structural steelwork</div><div class="ct-sub">Beams, spreader plates</div></td>
+          <td>£8,000</td>
+          <td>£11,500</td>
+          <td class="gap-warn">−£3,500</td>
+          <td><span class="qflag qf-ok">Plausible</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Internal floor structure</div><div class="ct-sub">Joists + marine ply + roof strengthen + insulation + eaves</div></td>
+          <td>£18,000</td>
+          <td>£14,500</td>
+          <td class="gap-ok">+£3,500</td>
+          <td><span class="qflag qf-ok">In line</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Loft partitions</div><div class="ct-sub">Bedroom 5, Lounge, Bathroom, WC, Hallway, Store</div></td>
+          <td style="text-align:right;color:var(--muted)">—</td>
+          <td>£7,000</td>
+          <td class="gap-crit">−£7,000</td>
+          <td><span class="qflag qf-missing">Missing</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Box dormer structure</div></td>
+          <td>£17,500</td>
+          <td>£19,500</td>
+          <td class="gap-ok">−£2,000</td>
+          <td><span class="qflag qf-ok">In line</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Gable wall build-up</div></td>
+          <td>£7,500</td>
+          <td>£10,500</td>
+          <td class="gap-warn">−£3,000</td>
+          <td><span class="qflag qf-ok">Plausible</span></td>
+        </tr>
+
+        <tr><td class="ct-group" colspan="5">Roofing</td></tr>
+        <tr>
+          <td><div class="ct-name">Rosemary clay tiles</div><div class="ct-sub">S2B: labour only, client supplies tiles (~£12k material)</div></td>
+          <td>£7,000 <span style="font-size:0.7rem;color:var(--muted)">labour</span></td>
+          <td>£24,000 <span style="font-size:0.7rem;color:var(--muted)">supply+fit</span></td>
+          <td class="gap-note">Client tiles</td>
+          <td><span class="qflag qf-spec">Scope diff</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Flat roof</div><div class="ct-sub">S2B: fibreglass (GRP) · Spec requires: 3-layer torch-on felt</div></td>
+          <td>£6,000 <span style="font-size:0.7rem;color:var(--muted)">GRP</span></td>
+          <td>£4,750 <span style="font-size:0.7rem;color:var(--muted)">felt</span></td>
+          <td class="gap-note">Diff spec</td>
+          <td><span class="qflag qf-spec">Wrong spec</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Velux windows ×6</div><div class="ct-sub">S2B: install only (client supplies units) · Market: supply + fit</div></td>
+          <td>£2,000 <span style="font-size:0.7rem;color:var(--muted)">install only</span></td>
+          <td>£13,250 <span style="font-size:0.7rem;color:var(--muted)">supply+fit</span></td>
+          <td class="gap-note">Client supply</td>
+          <td><span class="qflag qf-spec">Scope diff</span></td>
+        </tr>
+
+        <tr><td class="ct-group" colspan="5">External envelope</td></tr>
+        <tr>
+          <td><div class="ct-name">Dormer windows + Juliette door + gable window</div><div class="ct-sub">S2B: uPVC · Spec requires: aluminium throughout</div></td>
+          <td>£5,000 <span style="font-size:0.7rem;color:var(--muted)">uPVC</span></td>
+          <td>£21,750 <span style="font-size:0.7rem;color:var(--muted)">aluminium</span></td>
+          <td class="gap-crit">−£16,750</td>
+          <td><span class="qflag qf-spec">Wrong spec</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Oriel window replacement</div></td>
+          <td style="text-align:right;color:var(--muted)">—</td>
+          <td>£7,500</td>
+          <td class="gap-crit">−£7,500</td>
+          <td><span class="qflag qf-missing">Missing</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Fascias + cast aluminium gutters + downpipes</div><div class="ct-sub">S2B: basic fascia/gutter upgrade · Spec: cast aluminium specialist</div></td>
+          <td>£2,000</td>
+          <td>£12,500</td>
+          <td class="gap-crit">−£10,500</td>
+          <td><span class="qflag qf-spec">Wrong spec</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Repointing — all elevations + paint strip</div><div class="ct-sub">S2B explicitly said "someone else"</div></td>
+          <td style="text-align:right;color:var(--muted)">—</td>
+          <td>£16,250</td>
+          <td class="gap-crit">−£16,250</td>
+          <td><span class="qflag qf-missing">Excluded</span></td>
+        </tr>
+
+        <tr><td class="ct-group" colspan="5">Plumbing &amp; heating</td></tr>
+        <tr>
+          <td><div class="ct-name">Mains upgrade (moling) + unvented cylinder</div></td>
+          <td>£3,500</td>
+          <td>£9,500</td>
+          <td class="gap-crit">−£6,000</td>
+          <td><span class="qflag qf-spec">Underpriced</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Boiler flue + plumbing upgrades + leak investigations</div></td>
+          <td>£6,000</td>
+          <td>£5,000</td>
+          <td class="gap-ok">+£1,000</td>
+          <td><span class="qflag qf-ok">In line</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">1st fix plumbing</div><div class="ct-sub">Hot/cold, waste, drains, radiator pipework</div></td>
+          <td>£3,500</td>
+          <td>£10,000</td>
+          <td class="gap-crit">−£6,500</td>
+          <td><span class="qflag qf-spec">Underpriced</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Bathroom waterproofing (~20m²)</div></td>
+          <td style="text-align:right;color:var(--muted)">—</td>
+          <td>£2,000</td>
+          <td class="gap-warn">−£2,000</td>
+          <td><span class="qflag qf-missing">Missing</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">2nd fix plumbing + UFH mats</div></td>
+          <td>£2,800</td>
+          <td>£5,500</td>
+          <td class="gap-warn">−£2,700</td>
+          <td><span class="qflag qf-ok">Plausible</span></td>
+        </tr>
+
+        <tr><td class="ct-group" colspan="5">Electrical</td></tr>
+        <tr>
+          <td><div class="ct-name">Electrical — 1st &amp; 2nd fix, house-wide upgrade</div><div class="ct-sub">Full rewire, all new loft circuits, smoke detectors</div></td>
+          <td>£3,500</td>
+          <td>£17,500</td>
+          <td class="gap-crit">−£14,000</td>
+          <td><span class="qflag qf-spec">Severely low</span></td>
+        </tr>
+
+        <tr><td class="ct-group" colspan="5">Finishes</td></tr>
+        <tr>
+          <td><div class="ct-name">Plastering — house-wide</div><div class="ct-sub">All loft rooms + 1st floor + GF hallway + dining ceiling + cornicing</div></td>
+          <td>£4,500</td>
+          <td>£17,500</td>
+          <td class="gap-crit">−£13,000</td>
+          <td><span class="qflag qf-spec">Severely low</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Bathroom tiling</div></td>
+          <td style="text-align:right;color:var(--muted)">inc. above</td>
+          <td>£6,000</td>
+          <td class="gap-warn">−£6,000</td>
+          <td><span class="qflag qf-ok">Likely inc.</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Fire doors — 11 total</div><div class="ct-sub">3× loft FD30 + 8× stairwell FD30 — supply + hang</div></td>
+          <td>£1,200</td>
+          <td>£11,500</td>
+          <td class="gap-crit">−£10,300</td>
+          <td><span class="qflag qf-spec">Impossible</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">2nd fix carpentry (skirtings, hatches)</div></td>
+          <td>£2,000</td>
+          <td>£4,500</td>
+          <td class="gap-warn">−£2,500</td>
+          <td><span class="qflag qf-ok">Plausible</span></td>
+        </tr>
+
+        <tr><td class="ct-group" colspan="5">Items in S2B quote outside architect's scope</td></tr>
+        <tr>
+          <td><div class="ct-name">Loft staircase + glass balustrades</div></td>
+          <td>£7,400</td>
+          <td style="text-align:right;color:var(--muted)">not in scope</td>
+          <td class="gap-note">Extra</td>
+          <td><span class="qflag qf-extra">Out of scope</span></td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Flooring — loft + 1st floor</div></td>
+          <td>£7,000</td>
+          <td style="text-align:right;color:var(--muted)">not in scope</td>
+          <td class="gap-note">Extra</td>
+          <td><span class="qflag qf-extra">Out of scope</span></td>
+        </tr>
+
+        <!-- Totals -->
+        <tr class="ct-total">
+          <td><strong>Total quoted / estimated</strong></td>
+          <td><strong>£122,000</strong></td>
+          <td><strong>£283,150</strong></td>
+          <td class="gap-crit"><strong>−£161,150</strong></td>
+          <td style="font-size:0.72rem;color:var(--muted)">S2B is 57% below market</td>
+        </tr>
+        <tr class="ct-grand">
+          <td><strong>S2B in-scope total only</strong> <span style="font-size:0.72rem;font-weight:400;opacity:0.7">(excl. stairs, flooring, balustrades)</span></td>
+          <td><strong>£107,600</strong></td>
+          <td><strong>£283,150</strong></td>
+          <td class="gap-crit"><strong>−£175,550</strong></td>
+          <td style="color:rgba(255,255,255,0.6);font-size:0.72rem">62% short on like-for-like</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Muka Brickwork comparison -->
+  <div class="sh">
+    <div class="sh-title">Muka Brickwork — repointing specialist</div>
+    <p class="sh-desc">Covers the one package Space 2 Build explicitly excluded.</p>
+  </div>
+
+  <div class="ct-wrap">
+    <table class="ct">
+      <thead>
+        <tr>
+          <th style="width:33%">Item</th>
+          <th>Area</th>
+          <th>Muka quote</th>
+          <th>Market mid</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ct-name">Front — repoint with lime NHL 3.5</div></td>
+          <td>40 m²</td>
+          <td>£3,200</td>
+          <td>—</td>
+          <td>£80/m² · Standard lime rate</td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Front — repair 3 windowsills</div></td>
+          <td>3 nr</td>
+          <td>£1,050</td>
+          <td>—</td>
+          <td>£350 each · Not in original estimate</td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Front — re-render plinth</div></td>
+          <td>1 nr</td>
+          <td>£500</td>
+          <td>—</td>
+          <td>Not in original estimate</td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Side — Doff paint strip</div></td>
+          <td>60 m²</td>
+          <td>£2,100</td>
+          <td>—</td>
+          <td>£35/m² · Correct method for Victorian brick</td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Side — repoint with lime NHL 3.5</div></td>
+          <td>60 m²</td>
+          <td>£4,800</td>
+          <td>—</td>
+          <td>£80/m²</td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Rear — Doff paint strip</div></td>
+          <td>30 m²</td>
+          <td>£2,300</td>
+          <td>—</td>
+          <td>£77/m² · Higher rate for thicker red paint</td>
+        </tr>
+        <tr>
+          <td><div class="ct-name">Rear — repoint with lime NHL 3.5</div></td>
+          <td>30 m²</td>
+          <td>£2,400</td>
+          <td>—</td>
+          <td>£80/m²</td>
+        </tr>
+        <tr class="ct-total">
+          <td><strong>Muka total</strong></td>
+          <td></td>
+          <td><strong>£16,350</strong></td>
+          <td><strong>£16,250</strong></td>
+          <td style="font-size:0.72rem;color:var(--muted)"><span class="qflag qf-ok">Validates estimate</span> · Cash price — +20% for bank transfer = £19,620</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="compare-callout">
+    <strong>9 critical gaps in Space 2 Build's quote — what to watch</strong>
+    (1) Scaffolding at £3,500 will not cover 6 months — expect a variation claim early. (2) Windows quoted as uPVC, spec requires aluminium — this alone adds ~£17k. (3) Repointing completely excluded — Muka fills this at £16,350 but that's an additional contract. (4) Electrical at £3,500 for a house-wide upgrade is not realistic — likely a placeholder that will increase significantly. (5) Plastering at £4,500 for house-wide scope after a full loft conversion is well under £20k in reality. (6) 11 FD30 fire doors at £1,200 is impossible — supply cost alone exceeds this. (7) Loft partitions missing entirely. (8) Oriel window missing. (9) Cast aluminium gutters (specialist trade) not in their scope. If engaged at £122k expect the final bill to land between £200k–£240k through variations.
+  </div>
+
+</div>
+
 <!-- ===== BUDGET ===== -->
 <div class="section" id="budget">
   <div class="sh">
     <div class="sh-title">Cost estimate</div>
-    <p class="sh-desc">London 2026 market rates based on confirmed scope from contractor brief. Mid column is the planning figure. All figures ex-VAT.</p>
+    <p class="sh-desc">Ealing, London W7 market rates (2026) based on confirmed scope. Mid column is the planning figure. All figures ex-VAT.</p>
   </div>
 
   <div class="budget-summary">
     <div class="bsum-card bsum-low">
       <div class="bsum-label">Low estimate</div>
-      <div class="bsum-val">£237k</div>
+      <div class="bsum-val">£235k</div>
       <div class="bsum-note">Best case — minimal water damage, smooth programme</div>
     </div>
     <div class="bsum-card bsum-mid">
       <div class="bsum-label">Mid estimate · Use for planning</div>
-      <div class="bsum-val">£326k</div>
+      <div class="bsum-val">£322k</div>
       <div class="bsum-note">Realistic London 2026 mid-market with 15% contingency</div>
     </div>
     <div class="bsum-card bsum-high">
       <div class="bsum-label">High estimate</div>
-      <div class="bsum-val">£417k</div>
+      <div class="bsum-val">£413k</div>
       <div class="bsum-note">If water damage is extensive and programme runs long</div>
     </div>
     <div class="bsum-card bsum-cont">
       <div class="bsum-label">+ VAT (20%) on mid</div>
-      <div class="bsum-val">+£65k</div>
+      <div class="bsum-val">+£64k</div>
       <div class="bsum-note">Contractor will be VAT-registered at this value — confirm</div>
     </div>
   </div>
@@ -1537,14 +2057,14 @@
 
         <tr><td class="bt-phase" colspan="5">Professional fees</td></tr>
         <tr>
-          <td><div class="bt-name">Structural engineer</div><div class="bt-note-sm">Drawings, calc pack, site inspections</div></td>
-          <td class="bt-low">£3,000</td><td class="bt-mid">£4,000</td><td class="bt-high">£5,000</td>
-          <td>Outside MC contract — appoint directly</td>
+          <td><div class="bt-name">Structural engineer</div><div class="bt-note-sm">Already appointed &amp; paid — outside MC scope</div></td>
+          <td class="bt-low" style="color:var(--muted)">—</td><td class="bt-mid" style="color:var(--muted);font-weight:400">—</td><td class="bt-high" style="color:var(--muted)">—</td>
+          <td>Complete — already paid, not in contractor budget</td>
         </tr>
         <tr>
-          <td><div class="bt-name">Party Wall surveyor</div><div class="bt-note-sm">217a &amp; 217b — chimney removal triggers the Act</div></td>
-          <td class="bt-low">£2,000</td><td class="bt-mid">£3,000</td><td class="bt-high">£4,000</td>
-          <td>May need agreed surveyor for each neighbour</td>
+          <td><div class="bt-name">Party Wall surveyor</div><div class="bt-note-sm">Not required — confirmed by client</div></td>
+          <td class="bt-low" style="color:var(--muted)">—</td><td class="bt-mid" style="color:var(--muted);font-weight:400">—</td><td class="bt-high">—</td>
+          <td>Handled — removed from budget</td>
         </tr>
         <tr>
           <td><div class="bt-name">Building Control</div><div class="bt-note-sm">Full plans submission + stage inspections</div></td>
@@ -1704,24 +2224,24 @@
         <!-- Subtotal -->
         <tr class="bt-total">
           <td><strong>Subtotal (ex-contingency, ex-VAT)</strong></td>
-          <td class="bt-low"><strong>£206,300</strong></td>
-          <td class="bt-mid"><strong>£283,150</strong></td>
-          <td class="bt-high"><strong>£363,000</strong></td>
+          <td class="bt-low"><strong>£204,300</strong></td>
+          <td class="bt-mid"><strong>£280,150</strong></td>
+          <td class="bt-high"><strong>£359,000</strong></td>
           <td></td>
         </tr>
         <tr class="bt-cont">
           <td><strong>Contingency 15%</strong></td>
-          <td class="bt-low"><strong>£30,945</strong></td>
-          <td class="bt-mid"><strong>£42,473</strong></td>
-          <td class="bt-high"><strong>£54,450</strong></td>
+          <td class="bt-low"><strong>£30,645</strong></td>
+          <td class="bt-mid"><strong>£42,023</strong></td>
+          <td class="bt-high"><strong>£53,850</strong></td>
           <td style="color:var(--urgent);font-size:0.72rem">Primarily for water damage remediation + programme risk</td>
         </tr>
         <tr class="bt-grand">
           <td><strong>Total estimate (ex-VAT)</strong></td>
-          <td><strong>£237,245</strong></td>
-          <td><strong>£325,623</strong></td>
-          <td><strong>£417,450</strong></td>
-          <td>VAT at 20% adds ~£65k on mid figure</td>
+          <td><strong>£234,945</strong></td>
+          <td><strong>£322,173</strong></td>
+          <td><strong>£412,850</strong></td>
+          <td>VAT at 20% adds ~£64k on mid figure</td>
         </tr>
 
       </tbody>
