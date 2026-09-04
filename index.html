@@ -172,21 +172,37 @@
   .nav-spacer { flex: 1; }
 
   .auth-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: 'Inter', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 0.4rem 0.75rem;
-    background: var(--ink);
-    color: #fff;
-    border: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.32rem 0.85rem 0.32rem 0.4rem;
+    background: var(--surface);
+    color: var(--sub);
+    border: 1px solid var(--border2);
     border-radius: 999px;
     cursor: pointer;
     white-space: nowrap;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
 
-  .auth-btn.signed-in { background: var(--normal); }
-  .auth-btn:hover { opacity: 0.85; }
+  .auth-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+  .auth-avatar {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--border2);
+    color: var(--sub);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .auth-btn.signed-in { border-color: var(--normal); color: var(--normal); }
+  .auth-btn.signed-in .auth-avatar { background: var(--normal); color: #fff; }
 
   /* ── MAIN ── */
   main { padding: 2.5rem 3rem; max-width: 1280px; }
@@ -216,169 +232,230 @@
   }
 
   /* ── EDIT UI ── */
-  .edit-toggle {
-    display: none;
-    flex-shrink: 0;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 0.35rem 0.75rem;
-    background: var(--surface);
-    color: var(--sub);
-    border: 1px solid var(--border2);
-    border-radius: 999px;
-    cursor: pointer;
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  .edit-toggle:hover { background: var(--bg); color: var(--ink); }
-  .edit-toggle.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .edit-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.35rem 0.8rem;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+
+  .edit-toggle:hover { background: var(--bg); color: var(--ink); border-color: var(--border); }
+  .edit-toggle.on { background: var(--ink); color: #fff; }
 
   .edit-panel {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 1.25rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
     margin-bottom: 1.5rem;
+    animation: panelIn 0.18s ease-out;
   }
 
   .edit-panel .item-card {
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.875rem;
-    margin-bottom: 0.75rem;
-    background: var(--bg);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.7rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
+  .edit-panel .item-card:hover { border-color: var(--border2); box-shadow: 0 1px 3px rgba(9,9,11,0.04); }
 
-  .edit-panel .item-card .item-card { background: var(--surface); }
+  .edit-panel .item-card .item-card { background: var(--bg); }
 
-  .field-row { margin-bottom: 0.5rem; }
+  .field-row { margin-bottom: 0.7rem; }
   .field-row label {
     display: block;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--faint);
-    margin-bottom: 0.25rem;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
   }
 
   .field-row input[type=text], .field-row input[type=number], .field-row textarea, .field-row select {
     width: 100%;
     font-family: 'Inter', sans-serif;
-    font-size: 0.82rem;
-    padding: 0.45rem 0.6rem;
-    border: 1px solid var(--border2);
-    border-radius: 4px;
-    background: #fff;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--surface);
     color: var(--ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
 
-  .field-row textarea { min-height: 3rem; resize: vertical; }
-  .field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.5rem 0.75rem; }
+  .field-row input:focus, .field-row textarea:focus, .field-row select:focus {
+    outline: none;
+    border-color: var(--ink);
+    box-shadow: 0 0 0 3px rgba(9,9,11,0.06);
+  }
 
-  .item-controls { display: flex; gap: 0.4rem; margin-top: 0.5rem; justify-content: flex-end; }
+  .field-row textarea { min-height: 3rem; resize: vertical; line-height: 1.5; }
+  .field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.6rem 1rem; }
+  .field-preview {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: -0.35rem 0 0.7rem;
+  }
+
+  .swatch-row { display: flex; align-items: center; gap: 0.5rem; }
+  .swatch-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(9,9,11,0.08);
+  }
+  .swatch-row select { flex: 1; }
+
+  .item-controls { display: flex; align-items: center; gap: 0.3rem; margin-top: 0.6rem; justify-content: flex-end; }
   .icon-btn {
     font-family: 'Inter', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.3rem 0.6rem;
-    border: 1px solid var(--border2);
-    border-radius: 4px;
-    background: #fff;
-    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 0.3rem 0.55rem;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--faint);
     cursor: pointer;
+    transition: background 0.15s, color 0.15s;
   }
-  .icon-btn:hover { color: var(--ink); border-color: var(--ink); }
-  .icon-btn.danger:hover { color: var(--critical); border-color: var(--critical); }
+  .icon-btn:hover { color: var(--ink); background: var(--bg); }
+  .icon-btn.danger:hover { color: var(--critical); background: #fef2f2; }
 
   .add-btn {
     font-family: 'Inter', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 0.5rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.55rem 0.9rem;
     border: 1px dashed var(--border2);
-    border-radius: var(--radius);
+    border-radius: 8px;
     background: transparent;
     color: var(--muted);
     cursor: pointer;
     width: 100%;
     margin-top: 0.25rem;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
   }
-  .add-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--bg); }
+  .add-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface); }
 
   .save-bar {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
-    justify-content: flex-end;
-    margin-top: 1rem;
-    padding-top: 1rem;
+    justify-content: space-between;
+    margin-top: 1.25rem;
+    padding-top: 1.1rem;
     border-top: 1px solid var(--border);
   }
 
+  .dirty-pill {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--urgent);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .dirty-pill::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--urgent);
+    flex-shrink: 0;
+  }
+
+  .save-bar-actions { display: flex; gap: 0.5rem; margin-left: auto; }
+
   .save-btn {
     font-family: 'Inter', sans-serif;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    padding: 0.5rem 1.1rem;
-    border-radius: var(--radius);
+    padding: 0.55rem 1.2rem;
+    border-radius: 999px;
     background: var(--ink);
     color: #fff;
     border: none;
     cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
   }
   .save-btn:hover { opacity: 0.85; }
+  .save-btn:active { transform: scale(0.98); }
   .cancel-btn {
     font-family: 'Inter', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 0.5rem 1.1rem;
-    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
     background: transparent;
     color: var(--muted);
     border: 1px solid var(--border2);
     cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
   }
+  .cancel-btn:hover { color: var(--ink); border-color: var(--ink); }
 
   .nested-block {
-    border-top: 1px dashed var(--border2);
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
+    border-left: 2px solid var(--border);
+    margin: 0.9rem 0 0.1rem;
+    padding: 0.1rem 0 0.1rem 1rem;
   }
   .nested-label {
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--faint);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
   }
 
   .modal-overlay {
     position: fixed; inset: 0;
-    background: rgba(9,9,11,0.5);
+    background: rgba(9,9,11,0.45);
+    backdrop-filter: blur(2px);
     display: flex; align-items: center; justify-content: center;
     z-index: 100;
+    animation: panelIn 0.15s ease-out;
   }
   .modal {
     background: var(--surface);
-    border-radius: 10px;
+    border-radius: 14px;
     padding: 1.75rem;
     width: 320px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    box-shadow: 0 24px 60px rgba(9,9,11,0.22);
   }
-  .modal h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+  .modal h3 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 0.3rem; }
+  .modal p.modal-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.1rem; }
   .modal .field-row { margin-bottom: 0.75rem; }
-  .modal-err { color: var(--critical); font-size: 0.75rem; margin-bottom: 0.5rem; min-height: 1em; }
-  .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.75rem; }
+  .modal-err { color: var(--critical); font-size: 0.78rem; margin-bottom: 0.5rem; min-height: 1em; }
+  .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.9rem; }
 
   .toast {
     position: fixed; bottom: 1.5rem; right: 1.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
     background: var(--ink); color: #fff;
-    padding: 0.7rem 1.1rem; border-radius: var(--radius);
+    padding: 0.7rem 1.1rem; border-radius: 999px;
     font-size: 0.8rem; font-weight: 500;
     z-index: 200; opacity: 0; transform: translateY(8px);
     transition: opacity 0.2s, transform 0.2s;
     pointer-events: none;
+    box-shadow: 0 10px 30px rgba(9,9,11,0.25);
   }
   .toast.show { opacity: 1; transform: translateY(0); }
 
@@ -1777,7 +1854,10 @@ function money(n) { return "£" + Math.round(n).toLocaleString("en-GB"); }
 function num(s) { const n = parseFloat(String(s).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; }
 function toast(msg) {
   const t = document.getElementById("toast");
-  t.textContent = msg;
+  const isErr = /fail/i.test(msg);
+  t.innerHTML = "";
+  t.appendChild(el("span", {}, [isErr ? "⚠" : "✓"]));
+  t.appendChild(el("span", {}, [msg]));
   t.classList.add("show");
   setTimeout(() => t.classList.remove("show"), 2200);
 }
@@ -1786,9 +1866,10 @@ function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
 /* ============ GENERIC EDITABLE LIST ============ */
 /*
 schema: {
-  fields: [{key,label,type:'text'|'textarea'|'select'|'number', options?}],
+  fields: [{key,label,type:'text'|'textarea'|'select'|'number'|'colorSelect', options?, swatches?}],
   addLabel, makeDefault: () => item,
-  nested?: { key: 'children', schema: {...same shape...}, label: 'Tasks' }
+  nested?: { key: 'children', schema: {...same shape...}, label: 'Tasks' },
+  preview?: (item) => string
 }
 */
 function renderEditableList(items, schema, onChange) {
@@ -1799,14 +1880,16 @@ function renderEditableList(items, schema, onChange) {
     items.forEach((item, idx) => {
       const card = el("div", { class: "item-card" });
       const grid = el("div", { class: "field-grid" });
+      let previewEl = null;
+      const updatePreview = () => { if (previewEl && schema.preview) previewEl.textContent = schema.preview(item); };
       schema.fields.forEach(f => {
         const row = el("div", { class: "field-row" });
         row.appendChild(el("label", {}, [f.label]));
-        let input;
+        let input, dot;
         if (f.type === "textarea") {
           input = el("textarea", {});
           input.value = item[f.key] || "";
-        } else if (f.type === "select") {
+        } else if (f.type === "select" || f.type === "colorSelect") {
           input = el("select", {});
           f.options.forEach(o => {
             const opt = el("option", { value: o.value }, [o.label]);
@@ -1817,12 +1900,22 @@ function renderEditableList(items, schema, onChange) {
           input = el("input", { type: f.type === "number" ? "number" : "text" });
           input.value = item[f.key] || "";
         }
-        input.addEventListener("input", () => { item[f.key] = input.value; onChange(items); });
-        row.appendChild(input);
+        input.addEventListener("input", () => { item[f.key] = input.value; onChange(items); updatePreview(); if (dot) dot.style.background = swatchColor(f, input.value); });
+        if (f.type === "colorSelect") {
+          dot = el("span", { class: "swatch-dot", style: "background:" + swatchColor(f, item[f.key]) });
+          row.appendChild(el("div", { class: "swatch-row" }, [dot, input]));
+        } else {
+          row.appendChild(input);
+        }
         if (f.wide) row.style.gridColumn = "1 / -1";
         grid.appendChild(row);
       });
       card.appendChild(grid);
+
+      if (schema.preview) {
+        previewEl = el("div", { class: "field-preview" }, [schema.preview(item)]);
+        card.appendChild(previewEl);
+      }
 
       if (schema.nested) {
         const nb = el("div", { class: "nested-block" });
@@ -1833,9 +1926,9 @@ function renderEditableList(items, schema, onChange) {
       }
 
       const ctrl = el("div", { class: "item-controls" });
-      if (idx > 0) ctrl.appendChild(el("button", { class: "icon-btn", type:"button", onclick: () => { [items[idx-1], items[idx]] = [items[idx], items[idx-1]]; rerender(); } }, ["↑ Up"]));
-      if (idx < items.length - 1) ctrl.appendChild(el("button", { class: "icon-btn", type:"button", onclick: () => { [items[idx+1], items[idx]] = [items[idx], items[idx+1]]; rerender(); } }, ["↓ Down"]));
-      ctrl.appendChild(el("button", { class: "icon-btn danger", type:"button", onclick: () => { items.splice(idx, 1); rerender(); } }, ["✕ Remove"]));
+      if (idx > 0) ctrl.appendChild(el("button", { class: "icon-btn", type:"button", title:"Move up", onclick: () => { [items[idx-1], items[idx]] = [items[idx], items[idx-1]]; rerender(); } }, ["↑"]));
+      if (idx < items.length - 1) ctrl.appendChild(el("button", { class: "icon-btn", type:"button", title:"Move down", onclick: () => { [items[idx+1], items[idx]] = [items[idx], items[idx+1]]; rerender(); } }, ["↓"]));
+      ctrl.appendChild(el("button", { class: "icon-btn danger", type:"button", title:"Remove", onclick: () => { items.splice(idx, 1); rerender(); } }, ["✕ Remove"]));
       card.appendChild(ctrl);
       wrap.appendChild(card);
     });
@@ -1845,6 +1938,10 @@ function renderEditableList(items, schema, onChange) {
   refresh();
   return wrap;
 }
+function swatchColor(field, value) {
+  const opt = (field.swatches || []).find(s => s.value === value);
+  return opt ? opt.hex : "transparent";
+}
 
 function editPanel(bodyEl) {
   const panel = el("div", { class: "edit-panel" });
@@ -1853,8 +1950,12 @@ function editPanel(bodyEl) {
 }
 function saveBar(onSave, onCancel) {
   const bar = el("div", { class: "save-bar" });
-  bar.appendChild(el("button", { class: "cancel-btn", type:"button", onclick: onCancel }, ["Cancel"]));
-  bar.appendChild(el("button", { class: "save-btn", type:"button", onclick: onSave }, ["Save changes"]));
+  bar.appendChild(el("span", { class: "dirty-pill" }, ["Editing — not visible to others until you save"]));
+  const actions = el("div", { class: "save-bar-actions" }, [
+    el("button", { class: "cancel-btn", type:"button", onclick: onCancel }, ["Cancel"]),
+    el("button", { class: "save-btn", type:"button", onclick: onSave }, ["Save changes"])
+  ]);
+  bar.appendChild(actions);
   return bar;
 }
 
@@ -1862,6 +1963,15 @@ const FLAG_OPTS = [{value:"critical",label:"Critical"},{value:"urgent",label:"Ur
 const TAG_OPTS = [{value:"",label:"None"},{value:"new",label:"New"},{value:"remove",label:"Remove"},{value:"change",label:"Change"}];
 const LEVEL_OPTS = [{value:"crit",label:"Critical"},{value:"urg",label:"Urgent"},{value:"norm",label:"Normal"}];
 const RISK_LEVEL_OPTS = [{value:"rh",label:"High"},{value:"rm",label:"Medium"},{value:"rl",label:"Lower"}];
+const PHASE_COLOR_OPTS = [
+  {value:"ph0", label:"Red", hex:"#dc2626"},
+  {value:"ph1", label:"Dark red", hex:"#b91c1c"},
+  {value:"ph2", label:"Blue", hex:"#1d4ed8"},
+  {value:"ph3", label:"Green", hex:"#047857"},
+  {value:"ph4", label:"Amber", hex:"#b45309"},
+  {value:"ph5", label:"Purple", hex:"#6d28d9"},
+  {value:"ph6", label:"Teal", hex:"#065f46"}
+];
 
 /* ============ RENDER: PHASES ============ */
 function renderPhases() {
@@ -1871,7 +1981,7 @@ function renderPhases() {
     const data = deepClone(STATE.phases);
     const schema = {
       fields: [
-        {key:"cls", label:"Colour (ph0–ph6)", type:"text"},
+        {key:"cls", label:"Colour", type:"colorSelect", options: PHASE_COLOR_OPTS, swatches: PHASE_COLOR_OPTS},
         {key:"num", label:"Phase label", type:"text"},
         {key:"title", label:"Title", type:"text", wide:true},
         {key:"dates", label:"Dates", type:"text", wide:true}
@@ -1937,20 +2047,31 @@ function renderGantt() {
     alertInput.addEventListener("input", () => data.alert = alertInput.value);
     alertRow.appendChild(alertInput);
 
+    const BAR_COLOR_OPTS = [
+      {value:"bar-critical", label:"Mobilisation", hex:"#dc2626"},
+      {value:"bar-demo", label:"Demolition", hex:"#b91c1c"},
+      {value:"bar-struct", label:"Structural", hex:"#1d4ed8"},
+      {value:"bar-roof", label:"Roof / shell", hex:"#047857"},
+      {value:"bar-services", label:"MEP services", hex:"#b45309"},
+      {value:"bar-finish", label:"Finishes", hex:"#065f46"},
+      {value:"bar-external", label:"External specialists", hex:"#7c3aed"}
+    ];
+    function monthLabel(idx) {
+      const mi = Math.max(0, Math.min(data.months.length - 1, Math.floor(idx)));
+      const frac = idx - Math.floor(idx);
+      const part = frac < 0.34 ? "early " : frac < 0.67 ? "mid " : "late ";
+      return part + data.months[mi];
+    }
     const schema = {
       fields: [
         {key:"name", label:"Work package", type:"text", wide:true},
-        {key:"cls", label:"Colour class", type:"select", options:[
-          {value:"bar-critical",label:"Critical (red)"},{value:"bar-demo",label:"Demolition (dark red)"},
-          {value:"bar-struct",label:"Structural (blue)"},{value:"bar-roof",label:"Roof (green)"},
-          {value:"bar-services",label:"Services (orange)"},{value:"bar-finish",label:"Finish (teal)"},
-          {value:"bar-external",label:"External (purple)"}
-        ]},
-        {key:"s", label:"Start (month index, 0-based)", type:"number"},
-        {key:"e", label:"End (month index)", type:"number"}
+        {key:"cls", label:"Colour", type:"colorSelect", options: BAR_COLOR_OPTS, swatches: BAR_COLOR_OPTS},
+        {key:"s", label:"Start (month #, 0 = " + data.months[0] + ")", type:"number"},
+        {key:"e", label:"End (month #)", type:"number"}
       ],
       addLabel: "Add row",
-      makeDefault: () => ({name:"New item", cls:"bar-struct", s:0, e:1})
+      makeDefault: () => ({name:"New item", cls:"bar-struct", s:0, e:1}),
+      preview: (item) => "→ " + monthLabel(item.s) + " – " + monthLabel(Math.max(item.s, item.e - 0.01))
     };
     const list = renderEditableList(data.rows, schema, () => {});
     const wrap = el("div", {}, [alertRow, list]);
@@ -2473,9 +2594,10 @@ function toggleEdit(id) {
 function updateEditToggles() {
   document.querySelectorAll(".edit-toggle").forEach(btn => {
     const id = btn.getAttribute("data-section");
-    btn.style.display = session ? "inline-block" : "none";
-    btn.classList.toggle("on", editingSet.has(id));
-    btn.textContent = editingSet.has(id) ? "Editing…" : "Edit";
+    btn.style.display = session ? "inline-flex" : "none";
+    const editing = editingSet.has(id);
+    btn.classList.toggle("on", editing);
+    btn.textContent = editing ? "✕ Close editing" : "✎ Edit";
   });
 }
 
@@ -2508,24 +2630,28 @@ function openLogin() {
   const err = el("div", { class: "modal-err" }, [""]);
   const emailInput = el("input", { type: "text" });
   const passInput = el("input", { type: "password" });
+  const signIn = async () => {
+    if (!sb) { err.textContent = "Database not connected yet."; return; }
+    const { error } = await sb.auth.signInWithPassword({ email: emailInput.value, password: passInput.value });
+    if (error) { err.textContent = error.message; return; }
+    root.innerHTML = "";
+  };
+  passInput.addEventListener("keydown", (e) => { if (e.key === "Enter") signIn(); });
   const overlay = el("div", { class: "modal-overlay", onclick: (e) => { if (e.target === overlay) root.innerHTML = ""; } }, [
     el("div", { class: "modal" }, [
       el("h3", {}, ["Sign in to edit"]),
+      el("p", { class: "modal-sub" }, ["Use the login your architect set up for you."]),
       err,
       el("div", { class: "field-row" }, [el("label", {}, ["Email"]), emailInput]),
       el("div", { class: "field-row" }, [el("label", {}, ["Password"]), passInput]),
       el("div", { class: "modal-actions" }, [
         el("button", { class: "cancel-btn", type:"button", onclick: () => { root.innerHTML = ""; } }, ["Cancel"]),
-        el("button", { class: "save-btn", type:"button", onclick: async () => {
-          if (!sb) { err.textContent = "Database not connected yet."; return; }
-          const { error } = await sb.auth.signInWithPassword({ email: emailInput.value, password: passInput.value });
-          if (error) { err.textContent = error.message; return; }
-          root.innerHTML = "";
-        } }, ["Sign in"])
+        el("button", { class: "save-btn", type:"button", onclick: signIn }, ["Sign in"])
       ])
     ])
   ]);
   root.appendChild(overlay);
+  emailInput.focus();
 }
 function onAuthBtn() {
   if (session) {
@@ -2536,11 +2662,14 @@ function onAuthBtn() {
 }
 function updateAuthUI() {
   const btn = document.getElementById("auth-btn");
+  btn.innerHTML = "";
   if (session) {
-    btn.textContent = "Signed in — Sign out";
+    const initial = (session.user && session.user.email ? session.user.email[0] : "?").toUpperCase();
+    btn.appendChild(el("span", { class: "auth-avatar" }, [initial]));
+    btn.appendChild(el("span", {}, ["Editing as " + (session.user ? session.user.email : "you") + " — Sign out"]));
     btn.classList.add("signed-in");
   } else {
-    btn.textContent = "Sign in to edit";
+    btn.appendChild(el("span", {}, ["✎ Sign in to edit"]));
     btn.classList.remove("signed-in");
     editingSet.clear();
   }
