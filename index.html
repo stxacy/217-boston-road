@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   :root {
     --bg:       #f8fafc;
@@ -145,6 +146,7 @@
     scrollbar-width: none;
     margin: 0 -3rem;
     padding: 0 3rem;
+    align-items: center;
   }
 
   nav::-webkit-scrollbar { display: none; }
@@ -167,6 +169,25 @@
   nav button:hover { color: var(--sub); }
   nav button.active { color: var(--ink); border-bottom-color: var(--ink); }
 
+  .nav-spacer { flex: 1; }
+
+  .auth-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.4rem 0.75rem;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  .auth-btn.signed-in { background: var(--normal); }
+  .auth-btn:hover { opacity: 0.85; }
+
   /* ── MAIN ── */
   main { padding: 2.5rem 3rem; max-width: 1280px; }
   .section { display: none; }
@@ -175,6 +196,10 @@
   /* ── SECTION HEADER ── */
   .sh {
     margin-bottom: 1.75rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
   .sh-title {
@@ -189,6 +214,173 @@
     font-size: 0.8rem;
     color: var(--muted);
   }
+
+  /* ── EDIT UI ── */
+  .edit-toggle {
+    display: none;
+    flex-shrink: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    background: var(--surface);
+    color: var(--sub);
+    border: 1px solid var(--border2);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .edit-toggle:hover { background: var(--bg); color: var(--ink); }
+  .edit-toggle.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  .edit-panel {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .edit-panel .item-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.875rem;
+    margin-bottom: 0.75rem;
+    background: var(--bg);
+  }
+
+  .edit-panel .item-card .item-card { background: var(--surface); }
+
+  .field-row { margin-bottom: 0.5rem; }
+  .field-row label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 0.25rem;
+  }
+
+  .field-row input[type=text], .field-row input[type=number], .field-row textarea, .field-row select {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--ink);
+  }
+
+  .field-row textarea { min-height: 3rem; resize: vertical; }
+  .field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.5rem 0.75rem; }
+
+  .item-controls { display: flex; gap: 0.4rem; margin-top: 0.5rem; justify-content: flex-end; }
+  .icon-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .icon-btn:hover { color: var(--ink); border-color: var(--ink); }
+  .icon-btn.danger:hover { color: var(--critical); border-color: var(--critical); }
+
+  .add-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.5rem 0.9rem;
+    border: 1px dashed var(--border2);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+  .add-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--bg); }
+
+  .save-bar {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .save-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--radius);
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  .save-btn:hover { opacity: 0.85; }
+  .cancel-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border2);
+    cursor: pointer;
+  }
+
+  .nested-block {
+    border-top: 1px dashed var(--border2);
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+  }
+  .nested-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 0.5rem;
+  }
+
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(9,9,11,0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+  }
+  .modal {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 1.75rem;
+    width: 320px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  }
+  .modal h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+  .modal .field-row { margin-bottom: 0.75rem; }
+  .modal-err { color: var(--critical); font-size: 0.75rem; margin-bottom: 0.5rem; min-height: 1em; }
+  .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.75rem; }
+
+  .toast {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    background: var(--ink); color: #fff;
+    padding: 0.7rem 1.1rem; border-radius: var(--radius);
+    font-size: 0.8rem; font-weight: 500;
+    z-index: 200; opacity: 0; transform: translateY(8px);
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
 
   /* ── PHASES ── */
   .phase {
@@ -1039,6 +1231,7 @@
     border-radius: 999px;
     white-space: nowrap;
     margin-bottom: 3px;
+    margin-right: 3px;
   }
 
   .imat-wf   { background: #f0fdf4; color: #166534; }
@@ -1083,22 +1276,8 @@
 
 <header>
   <div class="header-top">
-    <div class="header-left">
-      <div class="header-eyebrow">Job 25100 · Draw &amp; Plan · London W7 2AA</div>
-      <h1>217 Boston Road<br><span>Build Plan 2026</span></h1>
-      <p class="header-sub">Loft conversion &amp; first floor renovation — strategic programme from mobilisation to completion.</p>
-      <div class="header-pills">
-        <span class="hpill"><span class="hpill-dot"></span>Roof watertight target: end Jan 2027</span>
-        <span class="hpill" style="--dot-c:#1d4ed8"><span class="hpill-dot" style="background:#1d4ed8"></span>Loft + 1st floor scope</span>
-        <span class="hpill" style="--dot-c:#059669"><span class="hpill-dot" style="background:#059669"></span>45.17 m³ new volume</span>
-      </div>
-    </div>
-    <div class="header-meta">
-      <div class="meta-row"><strong>Drawings</strong> PGA001–004 + EGA002–004</div>
-      <div class="meta-row"><strong>Architect</strong> Draw &amp; Plan</div>
-      <div class="meta-row"><strong>Issued</strong> 24/03/2026</div>
-      <div class="meta-row"><strong>Plan updated</strong> September 2026</div>
-    </div>
+    <div class="header-left" id="header-left"></div>
+    <div class="header-meta" id="header-meta"></div>
   </div>
 
   <nav>
@@ -1111,176 +1290,29 @@
     <button onclick="show('contractors', this)">Contractors</button>
     <button onclick="show('budget', this)">Budget</button>
     <button onclick="show('insulation', this)">Insulation</button>
+    <div class="nav-spacer"></div>
+    <button class="auth-btn" id="auth-btn" onclick="onAuthBtn()">Sign in to edit</button>
   </nav>
 </header>
 
 <main>
 
-<!-- ===== PHASES ===== -->
 <div class="section active" id="phases">
   <div class="sh">
-    <div class="sh-title">Phases &amp; tasks</div>
-    <p class="sh-desc">Full programme from mobilisation through to second fix — organised by construction sequence.</p>
+    <div><div class="sh-title">Phases &amp; tasks</div><p class="sh-desc">Full programme from mobilisation through to second fix — organised by construction sequence.</p></div>
+    <button class="edit-toggle" data-section="phases" onclick="toggleEdit('phases')">Edit</button>
   </div>
-
-  <div class="phase ph0">
-    <div class="phase-head">
-      <span class="phase-num">Phase 0 · In progress</span>
-      <span class="phase-title">Mobilisation &amp; procurement</span>
-      <span class="phase-dates">Sep – Oct 2026 · In progress</span>
-    </div>
-    <div class="tasks">
-      <div class="task"><div><div class="task-name">Sign contract — ABL Homes (Alb Homes)</div><div class="task-note">Quote at v4 (3 Sep 2026) — client keen to appoint. Issue the full scope pack: drawings PGA001–004 + structural, confirmed spec (aluminium windows, 3-layer flat roof felt, fire door schedule), client-supply list, insulation strategy (see Insulation tab), and hard roof deadline of end Jan 2027. Agree programme start date (likely end Sep 2026).</div></div><div class="task-who">You</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Confirm structural engineer drawings</div><div class="task-note">Steel beam schedule, spreader plate details, chimney breast removal spec — all needed before ordering fabricated steel.</div></div><div class="task-who">Engineer</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Order structural steelwork</div><div class="task-note">4–6 week fabrication lead time. On critical path — order the day drawings are issued. Do not wait.</div></div><div class="task-who">Fabricator</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Book scaffolding contractor</div><div class="task-note">Full wrap — front, rear, side alley. Single poles opposite 217a/b. Coordinate neighbour access. Lifts for repointing + Oriel window.</div></div><div class="task-who">Scaffold co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Appoint aluminium window supplier</div><div class="task-note">Dormer windows ×2, Juliette door ×1 (double), gable end window ×1. Custom items — 8–12 week lead time typical.</div></div><div class="task-who">You / supplier</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Appoint aluminium guttering contractor</div><div class="task-note">Cast aluminium gutters and downpipes — specialist trade, coordinate with roofing completion.</div></div><div class="task-who">Specialist co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Appoint repointing contractor</div><div class="task-note">Front, rear, side; red paint removal (rear); carbon cleaning (front). Must work while scaffold is up.</div></div><div class="task-who">Specialist co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Order Velux rooflights &amp; flat rooflight</div><div class="task-note">3× front pitched, 2× kitchen pitched, 1× loft flat roof. Confirm sizes against drawings before ordering.</div></div><div class="task-who">MC</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Arrange living situation during roof demolition</div><div class="task-note">Roof strip exposes entire house. Decide if staying on ground floor or temporary accommodation. Plan 1st floor protection before works start.</div></div><div class="task-who">You</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Order Rosemary clay tiles</div><div class="task-note">Check stock and batch availability — clay tiles can have lead times. Recover chimney bricks separately for garden wall reuse.</div></div><div class="task-who">MC / roofer</div><div><span class="flag f-urgent">Urgent</span></div></div>
-    </div>
-  </div>
-
-  <div class="phase ph1">
-    <div class="phase-head">
-      <span class="phase-num">Phase 1</span>
-      <span class="phase-title">Demolition &amp; soft strip</span>
-      <span class="phase-dates">Oct 2026 · ~2 weeks</span>
-    </div>
-    <div class="tasks">
-      <div class="task"><div><div class="task-name">Erect scaffolding</div><div class="task-note">First site activity. All trades that need scaffold must be coordinated around its programme.</div></div><div class="task-who">Scaffold co.</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Remove two chimney stacks</div><div class="task-note">Rear + front/alleyway side. Recover bricks for garden wall reuse. Both stacks shown on EGA003 existing elevations.</div></div><div class="task-who">MC / demolition</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Remove chimney breast (GF dining room)</div><div class="task-note">Open up housing for pipework. Structural check + propping required before removal. Engineer to specify support.</div></div><div class="task-who">MC / engineer</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Soft strip — 1st floor bathroom</div><div class="task-note">Ceiling, flooring, wall tiles. Expose and assess water damage from historic leaks.</div></div><div class="task-who">MC</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Soft strip — rear bedroom + corner dining room ceiling</div><div class="task-note">Expose water damage. Assess extent before structural works begin above.</div></div><div class="task-who">MC</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Skip hire &amp; waste management</div><div class="task-note">Road permit if skip on public highway. Plan brick recovery route separate from general waste.</div></div><div class="task-who">MC</div><div><span class="flag f-normal">Normal</span></div></div>
-    </div>
-  </div>
-
-  <div class="phase ph2">
-    <div class="phase-head">
-      <span class="phase-num">Phase 2</span>
-      <span class="phase-title">Loft structural works — steels, joists &amp; floors</span>
-      <span class="phase-dates">Oct – Nov 2026 · ~4–6 weeks</span>
-    </div>
-    <div class="tasks">
-      <div class="task"><div><div class="task-name">Install load-bearing spreader plates</div><div class="task-note">In walls to carry structural steelwork. Per engineer's drawings — do not deviate.</div></div><div class="task-who">MC / steelwork</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Fit steel beams &amp; columns</div><div class="task-note">Per engineer's drawings including triple timber trims. Existing loft has basic collar-tie roof — significant structural upgrade required.</div></div><div class="task-who">MC / steelwork</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Remove intrusive loft timbers &amp; strengthen roof supports</div><div class="task-note">Existing loft currently open with eaves storage. Remove redundant structure; retain and reinforce front gable with decorative tiles.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Lay new structural floor joists (loft)</div><div class="task-note">Existing loft floor is lightweight — new joists for habitable floor loading. Check/replace water-damaged ceiling joists at 1st floor simultaneously.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Lay marine ply subfloor throughout loft</div><div class="task-note">¾ inch marine grade. Board eaves storage areas (floor + eaves boarding).</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Repair 1st floor subfloor &amp; floorboards</div><div class="task-note">Under stairs, rear bedroom, anywhere lifted. Secure lifted boards generally. Replace missing sections.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
-    </div>
-  </div>
-
-  <div class="phase ph3">
-    <div class="phase-head">
-      <span class="phase-num">Phase 3 · ⚠ Weather critical</span>
-      <span class="phase-title">Loft external shell — dormer, gable &amp; roof</span>
-      <span class="phase-dates">Nov 2026 – Jan 2027 · ~8–10 weeks</span>
-    </div>
-    <div class="tasks">
-      <div class="task"><div><div class="task-name">Build up gable wall to ridge height</div><div class="task-note">Existing gable stops below ridge — new brickwork to receive gable end window per drawings. Obscure glazed, non-opening below 1.7m FFL.</div></div><div class="task-who">MC / bricklayer</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Form box dormer structure to rear</div><div class="task-note">New structure to rear — no dormer exists currently. Plan: 2086 × 2979mm, length 7759mm. Structural walls for Juliette door ×1 double + windows ×2.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Dormer flat roof — 3-layer torch-on felt</div><div class="task-note">Complete flat roof before dormer openings are formed. Critical sequence — never leave openings unprotected overnight.</div></div><div class="task-who">Roofer</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Strip existing roof tiles &amp; replace with Rosemary clay</div><div class="task-note">Existing tiles fully replaced. New ridges. Add bird spikes. This is the moment the house becomes watertight — hard deadline end of January 2027. Winter roofing: hold weather contingency.</div></div><div class="task-who">Roofer</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Install 3× Velux to front pitched roof</div><div class="task-note">Coordinate with tiling programme — Velux go in as tiling progresses around them.</div></div><div class="task-who">Roofer / Velux</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Install 1× flat rooflight in loft</div><div class="task-note">Before flat roof is finished. Coordinate sequence carefully.</div></div><div class="task-who">Roofer</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Install 2× Velux to kitchen pitched roof</div><div class="task-note">Ground floor kitchen roof. Coordinate with ground floor phase later, but roof access is now while scaffold is up.</div></div><div class="task-who">Roofer</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Loft insulation</div><div class="task-note">Hybrid natural strategy — wood fibre to pitched roof, dormer walls, gable &amp; between floor joists; Celotex + wood-fibre hybrid to the dormer flat ceiling; sheep's wool around the steels. See Insulation tab. Once roof is watertight.</div></div><div class="task-who">MC / insulator</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Repair/replace fascia boards — paint black</div><div class="task-note">Including repainting original decorative timber in front gable. External materials: finestration matching timber (PGA003). While scaffold is accessible.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Oriel window replacement</div><div class="task-note">Existing Oriel on front elevation — replace while scaffold is in place. Don't miss this opportunity.</div></div><div class="task-who">MC / window co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Install aluminium dormer windows, Juliette doors &amp; gable window</div><div class="task-note">By external supplier. Coordinate with dormer structure completion. Must be weathertight before scaffold comes down.</div></div><div class="task-who">Window supplier</div><div><span class="flag f-external">External</span></div></div>
-      <div class="task"><div><div class="task-name">Install cast aluminium gutters &amp; downpipes</div><div class="task-note">By specialist contractor. Follows roofing completion. Coordinate with fascia/scaffold programme.</div></div><div class="task-who">Gutter specialist</div><div><span class="flag f-external">External</span></div></div>
-      <div class="task"><div><div class="task-name">Brickwork repointing — front, rear &amp; side</div><div class="task-note">Remove red paint (rear); clean carbon (front); repoint all elevations. Must be completed before scaffold down.</div></div><div class="task-who">Repointing contractor</div><div><span class="flag f-external">External</span></div></div>
-    </div>
-  </div>
-
-  <div class="phase ph4">
-    <div class="phase-head">
-      <span class="phase-num">Phase 4</span>
-      <span class="phase-title">Partitions &amp; first fix MEP</span>
-      <span class="phase-dates">Dec 2026 – Feb 2027 · partitions before MEP</span>
-    </div>
-    <div class="tasks">
-      <div class="task"><div><div class="task-name">Loft dormer partition walls</div><div class="task-note">All rooms per PGA002: Bedroom 5, Lounge, Bathroom, WC, Hallway, Store. Must be erected before MEP first fix begins — trades need wall lines confirmed to route services and power correctly.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-critical">Critical</span></div></div>
-      <div class="task"><div><div class="task-name">Mains pipe upgrade — moling from drive to house</div><div class="task-note">Specialist moling contractor. Plan access and timing — disruptive. May need advance notice to Thames Water.</div></div><div class="task-who">Plumber / moling co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Install new unvented cylinder</div><div class="task-note">Pressure test each floor. Resolve leaks. Lift floorboards as required.</div></div><div class="task-who">Plumber</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Extend boiler flue to roof level</div><div class="task-note">External boiler shed flue extension. Coordinate with roofing/scaffold — easiest done while scaffold still up.</div></div><div class="task-who">Plumber / roofer</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">1st fix plumbing — loft bathroom &amp; 1st floor kitchenette</div><div class="task-note">Hot/cold runs concealed as much as possible. Waste extensions. Underground drains (alley + rear). Radiator pipework.</div></div><div class="task-who">Plumber</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">1st fix electrical — house-wide wiring upgrade</div><div class="task-note">New circuits: loft power/lighting/smoke alarms; 1st floor kitchenette; all back to existing fuse board.</div></div><div class="task-who">Electrician</div><div><span class="flag f-urgent">Urgent</span></div></div>
-      <div class="task"><div><div class="task-name">Relocate rear living room radiator</div><div class="task-note">Ground floor — coordinate with 1st fix plumbing programme.</div></div><div class="task-who">Plumber</div><div><span class="flag f-normal">Normal</span></div></div>
-    </div>
-  </div>
-
-  <div class="phase ph5">
-    <div class="phase-head">
-      <span class="phase-num">Phase 5</span>
-      <span class="phase-title">Boarding, waterproofing &amp; plastering</span>
-      <span class="phase-dates">Feb – Apr 2027</span>
-    </div>
-    <div class="tasks">
-      <div class="task"><div><div class="task-name">Waterproof bathroom subfloors (~20m² total)</div><div class="task-note">Loft bathroom + 1st floor bathroom. Before tiling.</div></div><div class="task-who">MC / tiler</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Plaster skim — loft walls &amp; ceilings</div><div class="task-note">All new loft rooms. Also: 1st floor bathroom, rear bedroom, stairs to loft, hallway, stairwell, GF hallway ceiling, GF dining room ceiling, around new kitchen rooflight, former chimney wall.</div></div><div class="task-who">Plasterer</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Protect &amp; repair existing decorative plaster/cornicing</div><div class="task-note">Retain where possible. Replace any sections damaged during works. Brief all trades before they start.</div></div><div class="task-who">Plasterer / specialist</div><div><span class="flag f-normal">Normal</span></div></div>
-    </div>
-  </div>
-
-  <div class="phase ph6">
-    <div class="phase-head">
-      <span class="phase-num">Phase 6</span>
-      <span class="phase-title">Second fix &amp; finishes</span>
-      <span class="phase-dates">Apr – Jun 2027</span>
-    </div>
-    <div class="tasks">
-      <div class="task"><div><div class="task-name">2nd fix plumbing — sanitary ware, radiators, UFH</div><div class="task-note">Loft bathroom &amp; WC; walk-in shower (1st floor); electric underfloor heating mats in both bathrooms. Sanitary ware and heated towel rails client-supplied (Davina to procure).</div></div><div class="task-who">Plumber</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Bathroom tiling — loft &amp; 1st floor</div><div class="task-note">Tiling spec TBC by client. Confirm before plasterer finishes so tile thickness/substrate can be coordinated.</div></div><div class="task-who">Tiler</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">2nd fix electrical</div><div class="task-note">House-wide upgrade to current standards. Sockets, lighting and switching to all loft rooms and the 1st floor bedroom + bathroom per the agreed schedule (see Decision 08); timed extractors to both bathrooms; 3× mains-linked smoke detectors with battery backup, one per level.</div></div><div class="task-who">Electrician</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Hang fire doors — loft &amp; stairwell</div><div class="task-note">2× single + 1× double, 4-panel grained FD30 (half-hour) to loft rooms, WC and bathroom; 8× FD30 to stairwell (Building Regs compliance). Confirm spec with Building Control.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Eaves access hatches (×2–3)</div><div class="task-note">To eaves storage areas per loft plan (PGA002).</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Skirtings &amp; architraves — loft &amp; 1st floor new areas</div><div class="task-note">Style TBC — decide by September so profile can be sourced and cut.</div></div><div class="task-who">MC / carpenter</div><div><span class="flag f-normal">Normal</span></div></div>
-      <div class="task"><div><div class="task-name">Strike scaffolding</div><div class="task-note">Only when ALL external works are confirmed complete — repointing, gutters, windows, Oriel, fascias. Don't rush this.</div></div><div class="task-who">Scaffold co.</div><div><span class="flag f-urgent">Urgent</span></div></div>
-    </div>
-  </div>
+  <div id="phases-body"></div>
 </div>
 
-<!-- ===== GANTT ===== -->
 <div class="section" id="gantt">
   <div class="sh">
-    <div class="sh-title">Programme timeline</div>
-    <p class="sh-desc">ABL Homes (Alb Homes) mobilising end September 2026. Weeks approximate; refine with ABL as works develop. Estimated practical completion: mid-2027.</p>
+    <div><div class="sh-title">Programme timeline</div><p class="sh-desc">ABL Homes (Alb Homes) mobilising end September 2026. Weeks approximate; refine with ABL as works develop. Estimated practical completion: mid-2027.</p></div>
+    <button class="edit-toggle" data-section="gantt" onclick="toggleEdit('gantt')">Edit</button>
   </div>
-
-  <div class="alert">
-    ⚠ Target: roof fully watertight — tiles replaced, flat roof felted, Velux installed — by end of January 2027. The red line marks this deadline. Phase 3 roofing runs through winter — keep temporary cover on standby and hold weather float.
-  </div>
-
-  <div class="legend">
-    <div class="leg"><div class="leg-sq" style="background:var(--ph0)"></div>Mobilisation</div>
-    <div class="leg"><div class="leg-sq" style="background:var(--ph1)"></div>Demolition</div>
-    <div class="leg"><div class="leg-sq" style="background:var(--ph2)"></div>Structural</div>
-    <div class="leg"><div class="leg-sq" style="background:var(--ph3)"></div>Roof / shell</div>
-    <div class="leg"><div class="leg-sq" style="background:var(--ph4)"></div>MEP services</div>
-    <div class="leg"><div class="leg-sq" style="background:var(--ph6)"></div>Finishes</div>
-    <div class="leg"><div class="leg-sq" style="background:var(--external)"></div>External specialists</div>
-  </div>
-
-  <div class="gantt-wrap">
-    <table class="gantt-table">
-      <thead>
-        <tr>
-          <th>Work package</th>
-          <th>Oct</th><th>Nov</th><th>Dec</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th>
-        </tr>
-      </thead>
-      <tbody id="gantt-body"></tbody>
-    </table>
-  </div>
+  <div id="gantt-body-wrap"></div>
 </div>
 
-<!-- ===== DRAWINGS ===== -->
 <div class="section" id="drawings">
   <div class="sh">
     <div class="sh-title">Architectural drawings</div>
@@ -1340,791 +1372,1213 @@
   </div>
 </div>
 
-<!-- ===== COMPARE ===== -->
 <div class="section" id="compare">
   <div class="sh">
-    <div class="sh-title">Existing vs proposed</div>
-    <p class="sh-desc">Analysis from existing drawings (EGA002–004, Dec 2025) vs. proposed drawings (PGA001–004, Mar 2026).</p>
+    <div><div class="sh-title">Existing vs proposed</div><p class="sh-desc">Analysis from existing drawings (EGA002–004, Dec 2025) vs. proposed drawings (PGA001–004, Mar 2026).</p></div>
+    <button class="edit-toggle" data-section="compare" onclick="toggleEdit('compare')">Edit</button>
   </div>
-
-  <p class="compare-intro">Understanding what changes highlights the demolition scope, structural complexity, and coordination requirements. Roof volume increases from uninhabitable storage to 45.17m³ of habitable loft space — Bedroom 5, Lounge, Bathroom, WC, Hallway and Store.</p>
-
-  <div class="delta-group">
-    <div class="delta-group-title">Loft level — key changes</div>
-    <div class="delta-table">
-      <div class="delta-head-row">
-        <div class="delta-head">Existing (EGA002–004)</div>
-        <div class="delta-head">Proposed (PGA002–004)</div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Loft use</div><div class="d-existing">Uninhabitable storage / eaves storage. Basic collar-tie roof structure. Single stair access.</div></div>
-        <div class="delta-cell"><div class="d-label">Loft use</div><div class="d-proposed">Fully habitable — Bedroom 5, Lounge, Bathroom, WC, Hallway, Store. <span class="cpill cp-new">New</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Roof form (rear)</div><div class="d-existing">Plain hipped/pitched roof to rear. No dormer. Two chimney stacks visible on flank elevation (EGA003).</div></div>
-        <div class="delta-cell"><div class="d-label">Roof form (rear)</div><div class="d-proposed">New box dormer to rear — 2086 × 2979mm plan, 7759mm length. Juliette door + 2 windows. Gable built to ridge. <span class="cpill cp-new">New structure</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Chimney stacks</div><div class="d-existing">Two stacks present — rear + front/alleyway side, shown on EGA003 existing elevations and loft plan.</div></div>
-        <div class="delta-cell"><div class="d-label">Chimney stacks</div><div class="d-proposed">Both removed. Bricks recovered for garden wall reuse. <span class="cpill cp-remove">Remove</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Roof windows (front)</div><div class="d-existing">No Velux or rooflights to front elevation.</div></div>
-        <div class="delta-cell"><div class="d-label">Roof windows (front)</div><div class="d-proposed">3× Velux to front pitched elevation. <span class="cpill cp-new">New</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Flat roof section</div><div class="d-existing">Existing flat roof area to rear/side — existing felt covering per EGA002 roof plan.</div></div>
-        <div class="delta-cell"><div class="d-label">Flat roof section</div><div class="d-proposed">Retained and re-felted (3-layer torch-on). New flat rooflight added. <span class="cpill cp-change">Upgrade</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Roof volume</div><div class="d-existing">N/A — uninhabitable, no habitable volume calculated.</div></div>
-        <div class="delta-cell"><div class="d-label">Roof volume</div><div class="d-proposed">Hip: 21.06m³ + Dormer: 24.11m³ = <strong>45.17m³ total</strong> (PGA003). <span class="cpill cp-new">New calc</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Floor structure</div><div class="d-existing">Lightweight loft floor (not designed for habitable loading). Existing joists evident in EGA004 section.</div></div>
-        <div class="delta-cell"><div class="d-label">Floor structure</div><div class="d-proposed">New structural steel + floor joists throughout. Marine ply subfloor. Spreader plates in walls. <span class="cpill cp-new">Full rebuild</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Gable window</div><div class="d-existing">No gable window — existing gable terminates below ridge level.</div></div>
-        <div class="delta-cell"><div class="d-label">Gable window</div><div class="d-proposed">New window 1500 × 1500mm — obscure glazed, non-opening below 1.7m FFL (PGA003). <span class="cpill cp-new">New</span></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="delta-group">
-    <div class="delta-group-title">First floor — key changes</div>
-    <div class="delta-table">
-      <div class="delta-head-row">
-        <div class="delta-head">Existing</div>
-        <div class="delta-head">Proposed</div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Room layout</div><div class="d-existing">Bedrooms 2, 3, 4; Bathroom; Hallway; Landing. Standard layout.</div></div>
-        <div class="delta-cell"><div class="d-label">Room layout</div><div class="d-proposed">Bedrooms 2, 3, 4 retained. Bathroom refurbished. New Store/Kitchenette added (PGA001). <span class="cpill cp-new">New room</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Bathroom</div><div class="d-existing">Existing bathroom — water-damaged, to be stripped.</div></div>
-        <div class="delta-cell"><div class="d-label">Bathroom</div><div class="d-proposed">Full refurbishment. Walk-in shower. Electric UFH mat. Retiled. <span class="cpill cp-change">Refurb</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Kitchenette / utility</div><div class="d-existing">No kitchenette at first floor level.</div></div>
-        <div class="delta-cell"><div class="d-label">Kitchenette / utility</div><div class="d-proposed">New Store/Kitchenette — "final design to kitchen supplier" noted on PGA001. Plumbing + electrical provisions. <span class="cpill cp-new">New</span></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="delta-group">
-    <div class="delta-group-title">External envelope — key changes</div>
-    <div class="delta-table">
-      <div class="delta-head-row">
-        <div class="delta-head">Existing</div>
-        <div class="delta-head">Proposed</div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Brickwork</div><div class="d-existing">Red paint on rear. Carbon deposits on front. Pointing deteriorated.</div></div>
-        <div class="delta-cell"><div class="d-label">Brickwork</div><div class="d-proposed">Full repoint all elevations. Paint removed (rear). Carbon cleaned (front). Walls: matching brick (PGA003). <span class="cpill cp-change">Restore</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Gutters &amp; downpipes</div><div class="d-existing">Existing gutters — condition unknown, likely original.</div></div>
-        <div class="delta-cell"><div class="d-label">Gutters &amp; downpipes</div><div class="d-proposed">Full replacement — cast aluminium by specialist contractor. <span class="cpill cp-change">Replace</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Oriel window (front)</div><div class="d-existing">Existing Oriel window on front elevation — prominent original feature (EGA003).</div></div>
-        <div class="delta-cell"><div class="d-label">Oriel window (front)</div><div class="d-proposed">Replacement works while scaffold is in place. Finestration: matching timber (PGA003). <span class="cpill cp-change">Replace</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Roof tiles</div><div class="d-existing">Existing tiles — condition and type TBC from survey.</div></div>
-        <div class="delta-cell"><div class="d-label">Roof tiles</div><div class="d-proposed">Full replacement with Rosemary clay. Roof: matching tile (PGA003). <span class="cpill cp-change">Replace</span></div></div>
-      </div>
-      <div class="delta-row">
-        <div class="delta-cell"><div class="d-label">Fascias</div><div class="d-existing">Existing timber fascias — condition unknown.</div></div>
-        <div class="delta-cell"><div class="d-label">Fascias</div><div class="d-proposed">Repair/replace and paint black. Retain decorative gable timber and repaint. <span class="cpill cp-change">Restore</span></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="compare-callout">
-    <strong>Key insight from comparing the drawings</strong>
-    The existing section (EGA004) and proposed section (PGA004) show the same ground/first floor structural arrangement — confirming the ground floor is not structurally affected in this phase. The primary structural complexity is entirely at loft level: adding habitable floor loading to what was a lightweight roof space, removing two chimney stacks, building a new rear dormer, and rebuilding the gable wall to ridge height. Roof volume calculation (PGA003) confirms 45.17m³ addition — hip: 21.06m³, dormer: 24.11m³. The 1st floor works are largely cosmetic/services: strip, repair, new bathroom, new kitchenette.
-  </div>
+  <div id="compare-body"></div>
 </div>
 
-<!-- ===== DECISIONS ===== -->
 <div class="section" id="decisions">
   <div class="sh">
-    <div class="sh-title">Decisions needed</div>
-    <p class="sh-desc">These are blocking items — delay on any of them delays the build.</p>
+    <div><div class="sh-title">Decisions needed</div><p class="sh-desc">These are blocking items — delay on any of them delays the build.</p></div>
+    <button class="edit-toggle" data-section="decisions" onclick="toggleEdit('decisions')">Edit</button>
   </div>
-
-  <div class="decision-list">
-    <div class="decision">
-      <div class="dec-n">01</div>
-      <div>
-        <div class="dec-title">Appoint ABL Homes &amp; sign contract</div>
-        <div class="dec-desc">ABL (Alb Homes, Ardit) has issued quote v4 and is asking for a decision so they can move to contract. Client is keen to appoint. Blocks the contract, the programme start date and every long-lead order.</div>
-      </div>
-      <div class="dec-by">Now — Sep 2026</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">02</div>
-      <div>
-        <div class="dec-title">Sign off the insulation strategy &amp; U-values</div>
-        <div class="dec-desc">Hybrid natural strategy issued to ABL (see Insulation tab). The structural engineer / Building Control must confirm the U-value calculations against actual rafter and stud depths before ABL re-prices the package or materials are ordered. Also confirm whether insulation supply already sits in ABL's £3,800 Celotex quote — don't pay twice.</div>
-      </div>
-      <div class="dec-by">Before insulation is re-priced</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">03</div>
-      <div>
-        <div class="dec-title">Appoint aluminium window supplier &amp; place order</div>
-        <div class="dec-desc">Dormer windows ×2, Juliette door ×1 double, gable end window ×1 — all custom aluminium, 8–12 week lead time. Order now or the units won't land before the dormer is closed in (Dec–Jan), leaving openings exposed through winter.</div>
-      </div>
-      <div class="dec-by">Now — 8–12 wk lead</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">04</div>
-      <div>
-        <div class="dec-title">Living arrangements during roof demolition</div>
-        <div class="dec-desc">The roof strip exposes the whole house and the first-floor bedrooms below need sheeting. Decide whether the household stays on the ground floor or relocates temporarily — ABL move faster without occupied rooms to protect.</div>
-      </div>
-      <div class="dec-by">Before Phase 1 · Oct 2026</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">05</div>
-      <div>
-        <div class="dec-title">1st floor kitchenette design &amp; supplier</div>
-        <div class="dec-desc">PGA001 notes "final design to kitchen supplier" — the layout drives plumbing rough-in and socket positions, both needed before 1st fix. A late decision means lifting floors or replastering.</div>
-      </div>
-      <div class="dec-by">Oct 2026</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">06</div>
-      <div>
-        <div class="dec-title">Flat roof — warm deck vs. ventilated cold deck</div>
-        <div class="dec-desc">EPDM is vapour-closed. A cold deck with wood fibre and no proper ventilation risks interstitial condensation. Commit to a warm deck (preferred) or a guaranteed 50mm cross-ventilated void above the insulation before the dormer roof build-up is fixed.</div>
-      </div>
-      <div class="dec-by">Before Phase 3 · Nov 2026</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">07</div>
-      <div>
-        <div class="dec-title">Loft bathroom location</div>
-        <div class="dec-desc">To be fixed once the shell and floor are in and steel positions are known — it drives 1st fix plumbing and drainage. Awaiting the structural engineer's (Amrit) advice on whether the bathroom can stay put.</div>
-      </div>
-      <div class="dec-by">After shell + floor · Nov 2026</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">08</div>
-      <div>
-        <div class="dec-title">Electrical socket &amp; lighting schedule (loft)</div>
-        <div class="dec-desc">The electrician needs a confirmed layout for 1st fix across all loft rooms. Changes after boarding-out are very costly.</div>
-      </div>
-      <div class="dec-by">Dec 2026</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">09</div>
-      <div>
-        <div class="dec-title">Bathroom sanitary ware &amp; tile specification</div>
-        <div class="dec-desc">Sanitary ware is client-supply; tiling spec also needs confirming. Both affect plumbing rough-in, waterproofing substrate and tile quantities. Specify and procure early to avoid waiting on delivery.</div>
-      </div>
-      <div class="dec-by">Dec 2026</div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">10</div>
-      <div>
-        <div class="dec-title">Skirting &amp; architrave profile</div>
-        <div class="dec-desc">Style TBC. Decide before second fix carpentry so the correct profile can be sourced and cut — bespoke profiles take longer than standard stock.</div>
-      </div>
-      <div class="dec-by">Mar 2027</div>
-    </div>
-  </div>
+  <div id="decisions-body"></div>
 </div>
 
-<!-- ===== RISKS ===== -->
 <div class="section" id="risks">
   <div class="sh">
-    <div class="sh-title">Risks &amp; mitigations</div>
-    <p class="sh-desc">Ranked by severity — monitor regularly and escalate early.</p>
+    <div><div class="sh-title">Risks &amp; mitigations</div><p class="sh-desc">Ranked by severity — monitor regularly and escalate early.</p></div>
+    <button class="edit-toggle" data-section="risks" onclick="toggleEdit('risks')">Edit</button>
   </div>
-
-  <div class="risk-group">
-    <div class="risk-label">High — address immediately</div>
-    <div class="risk-item"><div class="risk-bar rh"></div><div><div class="risk-name">Steel lead time slippage</div><div class="risk-mit">Order structural steelwork the moment the engineer's drawings are issued. 4–6 week fabrication lead time is non-negotiable and sits on the critical path ahead of Phase 2 (Oct–Nov).</div></div></div>
-    <div class="risk-item"><div class="risk-bar rh"></div><div><div class="risk-name">Roof not watertight before end January</div><div class="risk-mit">Phase 3 roofing runs Dec–Jan. Treat end January 2027 as a hard deadline. Have temporary roofing membrane (Monaflex/tarpaulins) on standby from day one of roof demolition, and hold a weather-float allowance. Never leave the stripped roof unprotected overnight.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rh"></div><div><div class="risk-name">Unknown extent of water damage</div><div class="risk-mit">The existing drawings and scope both reference water damage from roof leaks. Until strip-out is complete you won't know the full extent. Build 10–15% cost contingency and 2 weeks programme buffer specifically for remedial works.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rh"></div><div><div class="risk-name">Window lead time — dormer left open</div><div class="risk-mit">Aluminium windows on 8–12 week lead time. If the dormer structure is complete but windows haven't arrived, you need temporary hoarding or a membrane solution. Do not leave openings unprotected. Appoint supplier now.</div></div></div>
-  </div>
-
-  <div class="risk-group">
-    <div class="risk-label">Medium — monitor actively</div>
-    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Trade availability &amp; winter working</div><div class="risk-mit">Roofers, structural carpenters and plumbers book weeks ahead — confirm ABL's key trades and their earliest start dates now. Roofing and external works fall in Dec–Feb: expect weather-lost days and price a realistic float.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Scaffolding coordination with neighbours</div><div class="risk-mit">Flank elevation shows semi-detached neighbour (EGA003). Notify 217a and 217b in writing before scaffold is erected. Party Wall Agreement confirmed not required.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Mains moling disruption</div><div class="risk-mit">Moling from drive to house will disrupt supply. Coordinate timing when you have alternative water access. Thames Water may require advance notice — check before booking contractor.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Rosemary clay tile supply</div><div class="risk-mit">Clay tiles can have batch lead times and colour variation between batches. Order all tiles at once. Confirm availability before demolition starts — you can't strip the old roof without new tiles on order.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Contract not yet signed</div><div class="risk-mit">ABL Homes (Ardit) is the intended MC — replacing the earlier The Market Design &amp; Build line — but nothing is signed. Every long-lead order (steel, windows) and the winter roof deadline depend on getting the contract and scope pack issued to ABL now.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">Insulation double-counted</div><div class="risk-mit">ABL's estimator suspects insulation materials already sit in the original £3,800 Celotex quote. Confirm who supplies — ABL or Davina — before any materials are bought, or the package is paid for twice.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rm"></div><div><div class="risk-name">"Sinking" floor steels — +£2.4k</div><div class="risk-mit">Quote v4 adds £2.4k to drop the floor steels within the existing joist depth — a slow install method. Confirm it's necessary and that no shallower build-up or alternative connection detail avoids the cost.</div></div></div>
-  </div>
-
-  <div class="risk-group">
-    <div class="risk-label">Lower — monitor as programme develops</div>
-    <div class="risk-item"><div class="risk-bar rl"></div><div><div class="risk-name">Skip road permit delays</div><div class="risk-mit">Apply for Council road permit as soon as MC is appointed. Ealing can take 2–3 weeks. Don't let waste management hold up site clearance.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rl"></div><div><div class="risk-name">Decorative cornicing damage</div><div class="risk-mit">Photograph and document all existing cornicing before works begin. Brief every trade. Protect sections adjacent to work areas. Specialist cornice restorers are available but expensive — prevention is far cheaper.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rl"></div><div><div class="risk-name">Building Control sign-off</div><div class="risk-mit">Building Regs apply to structural works, fire doors, electrical upgrade, and drainage changes. Notify Building Control before works start and agree inspection stages. Get sign-off stage by stage — don't assume at completion.</div></div></div>
-    <div class="risk-item"><div class="risk-bar rl"></div><div><div class="risk-name">Natural insulation — labour &amp; programme</div><div class="risk-mit">Wood-fibre install is slower and hand-cut; ABL's estimator allows roughly £500 extra labour over the Celotex system. Hold a few days' float in Phase 3 and confirm ABL's team is comfortable with the natural build-ups.</div></div></div>
-  </div>
+  <div id="risks-body"></div>
 </div>
 
-<!-- ===== CONTRACTORS ===== -->
 <div class="section" id="contractors">
   <div class="sh">
-    <div class="sh-title">Contractor tracker</div>
-    <p class="sh-desc">All trades required. Get 2–3 quotes for each. Ask for earliest start date alongside price.</p>
+    <div><div class="sh-title">Contractor tracker</div><p class="sh-desc">All trades required. Get 2–3 quotes for each. Ask for earliest start date alongside price.</p></div>
+    <button class="edit-toggle" data-section="contractors" onclick="toggleEdit('contractors')">Edit</button>
   </div>
-
-  <div class="contractor-grid">
-    <div class="cc cc-crit"><div class="cc-role">Lead</div><div class="cc-name">ABL Homes (Alb Homes)</div><div class="cc-scope">Loft &amp; main works — structural, dormer, roofing, carpentry, plastering coordination, programme. Contact: Ardit · 07867 312160 · albhomes.co.uk. Quote at v4 (3 Sep 2026); client keen to appoint — contract not yet signed. Supersedes the earlier "The Market Design &amp; Build" appointment.</div><span class="cc-status">Sign contract</span></div>
-    <div class="cc cc-crit"><div class="cc-role">Structural</div><div class="cc-name">Structural engineer</div><div class="cc-scope">Steel beam schedule, spreader plate spec, chimney breast removal, site inspections during structural works.</div><span class="cc-status">Confirm drawings now</span></div>
-    <div class="cc cc-crit"><div class="cc-role">Structural</div><div class="cc-name">Steel fabricator</div><div class="cc-scope">Supply structural steelwork per engineer's drawings. 4–6 week lead time — order immediately on drawings issue.</div><span class="cc-status">Order ASAP</span></div>
-    <div class="cc cc-crit"><div class="cc-role">External</div><div class="cc-name">Aluminium window supplier</div><div class="cc-scope">Dormer windows ×2, Juliette door ×1 double, gable end window ×1 (1500 × 1500mm). Supply and install. 8–12 week lead time.</div><span class="cc-status">Appoint urgently</span></div>
-    <div class="cc cc-crit"><div class="cc-role">External</div><div class="cc-name">Scaffolding contractor</div><div class="cc-scope">Full wrap — front, rear, side alley. Lifts for repointing + Oriel. Boiler access. Neighbour coordination.</div><span class="cc-status">Book now</span></div>
-    <div class="cc cc-urg"><div class="cc-role">External</div><div class="cc-name">Aluminium guttering specialist</div><div class="cc-scope">Cast aluminium gutters and downpipes — full replacement. Must follow roofing completion.</div><span class="cc-status">Appoint soon</span></div>
-    <div class="cc cc-urg"><div class="cc-role">External</div><div class="cc-name">Repointing / brickwork contractor</div><div class="cc-scope">Front, rear, side. Red paint removal (rear). Carbon cleaning (front). Must work while scaffold is up. Muka Brickwork quote received (19/03/2026). ABL installs Monaflex ahead of their start.</div><span class="cc-status">Appoint soon</span></div>
-    <div class="cc cc-urg"><div class="cc-role">Services</div><div class="cc-name">Plumber</div><div class="cc-scope">Mains upgrade (moling), unvented cylinder, 1st &amp; 2nd fix throughout, drainage extensions, UFH.</div><span class="cc-status">Appoint soon</span></div>
-    <div class="cc cc-urg"><div class="cc-role">Services</div><div class="cc-name">Electrician</div><div class="cc-scope">House-wide wiring upgrade, 1st &amp; 2nd fix, smoke detectors (1 per level), extractor fans.</div><span class="cc-status">Appoint soon</span></div>
-    <div class="cc cc-norm"><div class="cc-role">Finishes</div><div class="cc-name">Plasterer</div><div class="cc-scope">Loft + 1st floor skim finish; house-wide repairs; cornicing protection and replacement.</div><span class="cc-status">Appoint Phase 4</span></div>
-    <div class="cc cc-norm"><div class="cc-role">Finishes</div><div class="cc-name">Tiler</div><div class="cc-scope">Waterproofing subfloors (~20m²); tiling loft + 1st floor bathrooms to client spec.</div><span class="cc-status">Appoint Phase 5</span></div>
-    <div class="cc cc-urg"><div class="cc-role">Specialist</div><div class="cc-name">Moling contractor</div><div class="cc-scope">Mains pipe upgrade from drive to house. Coordinate with water board — advance notice may be required.</div><span class="cc-status">Appoint soon</span></div>
-  </div>
+  <div id="contractors-body"></div>
 </div>
 
-
-<!-- ===== BUDGET ===== -->
 <div class="section" id="budget">
   <div class="sh">
-    <div class="sh-title">Cost estimate</div>
-    <p class="sh-desc">Ealing, London W7 market rates (2026) based on confirmed scope. Contractor: ABL Homes (Alb Homes) — quote v4, not yet appointed. Mid column is the planning figure. All figures ex-VAT.</p>
+    <div><div class="sh-title">Cost estimate</div><p class="sh-desc">Ealing, London W7 market rates (2026) based on confirmed scope. All figures ex-VAT.</p></div>
+    <button class="edit-toggle" data-section="budget" onclick="toggleEdit('budget')">Edit</button>
   </div>
-
-  <div class="budget-summary">
-    <div class="bsum-card bsum-low">
-      <div class="bsum-label">Low estimate</div>
-      <div class="bsum-val">£258k</div>
-      <div class="bsum-note">Best case — minimal water damage, smooth programme</div>
-    </div>
-    <div class="bsum-card bsum-mid">
-      <div class="bsum-label">Mid estimate · Use for planning</div>
-      <div class="bsum-val">£341k</div>
-      <div class="bsum-note">Realistic Ealing 2026 mid-market with 15% contingency</div>
-    </div>
-    <div class="bsum-card bsum-high">
-      <div class="bsum-label">High estimate</div>
-      <div class="bsum-val">£441k</div>
-      <div class="bsum-note">If water damage is extensive and programme runs long</div>
-    </div>
-    <div class="bsum-card bsum-cont">
-      <div class="bsum-label">+ VAT (20%) on mid</div>
-      <div class="bsum-val">+£68k</div>
-      <div class="bsum-note">Contractor will be VAT-registered at this value — confirm</div>
-    </div>
-  </div>
-
-  <div class="alert">
-    ⚠ 15% contingency is built into all totals above. Water damage extent is the biggest unknown — cannot be quantified until strip-out is complete. These figures cover contractor costs only; client-supplied items (sanitary ware, tiles, kitchen units, flooring, decoration) are additional.
-  </div>
-
-  <div class="delta-group-title" style="margin-top:0.5rem">Live quote — ABL Homes (Alb Homes) · v4 · 3 Sep 2026</div>
-  <div class="delta-table">
-    <div class="delta-head-row">
-      <div class="delta-head">Removed from scope — reduces v4</div>
-      <div class="delta-head">Added to scope — increases v4</div>
-    </div>
-    <div class="delta-row">
-      <div class="delta-cell"><div class="d-existing">Temporary ceilings — client has a different plan <span class="cpill cp-remove">Remove</span></div></div>
-      <div class="delta-cell"><div class="d-proposed">Floor steels <strong>+£2.4k</strong> for "sinking" steel within the existing joist depth — labour-intensive install <span class="cpill cp-new">Add</span></div></div>
-    </div>
-    <div class="delta-row">
-      <div class="delta-cell"><div class="d-existing">Staircase — keeping the existing stair; small allowance kept for a step up into the main loft area <span class="cpill cp-remove">Remove</span></div></div>
-      <div class="delta-cell"><div class="d-proposed">Install Monaflex after the brick contractor <span class="cpill cp-new">Add</span></div></div>
-    </div>
-    <div class="delta-row">
-      <div class="delta-cell"><div class="d-existing">Tanking — deferred until the bathroom design is settled <span class="cpill cp-remove">Remove</span></div></div>
-      <div class="delta-cell"><div class="d-proposed">Inspect the dining-room corner leak <span class="cpill cp-new">Add</span></div></div>
-    </div>
-    <div class="delta-row">
-      <div class="delta-cell"><div class="d-existing">Velux ×3 supply cost — Davina supplies the units <span class="cpill cp-remove">Remove</span></div></div>
-      <div class="delta-cell"><div class="d-proposed">Open up the doorway in front of the loft stairs <span class="cpill cp-new">Add</span></div></div>
-    </div>
-    <div class="delta-row">
-      <div class="delta-cell"><div class="d-existing">&nbsp;</div></div>
-      <div class="delta-cell"><div class="d-proposed">Wire for a future 2-unit split — future-proofing <span class="cpill cp-new">Add</span></div></div>
-    </div>
-  </div>
-  <div class="compare-callout" style="margin-bottom:1.75rem">
-    <strong>Status &amp; open pricing items</strong>
-    ABL Homes (Ardit · 07867 312160 · albhomes.co.uk) issued quote v4 on 3 Sep 2026 and is pushing for a yes/no to move to contract — client is keen to appoint. The estimate model below is unchanged; ABL's priced quote supersedes it once appointed. Still to be priced or firmed up: the <b>insulation package</b> — ABL's Celotex/PIR base is <b>£3,800</b>; the hybrid natural strategy (see Insulation tab) is estimated at <b>≈ £5,100</b> and needs re-pricing by ABL — the <b>opening in front of the stairs</b> (confirm whether a lintel is needed first), the <b>dining-room leak repair</b> (extent unknown until opened up), and possible <b>half-landing works</b> beneath the Oriel window.
-  </div>
-
-  <div class="budget-table-wrap">
-    <table class="budget-table">
-      <thead>
-        <tr>
-          <th style="width:36%">Work package</th>
-          <th>Low</th>
-          <th>Mid</th>
-          <th>High</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        <tr><td class="bt-phase" colspan="5">Professional fees</td></tr>
-        <tr>
-          <td><div class="bt-name">Structural engineer</div><div class="bt-note-sm">Already appointed &amp; paid — outside MC scope</div></td>
-          <td class="bt-low" style="color:var(--muted)">—</td><td class="bt-mid" style="color:var(--muted);font-weight:400">—</td><td class="bt-high" style="color:var(--muted)">—</td>
-          <td>Complete — already paid, not in contractor budget</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Party Wall surveyor</div><div class="bt-note-sm">Not required — confirmed by client</div></td>
-          <td class="bt-low" style="color:var(--muted)">—</td><td class="bt-mid" style="color:var(--muted);font-weight:400">—</td><td class="bt-high">—</td>
-          <td>Handled — removed from budget</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Building Control</div><div class="bt-note-sm">Full plans submission + stage inspections</div></td>
-          <td class="bt-low">£1,500</td><td class="bt-mid">£2,000</td><td class="bt-high">£2,500</td>
-          <td>Ealing Council or Approved Inspector</td>
-        </tr>
-
-        <tr><td class="bt-phase" colspan="5">Demolition &amp; soft strip</td></tr>
-        <tr>
-          <td><div class="bt-name">Demolition, soft strip &amp; skips</div><div class="bt-note-sm">1st floor bathroom, rear bedroom &amp; dining ceiling; chimney stacks ×2; chimney breast GF; brick recovery for garden wall; skip permits</div></td>
-          <td class="bt-low">£10,000</td><td class="bt-mid">£13,500</td><td class="bt-high">£18,000</td>
-          <td>Road permit from Ealing required for skip — apply early</td>
-        </tr>
-
-        <tr><td class="bt-phase" colspan="5">Structural works</td></tr>
-        <tr>
-          <td><div class="bt-name">Scaffolding</div><div class="bt-note-sm">Full wrap ~6 months; single poles to 217a/b; lifts for repointing, Oriel window &amp; boiler access</div></td>
-          <td class="bt-low">£13,000</td><td class="bt-mid">£15,000</td><td class="bt-high">£17,000</td>
-          <td>First site activity — book now</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Structural steelwork</div><div class="bt-note-sm">Beam fabrication + erection; spreader plates; triple timber trims; per engineer's drawings</div></td>
-          <td class="bt-low">£10,000</td><td class="bt-mid">£13,500</td><td class="bt-high">£18,000</td>
-          <td>4–6 week fabrication lead time — order on drawing issue</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Internal floor structure</div><div class="bt-note-sm">Loft structural joists; marine ply subfloor ¾"; water damage repair (loft floor + 1st floor ceiling joists); floorboard repairs; eaves boarding</div></td>
-          <td class="bt-low">£6,500</td><td class="bt-mid">£8,500</td><td class="bt-high">£11,000</td>
-          <td>Water damage extent unknown until strip — high range if widespread</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Loft partitions</div><div class="bt-note-sm">All new loft room walls per PGA002: Bedroom 5, Lounge, Bathroom, WC, Hallway, Store</div></td>
-          <td class="bt-low">£5,000</td><td class="bt-mid">£7,000</td><td class="bt-high">£9,000</td>
-          <td>After steelwork, before 1st fix MEP</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Box dormer structure</div><div class="bt-note-sm">Rear dormer — 7759mm wide, structural walls for Juliette door ×1 double + windows ×2</div></td>
-          <td class="bt-low">£18,000</td><td class="bt-mid">£22,000</td><td class="bt-high">£28,000</td>
-          <td>Structural carpentry + timber frame</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Gable wall build-up</div><div class="bt-note-sm">Brickwork to ridge height; retain front gable with decorative tiles and reinforce</div></td>
-          <td class="bt-low">£7,000</td><td class="bt-mid">£10,500</td><td class="bt-high">£14,000</td>
-          <td>Matching brick per PGA003</td>
-        </tr>
-
-        <tr><td class="bt-phase" colspan="5">Roofing</td></tr>
-        <tr>
-          <td><div class="bt-name">Rosemary clay tiles + ridges</div><div class="bt-note-sm">Full replacement of all pitched roof tiles; bird spikes; recover chimney bricks for garden wall</div></td>
-          <td class="bt-low">£20,000</td><td class="bt-mid">£25,500</td><td class="bt-high">£32,000</td>
-          <td>Hard deadline: watertight by end Jan 2027 — winter roofing</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Flat roof — 3-layer torch-on felt</div><div class="bt-note-sm">Dormer flat roof; complete before dormer openings formed</div></td>
-          <td class="bt-low">£3,500</td><td class="bt-mid">£4,750</td><td class="bt-high">£6,000</td>
-          <td>Never leave openings unprotected overnight</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Roof &amp; loft insulation</div><div class="bt-note-sm">Hybrid natural strategy — wood fibre to pitched roof / dormer walls / gable / floor; PIR + wood fibre to flat ceiling; wool to steels. See Insulation tab</div></td>
-          <td class="bt-low">£3,800</td><td class="bt-mid">£5,100</td><td class="bt-high">£6,500</td>
-          <td>ABL Celotex package £3,800; natural hybrid ≈ £5,100 est. — not yet re-priced by ABL</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Velux ×5 + flat rooflight ×1</div><div class="bt-note-sm">3× front pitched, 2× GF kitchen pitched, 1× loft flat roof</div></td>
-          <td class="bt-low">£12,000</td><td class="bt-mid">£14,500</td><td class="bt-high">£18,000</td>
-          <td>Confirm sizes vs drawings before ordering</td>
-        </tr>
-
-        <tr><td class="bt-phase" colspan="5">External envelope</td></tr>
-        <tr>
-          <td><div class="bt-name">Aluminium windows + Juliette door</div><div class="bt-note-sm">Dormer windows ×2, Juliette ×1 (double), gable end window ×1 (1500×1500mm) — all custom aluminium</div></td>
-          <td class="bt-low">£18,000</td><td class="bt-mid">£24,000</td><td class="bt-high">£32,000</td>
-          <td>8–12 week lead time — appoint supplier immediately</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Oriel window replacement</div><div class="bt-note-sm">Front elevation; matching timber per PGA003; while scaffold is up</div></td>
-          <td class="bt-low">£5,000</td><td class="bt-mid">£7,500</td><td class="bt-high">£10,000</td>
-          <td>Don't miss the scaffold window — won't come back</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Fascias + decorative timber</div><div class="bt-note-sm">Repair/replace + paint black; repaint front gable decorative timber</div></td>
-          <td class="bt-low">£2,500</td><td class="bt-mid">£3,500</td><td class="bt-high">£4,500</td>
-          <td>While scaffold accessible</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Repointing + cleaning</div><div class="bt-note-sm">Front, rear &amp; side elevations; red paint removal (rear); carbon cleaning (front)</div></td>
-          <td class="bt-low">£13,000</td><td class="bt-mid">£17,500</td><td class="bt-high">£23,000</td>
-          <td>Specialist contractor; must complete before scaffold comes down</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Cast aluminium gutters + downpipes</div><div class="bt-note-sm">Full replacement by specialist contractor; follows roofing completion</div></td>
-          <td class="bt-low">£6,000</td><td class="bt-mid">£9,000</td><td class="bt-high">£12,000</td>
-          <td>Coordinate with fascia + scaffold programme</td>
-        </tr>
-
-        <tr><td class="bt-phase" colspan="5">Plumbing &amp; heating</td></tr>
-        <tr>
-          <td><div class="bt-name">Mains pipe upgrade (moling)</div><div class="bt-note-sm">Drive to house; specialist moling contractor; Thames Water advance notice may be required</div></td>
-          <td class="bt-low">£4,000</td><td class="bt-mid">£5,500</td><td class="bt-high">£7,000</td>
-          <td>Disruptive — plan timing carefully</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Unvented cylinder</div><div class="bt-note-sm">Supply + install; pressure testing; resolve any leaks</div></td>
-          <td class="bt-low">£4,000</td><td class="bt-mid">£5,500</td><td class="bt-high">£7,000</td>
-          <td>G3 qualified plumber required</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Boiler flue extension</div><div class="bt-note-sm">External boiler shed flue to roof level</div></td>
-          <td class="bt-low">£800</td><td class="bt-mid">£1,150</td><td class="bt-high">£1,500</td>
-          <td>Easiest done while scaffold is up</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">1st fix plumbing</div><div class="bt-note-sm">Hot/cold to loft bathroom + 1st floor kitchenette; waste extensions; underground drains (alley + rear); radiator pipework for new areas; relocate rear living room radiator</div></td>
-          <td class="bt-low">£8,000</td><td class="bt-mid">£11,500</td><td class="bt-high">£15,000</td>
-          <td>Concealed runs as much as possible</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Bathroom waterproofing</div><div class="bt-note-sm">Loft + 1st floor bathrooms (~20m²)</div></td>
-          <td class="bt-low">£1,500</td><td class="bt-mid">£2,000</td><td class="bt-high">£2,500</td>
-          <td>Before tiling</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">2nd fix plumbing</div><div class="bt-note-sm">Fit sanitary ware (client-supplied by Davina), heated towel rails, radiators; walk-in shower 1st floor; UFH electric mats ×2 bathrooms</div></td>
-          <td class="bt-low">£4,000</td><td class="bt-mid">£5,500</td><td class="bt-high">£7,000</td>
-          <td>Sanitary ware + heated towel rails by Davina</td>
-        </tr>
-
-        <tr><td class="bt-phase" colspan="5">Electrical (1st &amp; 2nd fix)</td></tr>
-        <tr>
-          <td><div class="bt-name">Electrical — house-wide upgrade + loft</div><div class="bt-note-sm">New circuits to fuse board; loft bedroom, lounge, bathroom, WC, hall; 1st floor bedroom + bathroom; 3× mains-linked smoke detectors; extractor fans; UFH mats (supply in plumbing above)</div></td>
-          <td class="bt-low">£15,000</td><td class="bt-mid">£19,500</td><td class="bt-high">£25,000</td>
-          <td>Full socket/lighting schedule to be confirmed — see Phases tab</td>
-        </tr>
-
-        <tr><td class="bt-phase" colspan="5">Finishes</td></tr>
-        <tr>
-          <td><div class="bt-name">Plastering</div><div class="bt-note-sm">All loft rooms; 1st floor bathroom + rear bedroom; GF hallway + stairwell + dining room ceiling replacement; around kitchen rooflight; former chimney wall; cornicing protection + repair</div></td>
-          <td class="bt-low">£15,000</td><td class="bt-mid">£19,000</td><td class="bt-high">£25,000</td>
-          <td>GF hallway + dining ceilings are full replacements, not repairs</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Bathroom tiling</div><div class="bt-note-sm">Loft bathroom + 1st floor bathroom; spec to be confirmed by Davina</div></td>
-          <td class="bt-low">£4,000</td><td class="bt-mid">£6,000</td><td class="bt-high">£8,000</td>
-          <td>Labour only — tiles are client-supply (see below)</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">Fire doors</div><div class="bt-note-sm">2× single + 1× double, 4-panel grained FD30 to loft rooms, WC &amp; bathroom; 8× FD30 to stairwell</div></td>
-          <td class="bt-low">£9,000</td><td class="bt-mid">£12,000</td><td class="bt-high">£16,000</td>
-          <td>Confirm exact spec with Building Control</td>
-        </tr>
-        <tr>
-          <td><div class="bt-name">2nd fix carpentry</div><div class="bt-note-sm">Eaves access hatches ×2–3; skirtings + architraves to loft + new 1st floor areas; style TBC</div></td>
-          <td class="bt-low">£3,000</td><td class="bt-mid">£4,500</td><td class="bt-high">£6,000</td>
-          <td>Profile must be decided by Sep 2026 to source and cut</td>
-        </tr>
-
-        <!-- Subtotal -->
-        <tr class="bt-total">
-          <td><strong>Subtotal (ex-contingency, ex-VAT)</strong></td>
-          <td class="bt-low"><strong>£223,800</strong></td>
-          <td class="bt-mid"><strong>£296,400</strong></td>
-          <td class="bt-high"><strong>£383,000</strong></td>
-          <td></td>
-        </tr>
-        <tr class="bt-cont">
-          <td><strong>Contingency 15%</strong></td>
-          <td class="bt-low"><strong>£33,570</strong></td>
-          <td class="bt-mid"><strong>£44,460</strong></td>
-          <td class="bt-high"><strong>£57,450</strong></td>
-          <td style="color:var(--urgent);font-size:0.72rem">Primarily for water damage remediation + programme risk</td>
-        </tr>
-        <tr class="bt-grand">
-          <td><strong>Total estimate (ex-VAT)</strong></td>
-          <td><strong>£257,370</strong></td>
-          <td><strong>£340,860</strong></td>
-          <td><strong>£440,450</strong></td>
-          <td>VAT at 20% adds ~£68k on mid figure</td>
-        </tr>
-
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Client-supplied items -->
-  <div class="sh">
-    <div class="sh-title">Client-supplied items</div>
-    <p class="sh-desc">Not included in contractor cost above — procure separately. Budget these on top of the estimate.</p>
-  </div>
-
-  <div class="supply-grid">
-    <div class="supply-item">
-      <div class="supply-who">By Davina</div>
-      <div class="supply-name">Sanitary ware — loft bathroom &amp; WC</div>
-      <div class="supply-note">WC pan, basin, bath or shower tray, taps. Budget £2,000–£6,000+ depending on spec. Must be specified before 1st fix plumbing starts.</div>
-    </div>
-    <div class="supply-item">
-      <div class="supply-who">By Davina</div>
-      <div class="supply-name">Heated towel rails</div>
-      <div class="supply-note">Loft bathroom + WC. Budget £300–£800 per rail. Confirm BTU output with plumber before ordering.</div>
-    </div>
-    <div class="supply-item">
-      <div class="supply-who">By Davina</div>
-      <div class="supply-name">Bathroom tiles — both bathrooms</div>
-      <div class="supply-note">Spec TBC — tile choice drives cost significantly. Budget £800–£3,000+ per room for tiles. Must confirm before waterproofing so substrate can be coordinated.</div>
-    </div>
-    <div class="supply-item">
-      <div class="supply-who">Client decision</div>
-      <div class="supply-name">1st floor kitchenette units &amp; appliances</div>
-      <div class="supply-note">PGA001 notes "final design to kitchen supplier". Confirm layout by Oct 2026 — drives plumbing rough-in positions and socket locations.</div>
-    </div>
-    <div class="supply-item">
-      <div class="supply-who excl">Not in scope</div>
-      <div class="supply-name">Flooring — loft &amp; 1st floor</div>
-      <div class="supply-note">Carpet, engineered wood etc. not included. Budget £3,000–£8,000 depending on area and spec.</div>
-    </div>
-    <div class="supply-item">
-      <div class="supply-who excl">Not in scope</div>
-      <div class="supply-name">Internal decoration / painting</div>
-      <div class="supply-note">Painting throughout loft + all affected 1st floor and GF areas. Budget £4,000–£8,000 for a decorator once plastering dries.</div>
-    </div>
-  </div>
-
-  <div class="compare-callout">
-    <strong>What this estimate excludes</strong>
-    VAT (20% on all contractor works — at this contract value the MC will be VAT registered). Architect CA/inspection fees if Draw &amp; Plan continue in a contract administration role. Ground floor works beyond chimney breast removal and ceiling repairs. Any Thames Water adoption or reinstatement fees for the moling connection. Planning application fees (verify PD status with Draw &amp; Plan — the rear dormer size may require full planning). Furniture and soft furnishings.
-  </div>
-
+  <div id="budget-body"></div>
 </div>
 
-<!-- ===== INSULATION ===== -->
 <div class="section" id="insulation">
   <div class="sh">
-    <div class="sh-title">Insulation strategy</div>
-    <p class="sh-desc">Hybrid natural-insulation strategy — issued to ABL Homes to unblock the insulation line in quote v4. Targets per Approved Document L 2021.</p>
+    <div><div class="sh-title">Insulation strategy</div><p class="sh-desc">Hybrid natural-insulation strategy — targets per Approved Document L 2021.</p></div>
+    <button class="edit-toggle" data-section="insulation" onclick="toggleEdit('insulation')">Edit</button>
   </div>
-
-  <div class="alert">
-    ⚠ ABL made no change to the insulation line in quote v4 — Ardit is blocked without confirmed quantities and U-values. This strategy answers that. Final thicknesses to be signed off by the structural engineer / Building Control against actual rafter and stud depths before the package is re-priced or materials ordered.
-  </div>
-
-  <p class="compare-intro">
-    <strong>Approach:</strong> wood fibre (Steico Flex, &lambda; ≈ 0.038 W/m·K) as the primary insulant in every sloping and vertical element; a Celotex/PIR + wood-fibre <em>hybrid</em> only at the dormer flat ceiling, where headroom is tight; sheep's wool (Thermafleece CosyWool) hand-packed around and inside all new steel. Airtightness / vapour control throughout: Pro Clima INTELLO membrane + TESCON VANA tape, continuous across every junction.
-  </p>
-
-  <div class="delta-group-title">Element by element</div>
-  <div class="itbl-wrap">
-    <table class="itbl">
-      <thead>
-        <tr>
-          <th style="width:19%">Element</th>
-          <th style="width:10%">Insulant</th>
-          <th style="width:23%">Between the timbers</th>
-          <th style="width:23%">Continuous / over layer</th>
-          <th style="width:8%">Target U</th>
-          <th style="width:8%">Indicative U</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="itbl-el">Dormer flat ceiling <span>Hybrid — headroom critical</span></td>
-          <td><span class="imat imat-wf">Wood fibre</span> <span class="imat imat-pir">PIR</span></td>
-          <td>100–140mm wood fibre, full depth between the flat-roof rafters — uses existing joist depth, costs no headroom</td>
-          <td>50–75mm PIR continuous on the warm side under the rafters — the only headroom cost; also kills the rafter cold-bridge</td>
-          <td class="itbl-u">0.18*</td>
-          <td class="itbl-u">≈ 0.15–0.17</td>
-        </tr>
-        <tr>
-          <td class="itbl-el">Original front sloping roof</td>
-          <td><span class="imat imat-wf">Wood fibre</span></td>
-          <td>100mm between rafters (deepen rafters if shallower). Roof is being re-tiled — use a vapour-permeable underlay and drop the 50mm vent gap to allow full-fill</td>
-          <td>80–100mm wood fibre continuous across the underside of all rafters, then battened service void + plasterboard</td>
-          <td class="itbl-u">0.18*</td>
-          <td class="itbl-u">≈ 0.16–0.18</td>
-        </tr>
-        <tr>
-          <td class="itbl-el">Dormer walls — front, both cheeks &amp; any return</td>
-          <td><span class="imat imat-wf">Wood fibre</span></td>
-          <td>100mm Steico Flex, full-fill between 100mm studs</td>
-          <td>60mm wood-fibre sheathing board outside + 40mm wood fibre in the internal service zone (or 140mm studs + 60mm board, no internal layer)</td>
-          <td class="itbl-u">0.18</td>
-          <td class="itbl-u">≈ 0.18</td>
-        </tr>
-        <tr>
-          <td class="itbl-el">New gable wall <span>125 × 47 C24 frame</span></td>
-          <td><span class="imat imat-wf">Wood fibre</span></td>
-          <td>120–125mm Steico Flex, full-fill between the studs</td>
-          <td>60mm wood-fibre sheathing board outside; carry insulation + membrane unbroken across the junction with the masonry below</td>
-          <td class="itbl-u">0.18</td>
-          <td class="itbl-u">≈ 0.17</td>
-        </tr>
-        <tr>
-          <td class="itbl-el">Existing party wall</td>
-          <td><span class="imat imat-wool">Sheep's wool</span></td>
-          <td>Packed tight into every brick pocket where beams A–E bear</td>
-          <td>INTELLO membrane carried from roof / walls onto the party-wall face and sealed</td>
-          <td class="itbl-na">No target</td>
-          <td class="itbl-na">Separating wall — condensation control only</td>
-        </tr>
-        <tr>
-          <td class="itbl-el">New steel framing <span>Beams A–E, SHS column, padstones</span></td>
-          <td><span class="imat imat-wool">Sheep's wool</span></td>
-          <td>Hand-packed into the open web of every I-section; wrapped round the 100 × 100 SHS column</td>
-          <td>Stuffed into brick pockets and padstone recesses</td>
-          <td class="itbl-na">No target</td>
-          <td class="itbl-na">Surface-condensation control on cold steel</td>
-        </tr>
-        <tr>
-          <td class="itbl-el">Loft floor <span>Between joists</span></td>
-          <td><span class="imat imat-wf">Wood fibre</span></td>
-          <td>100mm Steico Flex pushed to the underside of the new 200 × 47 / 150 × 47 joists</td>
-          <td>50–100mm open service void left above for first-fix cables and pipes</td>
-          <td class="itbl-na">No target</td>
-          <td class="itbl-na">Heated both sides — acoustic + service void only</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="sh-desc" style="margin-bottom:1.75rem">* 0.18 W/m²K is the Approved Document L headroom-constrained allowance for rafter-level loft insulation; 0.15–0.16 is the unconstrained new-build target. Aim for the lower figure where the build-up allows. Wood fibre: Steico Flex 036 (&lambda; ≈ 0.038 W/m·K) — IndiTherm hemp is an equivalent alternative.</p>
-
-  <div class="delta-group-title">Cost — relative to ABL's Celotex package</div>
-  <div class="compare-callout" style="margin-top:0;border-left-color:var(--ph3)">
-    <strong>ABL's insulation package: £3,800 (Celotex / PIR system)</strong>
-    Includes the dormer ceiling PIR, install and membranes. Switching to this hybrid natural strategy, on the estimator's outline: −£960 PIR removed (floor + wall/pitch, excl. dormer ceiling) + £1,735 natural materials + ~£500 added labour ≈ <b>£5,100 total</b>, roughly a <b>£1,300 uplift</b>. Wood fibre between the dormer ceiling rafters and around the Velux may add a little more. To be firmed up by ABL against this strategy.
-  </div>
-
-  <div class="delta-group-title">ABL's three questions — answered</div>
-  <div class="decision-list">
-    <div class="decision">
-      <div class="dec-n">Q1</div>
-      <div>
-        <div class="dec-title">How much insulation to meet the U-values?</div>
-        <div class="dec-desc">Roughly 180–200mm total wood fibre on the pitched roof and dormer walls; 125–185mm on the new gable; a hybrid ~100mm wood fibre + ~60mm PIR at the flat ceiling. The loft floor and party wall have no U-value target. Exact figures to be confirmed by the structural engineer / Building Control against real timber depths — see table.</div>
-      </div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">Q2</div>
-      <div>
-        <div class="dec-title">How much between the timbers vs. over?</div>
-        <div class="dec-desc">Every sloping / flat element gets wood fibre filling the full depth <em>between</em> the timbers (~100mm) <em>plus</em> a continuous layer across the face of the timbers (60–100mm) — the continuous layer is what defeats the timber cold-bridge. The flat ceiling is the only exception: its continuous layer is PIR, not wood fibre, to save headroom.</div>
-      </div>
-    </div>
-    <div class="decision">
-      <div class="dec-n">Q3</div>
-      <div>
-        <div class="dec-title">Only pitched roof, floor &amp; gable — what about the rest of the dormer walls?</div>
-        <div class="dec-desc">Wood fibre goes in <strong>every</strong> external dormer wall — front, both cheeks and the gable — plus the front pitched roof and between the floor joists. PIR stays only in the flat dormer ceiling (hybrid, with wood fibre between the rafters). Sheep's wool is only around / inside the steels and the party-wall pockets.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="compare-callout">
-    <strong>Also confirm before re-pricing</strong>
-    <ul class="qv4-list">
-      <li><b>Insulation supply —</b> whether ABL's £3,800 quote already includes the insulation materials (their estimator suspects it does). Settle before Davina buys anything, or it is paid for twice.</li>
-      <li><b>U-value sign-off —</b> who confirms the calculations for Building Control: the structural engineer (David) or a separate assessor.</li>
-      <li><b>Flat roof deck —</b> EPDM is vapour-closed. Commit to a warm deck (preferred — removes the condensation risk and suits the breathable build-ups) or guarantee a 50mm cross-ventilated void above the wood fibre on a cold deck.</li>
-    </ul>
-  </div>
+  <div id="insulation-body"></div>
 </div>
 
 </main>
 
-<footer>
-  <span>217 Boston Road · London W7 2AA · Job 25100</span>
-  <span>Drawings: Draw &amp; Plan · 24/03/2026</span>
-  <span>Plan updated: September 2026</span>
-</footer>
+<footer id="site-footer"></footer>
+
+<div id="modal-root"></div>
+<div class="toast" id="toast"></div>
 
 <script>
-function show(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
+/* ============ CONFIG ============ */
+const SUPABASE_URL = "https://nzcdelzpdewdyqxmpndr.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56Y2RlbHpwZGV3ZHlxeG1wbmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NDA3MzIsImV4cCI6MjEwNDExNjczMn0.3D1YEMxLRZyEsQWfIwv9B2mO2uzcNu8R2vsEO0ots2Q";
+let sb = null;
+if (SUPABASE_URL.startsWith("http")) {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
-function loadPdf(btn, filename, title) {
-  document.querySelectorAll('.dwg-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('pdf-embed').src = filename;
-  document.getElementById('viewer-title').innerHTML = title;
-  document.getElementById('viewer-link').href = filename;
+/* ============ DEFAULT DATA (fallback + first-save seed) ============ */
+const DEFAULTS = {
+meta: {
+  eyebrow: "Job 25100 · Draw & Plan · London W7 2AA",
+  title1: "217 Boston Road",
+  title2: "Build Plan 2026",
+  sub: "Loft conversion & first floor renovation — strategic programme from mobilisation to completion.",
+  pills: [
+    {color:"#dc2626", text:"Roof watertight target: end Jan 2027"},
+    {color:"#1d4ed8", text:"Loft + 1st floor scope"},
+    {color:"#059669", text:"45.17 m³ new volume"}
+  ],
+  metaRows: [
+    {label:"Drawings", value:"PGA001–004 + EGA002–004"},
+    {label:"Architect", value:"Draw & Plan"},
+    {label:"Issued", value:"24/03/2026"},
+    {label:"Plan updated", value:"September 2026"}
+  ],
+  footerLeft: "217 Boston Road · London W7 2AA · Job 25100",
+  footerMid: "Drawings: Draw & Plan · 24/03/2026",
+  footerRight: "Plan updated: September 2026"
+},
+
+phases: { list: [
+  { cls:"ph0", num:"Phase 0 · In progress", title:"Mobilisation & procurement", dates:"Sep – Oct 2026 · In progress", tasks: [
+    {name:"Sign contract — ABL Homes (Alb Homes)", note:"Quote at v4 (3 Sep 2026) — client keen to appoint. Issue the full scope pack: drawings PGA001–004 + structural, confirmed spec (aluminium windows, 3-layer flat roof felt, fire door schedule), client-supply list, insulation strategy (see Insulation tab), and hard roof deadline of end Jan 2027. Agree programme start date (likely end Sep 2026).", who:"You", flag:"critical"},
+    {name:"Confirm structural engineer drawings", note:"Steel beam schedule, spreader plate details, chimney breast removal spec — all needed before ordering fabricated steel.", who:"Engineer", flag:"critical"},
+    {name:"Order structural steelwork", note:"4–6 week fabrication lead time. On critical path — order the day drawings are issued. Do not wait.", who:"Fabricator", flag:"critical"},
+    {name:"Book scaffolding contractor", note:"Full wrap — front, rear, side alley. Single poles opposite 217a/b. Coordinate neighbour access. Lifts for repointing + Oriel window.", who:"Scaffold co.", flag:"urgent"},
+    {name:"Appoint aluminium window supplier", note:"Dormer windows ×2, Juliette door ×1 (double), gable end window ×1. Custom items — 8–12 week lead time typical.", who:"You / supplier", flag:"critical"},
+    {name:"Appoint aluminium guttering contractor", note:"Cast aluminium gutters and downpipes — specialist trade, coordinate with roofing completion.", who:"Specialist co.", flag:"urgent"},
+    {name:"Appoint repointing contractor", note:"Front, rear, side; red paint removal (rear); carbon cleaning (front). Must work while scaffold is up.", who:"Specialist co.", flag:"urgent"},
+    {name:"Order Velux rooflights & flat rooflight", note:"3× front pitched, 2× kitchen pitched, 1× loft flat roof. Confirm sizes against drawings before ordering.", who:"MC", flag:"urgent"},
+    {name:"Arrange living situation during roof demolition", note:"Roof strip exposes entire house. Decide if staying on ground floor or temporary accommodation. Plan 1st floor protection before works start.", who:"You", flag:"critical"},
+    {name:"Order Rosemary clay tiles", note:"Check stock and batch availability — clay tiles can have lead times. Recover chimney bricks separately for garden wall reuse.", who:"MC / roofer", flag:"urgent"}
+  ]},
+  { cls:"ph1", num:"Phase 1", title:"Demolition & soft strip", dates:"Oct 2026 · ~2 weeks", tasks: [
+    {name:"Erect scaffolding", note:"First site activity. All trades that need scaffold must be coordinated around its programme.", who:"Scaffold co.", flag:"critical"},
+    {name:"Remove two chimney stacks", note:"Rear + front/alleyway side. Recover bricks for garden wall reuse. Both stacks shown on EGA003 existing elevations.", who:"MC / demolition", flag:"critical"},
+    {name:"Remove chimney breast (GF dining room)", note:"Open up housing for pipework. Structural check + propping required before removal. Engineer to specify support.", who:"MC / engineer", flag:"urgent"},
+    {name:"Soft strip — 1st floor bathroom", note:"Ceiling, flooring, wall tiles. Expose and assess water damage from historic leaks.", who:"MC", flag:"normal"},
+    {name:"Soft strip — rear bedroom + corner dining room ceiling", note:"Expose water damage. Assess extent before structural works begin above.", who:"MC", flag:"normal"},
+    {name:"Skip hire & waste management", note:"Road permit if skip on public highway. Plan brick recovery route separate from general waste.", who:"MC", flag:"normal"}
+  ]},
+  { cls:"ph2", num:"Phase 2", title:"Loft structural works — steels, joists & floors", dates:"Oct – Nov 2026 · ~4–6 weeks", tasks: [
+    {name:"Install load-bearing spreader plates", note:"In walls to carry structural steelwork. Per engineer's drawings — do not deviate.", who:"MC / steelwork", flag:"critical"},
+    {name:"Fit steel beams & columns", note:"Per engineer's drawings including triple timber trims. Existing loft has basic collar-tie roof — significant structural upgrade required.", who:"MC / steelwork", flag:"critical"},
+    {name:"Remove intrusive loft timbers & strengthen roof supports", note:"Existing loft currently open with eaves storage. Remove redundant structure; retain and reinforce front gable with decorative tiles.", who:"MC / carpenter", flag:"urgent"},
+    {name:"Lay new structural floor joists (loft)", note:"Existing loft floor is lightweight — new joists for habitable floor loading. Check/replace water-damaged ceiling joists at 1st floor simultaneously.", who:"MC / carpenter", flag:"urgent"},
+    {name:"Lay marine ply subfloor throughout loft", note:"¾ inch marine grade. Board eaves storage areas (floor + eaves boarding).", who:"MC / carpenter", flag:"urgent"},
+    {name:"Repair 1st floor subfloor & floorboards", note:"Under stairs, rear bedroom, anywhere lifted. Secure lifted boards generally. Replace missing sections.", who:"MC / carpenter", flag:"normal"}
+  ]},
+  { cls:"ph3", num:"Phase 3 · ⚠ Weather critical", title:"Loft external shell — dormer, gable & roof", dates:"Nov 2026 – Jan 2027 · ~8–10 weeks", tasks: [
+    {name:"Build up gable wall to ridge height", note:"Existing gable stops below ridge — new brickwork to receive gable end window per drawings. Obscure glazed, non-opening below 1.7m FFL.", who:"MC / bricklayer", flag:"critical"},
+    {name:"Form box dormer structure to rear", note:"New structure to rear — no dormer exists currently. Plan: 2086 × 2979mm, length 7759mm. Structural walls for Juliette door ×1 double + windows ×2.", who:"MC / carpenter", flag:"critical"},
+    {name:"Dormer flat roof — 3-layer torch-on felt", note:"Complete flat roof before dormer openings are formed. Critical sequence — never leave openings unprotected overnight.", who:"Roofer", flag:"critical"},
+    {name:"Strip existing roof tiles & replace with Rosemary clay", note:"Existing tiles fully replaced. New ridges. Add bird spikes. This is the moment the house becomes watertight — hard deadline end of January 2027. Winter roofing: hold weather contingency.", who:"Roofer", flag:"critical"},
+    {name:"Install 3× Velux to front pitched roof", note:"Coordinate with tiling programme — Velux go in as tiling progresses around them.", who:"Roofer / Velux", flag:"critical"},
+    {name:"Install 1× flat rooflight in loft", note:"Before flat roof is finished. Coordinate sequence carefully.", who:"Roofer", flag:"urgent"},
+    {name:"Install 2× Velux to kitchen pitched roof", note:"Ground floor kitchen roof. Coordinate with ground floor phase later, but roof access is now while scaffold is up.", who:"Roofer", flag:"urgent"},
+    {name:"Loft insulation", note:"Hybrid natural strategy — wood fibre to pitched roof, dormer walls, gable & between floor joists; Celotex + wood-fibre hybrid to the dormer flat ceiling; sheep's wool around the steels. See Insulation tab. Once roof is watertight.", who:"MC / insulator", flag:"urgent"},
+    {name:"Repair/replace fascia boards — paint black", note:"Including repainting original decorative timber in front gable. External materials: finestration matching timber (PGA003). While scaffold is accessible.", who:"MC / carpenter", flag:"urgent"},
+    {name:"Oriel window replacement", note:"Existing Oriel on front elevation — replace while scaffold is in place. Don't miss this opportunity.", who:"MC / window co.", flag:"urgent"},
+    {name:"Install aluminium dormer windows, Juliette doors & gable window", note:"By external supplier. Coordinate with dormer structure completion. Must be weathertight before scaffold comes down.", who:"Window supplier", flag:"external"},
+    {name:"Install cast aluminium gutters & downpipes", note:"By specialist contractor. Follows roofing completion. Coordinate with fascia/scaffold programme.", who:"Gutter specialist", flag:"external"},
+    {name:"Brickwork repointing — front, rear & side", note:"Remove red paint (rear); clean carbon (front); repoint all elevations. Must be completed before scaffold down.", who:"Repointing contractor", flag:"external"}
+  ]},
+  { cls:"ph4", num:"Phase 4", title:"Partitions & first fix MEP", dates:"Dec 2026 – Feb 2027 · partitions before MEP", tasks: [
+    {name:"Loft dormer partition walls", note:"All rooms per PGA002: Bedroom 5, Lounge, Bathroom, WC, Hallway, Store. Must be erected before MEP first fix begins — trades need wall lines confirmed to route services and power correctly.", who:"MC / carpenter", flag:"critical"},
+    {name:"Mains pipe upgrade — moling from drive to house", note:"Specialist moling contractor. Plan access and timing — disruptive. May need advance notice to Thames Water.", who:"Plumber / moling co.", flag:"urgent"},
+    {name:"Install new unvented cylinder", note:"Pressure test each floor. Resolve leaks. Lift floorboards as required.", who:"Plumber", flag:"urgent"},
+    {name:"Extend boiler flue to roof level", note:"External boiler shed flue extension. Coordinate with roofing/scaffold — easiest done while scaffold still up.", who:"Plumber / roofer", flag:"urgent"},
+    {name:"1st fix plumbing — loft bathroom & 1st floor kitchenette", note:"Hot/cold runs concealed as much as possible. Waste extensions. Underground drains (alley + rear). Radiator pipework.", who:"Plumber", flag:"normal"},
+    {name:"1st fix electrical — house-wide wiring upgrade", note:"New circuits: loft power/lighting/smoke alarms; 1st floor kitchenette; all back to existing fuse board.", who:"Electrician", flag:"urgent"},
+    {name:"Relocate rear living room radiator", note:"Ground floor — coordinate with 1st fix plumbing programme.", who:"Plumber", flag:"normal"}
+  ]},
+  { cls:"ph5", num:"Phase 5", title:"Boarding, waterproofing & plastering", dates:"Feb – Apr 2027", tasks: [
+    {name:"Waterproof bathroom subfloors (~20m² total)", note:"Loft bathroom + 1st floor bathroom. Before tiling.", who:"MC / tiler", flag:"normal"},
+    {name:"Plaster skim — loft walls & ceilings", note:"All new loft rooms. Also: 1st floor bathroom, rear bedroom, stairs to loft, hallway, stairwell, GF hallway ceiling, GF dining room ceiling, around new kitchen rooflight, former chimney wall.", who:"Plasterer", flag:"normal"},
+    {name:"Protect & repair existing decorative plaster/cornicing", note:"Retain where possible. Replace any sections damaged during works. Brief all trades before they start.", who:"Plasterer / specialist", flag:"normal"}
+  ]},
+  { cls:"ph6", num:"Phase 6", title:"Second fix & finishes", dates:"Apr – Jun 2027", tasks: [
+    {name:"2nd fix plumbing — sanitary ware, radiators, UFH", note:"Loft bathroom & WC; walk-in shower (1st floor); electric underfloor heating mats in both bathrooms. Sanitary ware and heated towel rails client-supplied (Davina to procure).", who:"Plumber", flag:"normal"},
+    {name:"Bathroom tiling — loft & 1st floor", note:"Tiling spec TBC by client. Confirm before plasterer finishes so tile thickness/substrate can be coordinated.", who:"Tiler", flag:"normal"},
+    {name:"2nd fix electrical", note:"House-wide upgrade to current standards. Sockets, lighting and switching to all loft rooms and the 1st floor bedroom + bathroom per the agreed schedule (see Decision 08); timed extractors to both bathrooms; 3× mains-linked smoke detectors with battery backup, one per level.", who:"Electrician", flag:"normal"},
+    {name:"Hang fire doors — loft & stairwell", note:"2× single + 1× double, 4-panel grained FD30 (half-hour) to loft rooms, WC and bathroom; 8× FD30 to stairwell (Building Regs compliance). Confirm spec with Building Control.", who:"MC / carpenter", flag:"normal"},
+    {name:"Eaves access hatches (×2–3)", note:"To eaves storage areas per loft plan (PGA002).", who:"MC / carpenter", flag:"normal"},
+    {name:"Skirtings & architraves — loft & 1st floor new areas", note:"Style TBC — decide by September so profile can be sourced and cut.", who:"MC / carpenter", flag:"normal"},
+    {name:"Strike scaffolding", note:"Only when ALL external works are confirmed complete — repointing, gutters, windows, Oriel, fascias. Don't rush this.", who:"Scaffold co.", flag:"urgent"}
+  ]}
+]},
+
+gantt: {
+  alert: "⚠ Target: roof fully watertight — tiles replaced, flat roof felted, Velux installed — by end of January 2027. The red line marks this deadline. Phase 3 roofing runs through winter — keep temporary cover on standby and hold weather float.",
+  months: ["Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"],
+  deadlineMonth: 3,
+  legend: [
+    {label:"Mobilisation", color:"var(--ph0)"},
+    {label:"Demolition", color:"var(--ph1)"},
+    {label:"Structural", color:"var(--ph2)"},
+    {label:"Roof / shell", color:"var(--ph3)"},
+    {label:"MEP services", color:"var(--ph4)"},
+    {label:"Finishes", color:"var(--ph6)"},
+    {label:"External specialists", color:"var(--external)"}
+  ],
+  rows: [
+    {name:"Mobilisation & orders", cls:"bar-critical", s:0, e:0.5},
+    {name:"Scaffolding", cls:"bar-struct", s:0.25, e:6},
+    {name:"Steel order → delivery", cls:"bar-critical", s:0, e:1.5},
+    {name:"Demolition & strip-out", cls:"bar-demo", s:0.5, e:1.5},
+    {name:"Steelwork & floor joists", cls:"bar-struct", s:1.5, e:3},
+    {name:"Gable wall build-up", cls:"bar-struct", s:2, e:3},
+    {name:"Dormer structure", cls:"bar-struct", s:2.5, e:3.75},
+    {name:"Roofing — tiles & flat", cls:"bar-roof", s:2.5, e:3.75},
+    {name:"Velux installs", cls:"bar-roof", s:3, e:4},
+    {name:"Loft insulation", cls:"bar-roof", s:3.75, e:5},
+    {name:"Aluminium windows", cls:"bar-external", s:2.5, e:4},
+    {name:"Repointing", cls:"bar-external", s:1.5, e:4.5},
+    {name:"Guttering", cls:"bar-external", s:4, e:5},
+    {name:"1st fix plumbing", cls:"bar-services", s:3, e:5},
+    {name:"1st fix electrical", cls:"bar-services", s:3, e:5},
+    {name:"Loft partitions", cls:"bar-struct", s:3.5, e:4.5},
+    {name:"Plastering (house-wide)", cls:"bar-services", s:5, e:7},
+    {name:"2nd fix MEP + tiling", cls:"bar-finish", s:6.5, e:8},
+    {name:"Fire doors + carpentry", cls:"bar-finish", s:7.5, e:8.75},
+    {name:"Strike scaffold", cls:"bar-demo", s:6, e:6.5}
+  ]
+},
+
+compare: {
+  intro: "Understanding what changes highlights the demolition scope, structural complexity, and coordination requirements. Roof volume increases from uninhabitable storage to 45.17m³ of habitable loft space — Bedroom 5, Lounge, Bathroom, WC, Hallway and Store.",
+  groups: [
+    { title:"Loft level — key changes", colL:"Existing (EGA002–004)", colR:"Proposed (PGA002–004)", rows: [
+      {label:"Loft use", existing:"Uninhabitable storage / eaves storage. Basic collar-tie roof structure. Single stair access.", proposed:"Fully habitable — Bedroom 5, Lounge, Bathroom, WC, Hallway, Store.", tag:"new"},
+      {label:"Roof form (rear)", existing:"Plain hipped/pitched roof to rear. No dormer. Two chimney stacks visible on flank elevation (EGA003).", proposed:"New box dormer to rear — 2086 × 2979mm plan, 7759mm length. Juliette door + 2 windows. Gable built to ridge.", tag:"new", tagText:"New structure"},
+      {label:"Chimney stacks", existing:"Two stacks present — rear + front/alleyway side, shown on EGA003 existing elevations and loft plan.", proposed:"Both removed. Bricks recovered for garden wall reuse.", tag:"remove"},
+      {label:"Roof windows (front)", existing:"No Velux or rooflights to front elevation.", proposed:"3× Velux to front pitched elevation.", tag:"new"},
+      {label:"Flat roof section", existing:"Existing flat roof area to rear/side — existing felt covering per EGA002 roof plan.", proposed:"Retained and re-felted (3-layer torch-on). New flat rooflight added.", tag:"change", tagText:"Upgrade"},
+      {label:"Roof volume", existing:"N/A — uninhabitable, no habitable volume calculated.", proposed:"Hip: 21.06m³ + Dormer: 24.11m³ = 45.17m³ total (PGA003).", tag:"new", tagText:"New calc"},
+      {label:"Floor structure", existing:"Lightweight loft floor (not designed for habitable loading). Existing joists evident in EGA004 section.", proposed:"New structural steel + floor joists throughout. Marine ply subfloor. Spreader plates in walls.", tag:"new", tagText:"Full rebuild"},
+      {label:"Gable window", existing:"No gable window — existing gable terminates below ridge level.", proposed:"New window 1500 × 1500mm — obscure glazed, non-opening below 1.7m FFL (PGA003).", tag:"new"}
+    ]},
+    { title:"First floor — key changes", colL:"Existing", colR:"Proposed", rows: [
+      {label:"Room layout", existing:"Bedrooms 2, 3, 4; Bathroom; Hallway; Landing. Standard layout.", proposed:"Bedrooms 2, 3, 4 retained. Bathroom refurbished. New Store/Kitchenette added (PGA001).", tag:"new", tagText:"New room"},
+      {label:"Bathroom", existing:"Existing bathroom — water-damaged, to be stripped.", proposed:"Full refurbishment. Walk-in shower. Electric UFH mat. Retiled.", tag:"change", tagText:"Refurb"},
+      {label:"Kitchenette / utility", existing:"No kitchenette at first floor level.", proposed:"New Store/Kitchenette — \"final design to kitchen supplier\" noted on PGA001. Plumbing + electrical provisions.", tag:"new"}
+    ]},
+    { title:"External envelope — key changes", colL:"Existing", colR:"Proposed", rows: [
+      {label:"Brickwork", existing:"Red paint on rear. Carbon deposits on front. Pointing deteriorated.", proposed:"Full repoint all elevations. Paint removed (rear). Carbon cleaned (front). Walls: matching brick (PGA003).", tag:"change", tagText:"Restore"},
+      {label:"Gutters & downpipes", existing:"Existing gutters — condition unknown, likely original.", proposed:"Full replacement — cast aluminium by specialist contractor.", tag:"change", tagText:"Replace"},
+      {label:"Oriel window (front)", existing:"Existing Oriel window on front elevation — prominent original feature (EGA003).", proposed:"Replacement works while scaffold is in place. Finestration: matching timber (PGA003).", tag:"change", tagText:"Replace"},
+      {label:"Roof tiles", existing:"Existing tiles — condition and type TBC from survey.", proposed:"Full replacement with Rosemary clay. Roof: matching tile (PGA003).", tag:"change", tagText:"Replace"},
+      {label:"Fascias", existing:"Existing timber fascias — condition unknown.", proposed:"Repair/replace and paint black. Retain decorative gable timber and repaint.", tag:"change", tagText:"Restore"}
+    ]}
+  ],
+  callout: {title:"Key insight from comparing the drawings", text:"The existing section (EGA004) and proposed section (PGA004) show the same ground/first floor structural arrangement — confirming the ground floor is not structurally affected in this phase. The primary structural complexity is entirely at loft level: adding habitable floor loading to what was a lightweight roof space, removing two chimney stacks, building a new rear dormer, and rebuilding the gable wall to ridge height. Roof volume calculation (PGA003) confirms 45.17m³ addition — hip: 21.06m³, dormer: 24.11m³. The 1st floor works are largely cosmetic/services: strip, repair, new bathroom, new kitchenette."}
+},
+
+decisions: { items: [
+  {title:"Appoint ABL Homes & sign contract", desc:"ABL (Alb Homes, Ardit) has issued quote v4 and is asking for a decision so they can move to contract. Client is keen to appoint. Blocks the contract, the programme start date and every long-lead order.", by:"Now — Sep 2026"},
+  {title:"Sign off the insulation strategy & U-values", desc:"Hybrid natural strategy issued to ABL (see Insulation tab). The structural engineer / Building Control must confirm the U-value calculations against actual rafter and stud depths before ABL re-prices the package or materials are ordered. Also confirm whether insulation supply already sits in ABL's £3,800 Celotex quote — don't pay twice.", by:"Before insulation is re-priced"},
+  {title:"Appoint aluminium window supplier & place order", desc:"Dormer windows ×2, Juliette door ×1 double, gable end window ×1 — all custom aluminium, 8–12 week lead time. Order now or the units won't land before the dormer is closed in (Dec–Jan), leaving openings exposed through winter.", by:"Now — 8–12 wk lead"},
+  {title:"Living arrangements during roof demolition", desc:"The roof strip exposes the whole house and the first-floor bedrooms below need sheeting. Decide whether the household stays on the ground floor or relocates temporarily — ABL move faster without occupied rooms to protect.", by:"Before Phase 1 · Oct 2026"},
+  {title:"1st floor kitchenette design & supplier", desc:"PGA001 notes \"final design to kitchen supplier\" — the layout drives plumbing rough-in and socket positions, both needed before 1st fix. A late decision means lifting floors or replastering.", by:"Oct 2026"},
+  {title:"Flat roof — warm deck vs. ventilated cold deck", desc:"EPDM is vapour-closed. A cold deck with wood fibre and no proper ventilation risks interstitial condensation. Commit to a warm deck (preferred) or a guaranteed 50mm cross-ventilated void above the insulation before the dormer roof build-up is fixed.", by:"Before Phase 3 · Nov 2026"},
+  {title:"Loft bathroom location", desc:"To be fixed once the shell and floor are in and steel positions are known — it drives 1st fix plumbing and drainage. Awaiting the structural engineer's (Amrit) advice on whether the bathroom can stay put.", by:"After shell + floor · Nov 2026"},
+  {title:"Electrical socket & lighting schedule (loft)", desc:"The electrician needs a confirmed layout for 1st fix across all loft rooms. Changes after boarding-out are very costly.", by:"Dec 2026"},
+  {title:"Bathroom sanitary ware & tile specification", desc:"Sanitary ware is client-supply; tiling spec also needs confirming. Both affect plumbing rough-in, waterproofing substrate and tile quantities. Specify and procure early to avoid waiting on delivery.", by:"Dec 2026"},
+  {title:"Skirting & architrave profile", desc:"Style TBC. Decide before second fix carpentry so the correct profile can be sourced and cut — bespoke profiles take longer than standard stock.", by:"Mar 2027"}
+]},
+
+risks: { groups: [
+  { label:"High — address immediately", level:"rh", items: [
+    {name:"Steel lead time slippage", mit:"Order structural steelwork the moment the engineer's drawings are issued. 4–6 week fabrication lead time is non-negotiable and sits on the critical path ahead of Phase 2 (Oct–Nov)."},
+    {name:"Roof not watertight before end January", mit:"Phase 3 roofing runs Dec–Jan. Treat end January 2027 as a hard deadline. Have temporary roofing membrane (Monaflex/tarpaulins) on standby from day one of roof demolition, and hold a weather-float allowance. Never leave the stripped roof unprotected overnight."},
+    {name:"Unknown extent of water damage", mit:"The existing drawings and scope both reference water damage from roof leaks. Until strip-out is complete you won't know the full extent. Build 10–15% cost contingency and 2 weeks programme buffer specifically for remedial works."},
+    {name:"Window lead time — dormer left open", mit:"Aluminium windows on 8–12 week lead time. If the dormer structure is complete but windows haven't arrived, you need temporary hoarding or a membrane solution. Do not leave openings unprotected. Appoint supplier now."}
+  ]},
+  { label:"Medium — monitor actively", level:"rm", items: [
+    {name:"Trade availability & winter working", mit:"Roofers, structural carpenters and plumbers book weeks ahead — confirm ABL's key trades and their earliest start dates now. Roofing and external works fall in Dec–Feb: expect weather-lost days and price a realistic float."},
+    {name:"Scaffolding coordination with neighbours", mit:"Flank elevation shows semi-detached neighbour (EGA003). Notify 217a and 217b in writing before scaffold is erected. Party Wall Agreement confirmed not required."},
+    {name:"Mains moling disruption", mit:"Moling from drive to house will disrupt supply. Coordinate timing when you have alternative water access. Thames Water may require advance notice — check before booking contractor."},
+    {name:"Rosemary clay tile supply", mit:"Clay tiles can have batch lead times and colour variation between batches. Order all tiles at once. Confirm availability before demolition starts — you can't strip the old roof without new tiles on order."},
+    {name:"Contract not yet signed", mit:"ABL Homes (Ardit) is the intended MC — replacing the earlier The Market Design & Build line — but nothing is signed. Every long-lead order (steel, windows) and the winter roof deadline depend on getting the contract and scope pack issued to ABL now."},
+    {name:"Insulation double-counted", mit:"ABL's estimator suspects insulation materials already sit in the original £3,800 Celotex quote. Confirm who supplies — ABL or Davina — before any materials are bought, or the package is paid for twice."},
+    {name:"\"Sinking\" floor steels — +£2.4k", mit:"Quote v4 adds £2.4k to drop the floor steels within the existing joist depth — a slow install method. Confirm it's necessary and that no shallower build-up or alternative connection detail avoids the cost."}
+  ]},
+  { label:"Lower — monitor as programme develops", level:"rl", items: [
+    {name:"Skip road permit delays", mit:"Apply for Council road permit as soon as MC is appointed. Ealing can take 2–3 weeks. Don't let waste management hold up site clearance."},
+    {name:"Decorative cornicing damage", mit:"Photograph and document all existing cornicing before works begin. Brief every trade. Protect sections adjacent to work areas. Specialist cornice restorers are available but expensive — prevention is far cheaper."},
+    {name:"Building Control sign-off", mit:"Building Regs apply to structural works, fire doors, electrical upgrade, and drainage changes. Notify Building Control before works start and agree inspection stages. Get sign-off stage by stage — don't assume at completion."},
+    {name:"Natural insulation — labour & programme", mit:"Wood-fibre install is slower and hand-cut; ABL's estimator allows roughly £500 extra labour over the Celotex system. Hold a few days' float in Phase 3 and confirm ABL's team is comfortable with the natural build-ups."}
+  ]}
+]},
+
+contractors: { items: [
+  {role:"Lead", name:"ABL Homes (Alb Homes)", scope:"Loft & main works — structural, dormer, roofing, carpentry, plastering coordination, programme. Contact: Ardit · 07867 312160 · albhomes.co.uk. Quote at v4 (3 Sep 2026); client keen to appoint — contract not yet signed. Supersedes the earlier \"The Market Design & Build\" appointment.", status:"Sign contract", level:"crit"},
+  {role:"Structural", name:"Structural engineer", scope:"Steel beam schedule, spreader plate spec, chimney breast removal, site inspections during structural works.", status:"Confirm drawings now", level:"crit"},
+  {role:"Structural", name:"Steel fabricator", scope:"Supply structural steelwork per engineer's drawings. 4–6 week lead time — order immediately on drawings issue.", status:"Order ASAP", level:"crit"},
+  {role:"External", name:"Aluminium window supplier", scope:"Dormer windows ×2, Juliette door ×1 double, gable end window ×1 (1500 × 1500mm). Supply and install. 8–12 week lead time.", status:"Appoint urgently", level:"crit"},
+  {role:"External", name:"Scaffolding contractor", scope:"Full wrap — front, rear, side alley. Lifts for repointing + Oriel. Boiler access. Neighbour coordination.", status:"Book now", level:"crit"},
+  {role:"External", name:"Aluminium guttering specialist", scope:"Cast aluminium gutters and downpipes — full replacement. Must follow roofing completion.", status:"Appoint soon", level:"urg"},
+  {role:"External", name:"Repointing / brickwork contractor", scope:"Front, rear, side. Red paint removal (rear). Carbon cleaning (front). Must work while scaffold is up. Muka Brickwork quote received (19/03/2026). ABL installs Monaflex ahead of their start.", status:"Appoint soon", level:"urg"},
+  {role:"Services", name:"Plumber", scope:"Mains upgrade (moling), unvented cylinder, 1st & 2nd fix throughout, drainage extensions, UFH.", status:"Appoint soon", level:"urg"},
+  {role:"Services", name:"Electrician", scope:"House-wide wiring upgrade, 1st & 2nd fix, smoke detectors (1 per level), extractor fans.", status:"Appoint soon", level:"urg"},
+  {role:"Finishes", name:"Plasterer", scope:"Loft + 1st floor skim finish; house-wide repairs; cornicing protection and replacement.", status:"Appoint Phase 4", level:"norm"},
+  {role:"Finishes", name:"Tiler", scope:"Waterproofing subfloors (~20m²); tiling loft + 1st floor bathrooms to client spec.", status:"Appoint Phase 5", level:"norm"},
+  {role:"Specialist", name:"Moling contractor", scope:"Mains pipe upgrade from drive to house. Coordinate with water board — advance notice may be required.", status:"Appoint soon", level:"urg"}
+]},
+
+budget: {
+  alert: "⚠ 15% contingency is built into all totals above. Water damage extent is the biggest unknown — cannot be quantified until strip-out is complete. These figures cover contractor costs only; client-supplied items (sanitary ware, tiles, kitchen units, flooring, decoration) are additional.",
+  quoteTitle: "Live quote — ABL Homes (Alb Homes) · v4 · 3 Sep 2026",
+  removed: [
+    "Temporary ceilings — client has a different plan",
+    "Staircase — keeping the existing stair; small allowance kept for a step up into the main loft area",
+    "Tanking — deferred until the bathroom design is settled",
+    "Velux ×3 supply cost — Davina supplies the units"
+  ],
+  added: [
+    "Floor steels +£2.4k for \"sinking\" steel within the existing joist depth — labour-intensive install",
+    "Install Monaflex after the brick contractor",
+    "Inspect the dining-room corner leak",
+    "Open up the doorway in front of the loft stairs",
+    "Wire for a future 2-unit split — future-proofing"
+  ],
+  statusCallout: {title:"Status & open pricing items", text:"ABL Homes (Ardit · 07867 312160 · albhomes.co.uk) issued quote v4 on 3 Sep 2026 and is pushing for a yes/no to move to contract — client is keen to appoint. The estimate model below is unchanged; ABL's priced quote supersedes it once appointed. Still to be priced or firmed up: the insulation package — ABL's Celotex/PIR base is £3,800; the hybrid natural strategy (see Insulation tab) is estimated at ≈ £5,100 and needs re-pricing by ABL — the opening in front of the stairs (confirm whether a lintel is needed first), the dining-room leak repair (extent unknown until opened up), and possible half-landing works beneath the Oriel window."},
+  contingencyPct: 15,
+  groups: [
+    { phase:"Professional fees", rows: [
+      {name:"Structural engineer", note:"Already appointed & paid — outside MC scope", low:"", mid:"", high:"", notes:"Complete — already paid, not in contractor budget"},
+      {name:"Party Wall surveyor", note:"Not required — confirmed by client", low:"", mid:"", high:"", notes:"Handled — removed from budget"},
+      {name:"Building Control", note:"Full plans submission + stage inspections", low:"1500", mid:"2000", high:"2500", notes:"Ealing Council or Approved Inspector"}
+    ]},
+    { phase:"Demolition & soft strip", rows: [
+      {name:"Demolition, soft strip & skips", note:"1st floor bathroom, rear bedroom & dining ceiling; chimney stacks ×2; chimney breast GF; brick recovery for garden wall; skip permits", low:"10000", mid:"13500", high:"18000", notes:"Road permit from Ealing required for skip — apply early"}
+    ]},
+    { phase:"Structural works", rows: [
+      {name:"Scaffolding", note:"Full wrap ~6 months; single poles to 217a/b; lifts for repointing, Oriel window & boiler access", low:"13000", mid:"15000", high:"17000", notes:"First site activity — book now"},
+      {name:"Structural steelwork", note:"Beam fabrication + erection; spreader plates; triple timber trims; per engineer's drawings", low:"10000", mid:"13500", high:"18000", notes:"4–6 week fabrication lead time — order on drawing issue"},
+      {name:"Internal floor structure", note:"Loft structural joists; marine ply subfloor ¾\"; water damage repair (loft floor + 1st floor ceiling joists); floorboard repairs; eaves boarding", low:"6500", mid:"8500", high:"11000", notes:"Water damage extent unknown until strip — high range if widespread"},
+      {name:"Loft partitions", note:"All new loft room walls per PGA002: Bedroom 5, Lounge, Bathroom, WC, Hallway, Store", low:"5000", mid:"7000", high:"9000", notes:"After steelwork, before 1st fix MEP"},
+      {name:"Box dormer structure", note:"Rear dormer — 7759mm wide, structural walls for Juliette door ×1 double + windows ×2", low:"18000", mid:"22000", high:"28000", notes:"Structural carpentry + timber frame"},
+      {name:"Gable wall build-up", note:"Brickwork to ridge height; retain front gable with decorative tiles and reinforce", low:"7000", mid:"10500", high:"14000", notes:"Matching brick per PGA003"}
+    ]},
+    { phase:"Roofing", rows: [
+      {name:"Rosemary clay tiles + ridges", note:"Full replacement of all pitched roof tiles; bird spikes; recover chimney bricks for garden wall", low:"20000", mid:"25500", high:"32000", notes:"Hard deadline: watertight by end Jan 2027 — winter roofing"},
+      {name:"Flat roof — 3-layer torch-on felt", note:"Dormer flat roof; complete before dormer openings formed", low:"3500", mid:"4750", high:"6000", notes:"Never leave openings unprotected overnight"},
+      {name:"Roof & loft insulation", note:"Hybrid natural strategy — wood fibre to pitched roof / dormer walls / gable / floor; PIR + wood fibre to flat ceiling; wool to steels. See Insulation tab", low:"3800", mid:"5100", high:"6500", notes:"ABL Celotex package £3,800; natural hybrid ≈ £5,100 est. — not yet re-priced by ABL"},
+      {name:"Velux ×5 + flat rooflight ×1", note:"3× front pitched, 2× GF kitchen pitched, 1× loft flat roof", low:"12000", mid:"14500", high:"18000", notes:"Confirm sizes vs drawings before ordering"}
+    ]},
+    { phase:"External envelope", rows: [
+      {name:"Aluminium windows + Juliette door", note:"Dormer windows ×2, Juliette ×1 (double), gable end window ×1 (1500×1500mm) — all custom aluminium", low:"18000", mid:"24000", high:"32000", notes:"8–12 week lead time — appoint supplier immediately"},
+      {name:"Oriel window replacement", note:"Front elevation; matching timber per PGA003; while scaffold is up", low:"5000", mid:"7500", high:"10000", notes:"Don't miss the scaffold window — won't come back"},
+      {name:"Fascias + decorative timber", note:"Repair/replace + paint black; repaint front gable decorative timber", low:"2500", mid:"3500", high:"4500", notes:"While scaffold accessible"},
+      {name:"Repointing + cleaning", note:"Front, rear & side elevations; red paint removal (rear); carbon cleaning (front)", low:"13000", mid:"17500", high:"23000", notes:"Specialist contractor; must complete before scaffold comes down"},
+      {name:"Cast aluminium gutters + downpipes", note:"Full replacement by specialist contractor; follows roofing completion", low:"6000", mid:"9000", high:"12000", notes:"Coordinate with fascia + scaffold programme"}
+    ]},
+    { phase:"Plumbing & heating", rows: [
+      {name:"Mains pipe upgrade (moling)", note:"Drive to house; specialist moling contractor; Thames Water advance notice may be required", low:"4000", mid:"5500", high:"7000", notes:"Disruptive — plan timing carefully"},
+      {name:"Unvented cylinder", note:"Supply + install; pressure testing; resolve any leaks", low:"4000", mid:"5500", high:"7000", notes:"G3 qualified plumber required"},
+      {name:"Boiler flue extension", note:"External boiler shed flue to roof level", low:"800", mid:"1150", high:"1500", notes:"Easiest done while scaffold is up"},
+      {name:"1st fix plumbing", note:"Hot/cold to loft bathroom + 1st floor kitchenette; waste extensions; underground drains (alley + rear); radiator pipework for new areas; relocate rear living room radiator", low:"8000", mid:"11500", high:"15000", notes:"Concealed runs as much as possible"},
+      {name:"Bathroom waterproofing", note:"Loft + 1st floor bathrooms (~20m²)", low:"1500", mid:"2000", high:"2500", notes:"Before tiling"},
+      {name:"2nd fix plumbing", note:"Fit sanitary ware (client-supplied by Davina), heated towel rails, radiators; walk-in shower 1st floor; UFH electric mats ×2 bathrooms", low:"4000", mid:"5500", high:"7000", notes:"Sanitary ware + heated towel rails by Davina"}
+    ]},
+    { phase:"Electrical (1st & 2nd fix)", rows: [
+      {name:"Electrical — house-wide upgrade + loft", note:"New circuits to fuse board; loft bedroom, lounge, bathroom, WC, hall; 1st floor bedroom + bathroom; 3× mains-linked smoke detectors; extractor fans; UFH mats (supply in plumbing above)", low:"15000", mid:"19500", high:"25000", notes:"Full socket/lighting schedule to be confirmed — see Phases tab"}
+    ]},
+    { phase:"Finishes", rows: [
+      {name:"Plastering", note:"All loft rooms; 1st floor bathroom + rear bedroom; GF hallway + stairwell + dining room ceiling replacement; around kitchen rooflight; former chimney wall; cornicing protection + repair", low:"15000", mid:"19000", high:"25000", notes:"GF hallway + dining ceilings are full replacements, not repairs"},
+      {name:"Bathroom tiling", note:"Loft bathroom + 1st floor bathroom; spec to be confirmed by Davina", low:"4000", mid:"6000", high:"8000", notes:"Labour only — tiles are client-supply (see below)"},
+      {name:"Fire doors", note:"2× single + 1× double, 4-panel grained FD30 to loft rooms, WC & bathroom; 8× FD30 to stairwell", low:"9000", mid:"12000", high:"16000", notes:"Confirm exact spec with Building Control"},
+      {name:"2nd fix carpentry", note:"Eaves access hatches ×2–3; skirtings + architraves to loft + new 1st floor areas; style TBC", low:"3000", mid:"4500", high:"6000", notes:"Profile must be decided by Sep 2026 to source and cut"}
+    ]}
+  ],
+  grandNote: "VAT at 20% adds ~£68k on mid figure",
+  vatNote: "Contractor will be VAT-registered at this value — confirm",
+  supplyDesc: "Not included in contractor cost above — procure separately. Budget these on top of the estimate.",
+  supply: [
+    {who:"By Davina", excl:false, name:"Sanitary ware — loft bathroom & WC", note:"WC pan, basin, bath or shower tray, taps. Budget £2,000–£6,000+ depending on spec. Must be specified before 1st fix plumbing starts."},
+    {who:"By Davina", excl:false, name:"Heated towel rails", note:"Loft bathroom + WC. Budget £300–£800 per rail. Confirm BTU output with plumber before ordering."},
+    {who:"By Davina", excl:false, name:"Bathroom tiles — both bathrooms", note:"Spec TBC — tile choice drives cost significantly. Budget £800–£3,000+ per room for tiles. Must confirm before waterproofing so substrate can be coordinated."},
+    {who:"Client decision", excl:false, name:"1st floor kitchenette units & appliances", note:"PGA001 notes \"final design to kitchen supplier\". Confirm layout by Oct 2026 — drives plumbing rough-in positions and socket locations."},
+    {who:"Not in scope", excl:true, name:"Flooring — loft & 1st floor", note:"Carpet, engineered wood etc. not included. Budget £3,000–£8,000 depending on area and spec."},
+    {who:"Not in scope", excl:true, name:"Internal decoration / painting", note:"Painting throughout loft + all affected 1st floor and GF areas. Budget £4,000–£8,000 for a decorator once plastering dries."}
+  ],
+  excludesCallout: {title:"What this estimate excludes", text:"VAT (20% on all contractor works — at this contract value the MC will be VAT registered). Architect CA/inspection fees if Draw & Plan continue in a contract administration role. Ground floor works beyond chimney breast removal and ceiling repairs. Any Thames Water adoption or reinstatement fees for the moling connection. Planning application fees (verify PD status with Draw & Plan — the rear dormer size may require full planning). Furniture and soft furnishings."}
+},
+
+insulation: {
+  alert: "⚠ ABL made no change to the insulation line in quote v4 — Ardit is blocked without confirmed quantities and U-values. This strategy answers that. Final thicknesses to be signed off by the structural engineer / Building Control against actual rafter and stud depths before the package is re-priced or materials ordered.",
+  approach: "Approach: wood fibre (Steico Flex, λ ≈ 0.038 W/m·K) as the primary insulant in every sloping and vertical element; a Celotex/PIR + wood-fibre hybrid only at the dormer flat ceiling, where headroom is tight; sheep's wool (Thermafleece CosyWool) hand-packed around and inside all new steel. Airtightness / vapour control throughout: Pro Clima INTELLO membrane + TESCON VANA tape, continuous across every junction.",
+  tableRows: [
+    {element:"Dormer flat ceiling", subtitle:"Hybrid — headroom critical", mats:["wf","pir"], between:"100–140mm wood fibre, full depth between the flat-roof rafters — uses existing joist depth, costs no headroom", over:"50–75mm PIR continuous on the warm side under the rafters — the only headroom cost; also kills the rafter cold-bridge", targetU:"0.18*", indicU:"≈ 0.15–0.17"},
+    {element:"Original front sloping roof", subtitle:"", mats:["wf"], between:"100mm between rafters (deepen rafters if shallower). Roof is being re-tiled — use a vapour-permeable underlay and drop the 50mm vent gap to allow full-fill", over:"80–100mm wood fibre continuous across the underside of all rafters, then battened service void + plasterboard", targetU:"0.18*", indicU:"≈ 0.16–0.18"},
+    {element:"Dormer walls — front, both cheeks & any return", subtitle:"", mats:["wf"], between:"100mm Steico Flex, full-fill between 100mm studs", over:"60mm wood-fibre sheathing board outside + 40mm wood fibre in the internal service zone (or 140mm studs + 60mm board, no internal layer)", targetU:"0.18", indicU:"≈ 0.18"},
+    {element:"New gable wall", subtitle:"125 × 47 C24 frame", mats:["wf"], between:"120–125mm Steico Flex, full-fill between the studs", over:"60mm wood-fibre sheathing board outside; carry insulation + membrane unbroken across the junction with the masonry below", targetU:"0.18", indicU:"≈ 0.17"},
+    {element:"Existing party wall", subtitle:"", mats:["wool"], between:"Packed tight into every brick pocket where beams A–E bear", over:"INTELLO membrane carried from roof / walls onto the party-wall face and sealed", targetU:"No target", indicU:"Separating wall — condensation control only", na:true},
+    {element:"New steel framing", subtitle:"Beams A–E, SHS column, padstones", mats:["wool"], between:"Hand-packed into the open web of every I-section; wrapped round the 100 × 100 SHS column", over:"Stuffed into brick pockets and padstone recesses", targetU:"No target", indicU:"Surface-condensation control on cold steel", na:true},
+    {element:"Loft floor", subtitle:"Between joists", mats:["wf"], between:"100mm Steico Flex pushed to the underside of the new 200 × 47 / 150 × 47 joists", over:"50–100mm open service void left above for first-fix cables and pipes", targetU:"No target", indicU:"Heated both sides — acoustic + service void only", na:true}
+  ],
+  footnote: "* 0.18 W/m²K is the Approved Document L headroom-constrained allowance for rafter-level loft insulation; 0.15–0.16 is the unconstrained new-build target. Aim for the lower figure where the build-up allows. Wood fibre: Steico Flex 036 (λ ≈ 0.038 W/m·K) — IndiTherm hemp is an equivalent alternative.",
+  costTitle: "ABL's insulation package: £3,800 (Celotex / PIR system)",
+  costText: "Includes the dormer ceiling PIR, install and membranes. Switching to this hybrid natural strategy, on the estimator's outline: −£960 PIR removed (floor + wall/pitch, excl. dormer ceiling) + £1,735 natural materials + ~£500 added labour ≈ £5,100 total, roughly a £1,300 uplift. Wood fibre between the dormer ceiling rafters and around the Velux may add a little more. To be firmed up by ABL against this strategy.",
+  qa: [
+    {n:"Q1", title:"How much insulation to meet the U-values?", desc:"Roughly 180–200mm total wood fibre on the pitched roof and dormer walls; 125–185mm on the new gable; a hybrid ~100mm wood fibre + ~60mm PIR at the flat ceiling. The loft floor and party wall have no U-value target. Exact figures to be confirmed by the structural engineer / Building Control against real timber depths — see table."},
+    {n:"Q2", title:"How much between the timbers vs. over?", desc:"Every sloping / flat element gets wood fibre filling the full depth between the timbers (~100mm) plus a continuous layer across the face of the timbers (60–100mm) — the continuous layer is what defeats the timber cold-bridge. The flat ceiling is the only exception: its continuous layer is PIR, not wood fibre, to save headroom."},
+    {n:"Q3", title:"Only pitched roof, floor & gable — what about the rest of the dormer walls?", desc:"Wood fibre goes in every external dormer wall — front, both cheeks and the gable — plus the front pitched roof and between the floor joists. PIR stays only in the flat dormer ceiling (hybrid, with wood fibre between the rafters). Sheep's wool is only around / inside the steels and the party-wall pockets."}
+  ],
+  confirmTitle: "Also confirm before re-pricing",
+  confirmItems: [
+    {bold:"Insulation supply —", text:"whether ABL's £3,800 quote already includes the insulation materials (their estimator suspects it does). Settle before Davina buys anything, or it is paid for twice."},
+    {bold:"U-value sign-off —", text:"who confirms the calculations for Building Control: the structural engineer (David) or a separate assessor."},
+    {bold:"Flat roof deck —", text:"EPDM is vapour-closed. Commit to a warm deck (preferred — removes the condensation risk and suits the breathable build-ups) or guarantee a 50mm cross-ventilated void above the wood fibre on a cold deck."}
+  ]
 }
+};
 
-// Month columns: 0 = Oct 2026 … 8 = Jun 2027. Deadline line = end of Jan (m === 3).
-const rows = [
-  { name: 'Mobilisation & orders',    cls: 'bar-critical',  s: 0,    e: 0.5  },
-  { name: 'Scaffolding',              cls: 'bar-struct',    s: 0.25, e: 6    },
-  { name: 'Steel order → delivery',   cls: 'bar-critical',  s: 0,    e: 1.5  },
-  { name: 'Demolition & strip-out',   cls: 'bar-demo',      s: 0.5,  e: 1.5  },
-  { name: 'Steelwork & floor joists', cls: 'bar-struct',    s: 1.5,  e: 3    },
-  { name: 'Gable wall build-up',      cls: 'bar-struct',    s: 2,    e: 3    },
-  { name: 'Dormer structure',         cls: 'bar-struct',    s: 2.5,  e: 3.75 },
-  { name: 'Roofing — tiles & flat',   cls: 'bar-roof',      s: 2.5,  e: 3.75 },
-  { name: 'Velux installs',           cls: 'bar-roof',      s: 3,    e: 4    },
-  { name: 'Loft insulation',          cls: 'bar-roof',      s: 3.75, e: 5    },
-  { name: 'Aluminium windows',        cls: 'bar-external',  s: 2.5,  e: 4    },
-  { name: 'Repointing',               cls: 'bar-external',  s: 1.5,  e: 4.5  },
-  { name: 'Guttering',                cls: 'bar-external',  s: 4,    e: 5    },
-  { name: '1st fix plumbing',         cls: 'bar-services',  s: 3,    e: 5    },
-  { name: '1st fix electrical',       cls: 'bar-services',  s: 3,    e: 5    },
-  { name: 'Loft partitions',          cls: 'bar-struct',    s: 3.5,  e: 4.5  },
-  { name: 'Plastering (house-wide)',   cls: 'bar-services',  s: 5,    e: 7    },
-  { name: '2nd fix MEP + tiling',     cls: 'bar-finish',    s: 6.5,  e: 8    },
-  { name: 'Fire doors + carpentry',   cls: 'bar-finish',    s: 7.5,  e: 8.75 },
-  { name: 'Strike scaffold',          cls: 'bar-demo',      s: 6,    e: 6.5  },
-];
+/* ============ STATE ============ */
+let STATE = JSON.parse(JSON.stringify(DEFAULTS));
+let session = null;
+const editingSet = new Set();
 
-const tbody = document.getElementById('gantt-body');
-rows.forEach(r => {
-  const tr = document.createElement('tr');
-  const td0 = document.createElement('td');
-  td0.textContent = r.name;
-  tr.appendChild(td0);
-  for (let m = 0; m < 9; m++) {
-    const td = document.createElement('td');
-    td.style.minWidth = '58px';
-    const wrap = document.createElement('div');
-    wrap.className = 'bar-cell';
-    if (r.e > m && r.s < m + 1) {
-      const bar = document.createElement('div');
-      bar.className = 'bar ' + r.cls;
-      bar.style.left  = Math.max(0, (r.s - m)) * 100 + '%';
-      bar.style.right = Math.max(0, (m + 1 - r.e)) * 100 + '%';
-      wrap.appendChild(bar);
-    }
-    if (m === 3) {
-      const line = document.createElement('div');
-      line.className = 'deadline-line';
-      line.title = 'Roof watertight deadline';
-      wrap.appendChild(line);
-    }
-    td.appendChild(wrap);
-    tr.appendChild(td);
+/* ============ HELPERS ============ */
+function el(tag, attrs, children) {
+  const e = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    if (k === "class") e.className = attrs[k];
+    else if (k === "html") e.innerHTML = attrs[k];
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), attrs[k]);
+    else e.setAttribute(k, attrs[k]);
   }
-  tbody.appendChild(tr);
-});
+  (children || []).forEach(c => { if (c) e.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+  return e;
+}
+function txt(s) { return document.createTextNode(s == null ? "" : s); }
+function money(n) { return "£" + Math.round(n).toLocaleString("en-GB"); }
+function num(s) { const n = parseFloat(String(s).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; }
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+
+/* ============ GENERIC EDITABLE LIST ============ */
+/*
+schema: {
+  fields: [{key,label,type:'text'|'textarea'|'select'|'number', options?}],
+  addLabel, makeDefault: () => item,
+  nested?: { key: 'children', schema: {...same shape...}, label: 'Tasks' }
+}
+*/
+function renderEditableList(items, schema, onChange) {
+  const wrap = el("div", {});
+  function rerender() { onChange(items); refresh(); }
+  function refresh() {
+    wrap.innerHTML = "";
+    items.forEach((item, idx) => {
+      const card = el("div", { class: "item-card" });
+      const grid = el("div", { class: "field-grid" });
+      schema.fields.forEach(f => {
+        const row = el("div", { class: "field-row" });
+        row.appendChild(el("label", {}, [f.label]));
+        let input;
+        if (f.type === "textarea") {
+          input = el("textarea", {});
+          input.value = item[f.key] || "";
+        } else if (f.type === "select") {
+          input = el("select", {});
+          f.options.forEach(o => {
+            const opt = el("option", { value: o.value }, [o.label]);
+            if (item[f.key] === o.value) opt.selected = true;
+            input.appendChild(opt);
+          });
+        } else {
+          input = el("input", { type: f.type === "number" ? "number" : "text" });
+          input.value = item[f.key] || "";
+        }
+        input.addEventListener("input", () => { item[f.key] = input.value; onChange(items); });
+        row.appendChild(input);
+        if (f.wide) row.style.gridColumn = "1 / -1";
+        grid.appendChild(row);
+      });
+      card.appendChild(grid);
+
+      if (schema.nested) {
+        const nb = el("div", { class: "nested-block" });
+        nb.appendChild(el("div", { class: "nested-label" }, [schema.nested.label]));
+        if (!item[schema.nested.key]) item[schema.nested.key] = [];
+        nb.appendChild(renderEditableList(item[schema.nested.key], schema.nested.schema, () => onChange(items)));
+        card.appendChild(nb);
+      }
+
+      const ctrl = el("div", { class: "item-controls" });
+      if (idx > 0) ctrl.appendChild(el("button", { class: "icon-btn", type:"button", onclick: () => { [items[idx-1], items[idx]] = [items[idx], items[idx-1]]; rerender(); } }, ["↑ Up"]));
+      if (idx < items.length - 1) ctrl.appendChild(el("button", { class: "icon-btn", type:"button", onclick: () => { [items[idx+1], items[idx]] = [items[idx], items[idx+1]]; rerender(); } }, ["↓ Down"]));
+      ctrl.appendChild(el("button", { class: "icon-btn danger", type:"button", onclick: () => { items.splice(idx, 1); rerender(); } }, ["✕ Remove"]));
+      card.appendChild(ctrl);
+      wrap.appendChild(card);
+    });
+    const addBtn = el("button", { class: "add-btn", type:"button", onclick: () => { items.push(schema.makeDefault()); rerender(); } }, ["+ " + schema.addLabel]);
+    wrap.appendChild(addBtn);
+  }
+  refresh();
+  return wrap;
+}
+
+function editPanel(bodyEl) {
+  const panel = el("div", { class: "edit-panel" });
+  panel.appendChild(bodyEl);
+  return panel;
+}
+function saveBar(onSave, onCancel) {
+  const bar = el("div", { class: "save-bar" });
+  bar.appendChild(el("button", { class: "cancel-btn", type:"button", onclick: onCancel }, ["Cancel"]));
+  bar.appendChild(el("button", { class: "save-btn", type:"button", onclick: onSave }, ["Save changes"]));
+  return bar;
+}
+
+const FLAG_OPTS = [{value:"critical",label:"Critical"},{value:"urgent",label:"Urgent"},{value:"normal",label:"Normal"},{value:"external",label:"External"}];
+const TAG_OPTS = [{value:"",label:"None"},{value:"new",label:"New"},{value:"remove",label:"Remove"},{value:"change",label:"Change"}];
+const LEVEL_OPTS = [{value:"crit",label:"Critical"},{value:"urg",label:"Urgent"},{value:"norm",label:"Normal"}];
+const RISK_LEVEL_OPTS = [{value:"rh",label:"High"},{value:"rm",label:"Medium"},{value:"rl",label:"Lower"}];
+
+/* ============ RENDER: PHASES ============ */
+function renderPhases() {
+  const host = document.getElementById("phases-body");
+  host.innerHTML = "";
+  if (editingSet.has("phases")) {
+    const data = deepClone(STATE.phases);
+    const schema = {
+      fields: [
+        {key:"cls", label:"Colour (ph0–ph6)", type:"text"},
+        {key:"num", label:"Phase label", type:"text"},
+        {key:"title", label:"Title", type:"text", wide:true},
+        {key:"dates", label:"Dates", type:"text", wide:true}
+      ],
+      addLabel: "Add phase",
+      makeDefault: () => ({cls:"ph0", num:"Phase", title:"New phase", dates:"", tasks:[]}),
+      nested: {
+        key: "tasks", label: "Tasks",
+        schema: {
+          fields: [
+            {key:"name", label:"Task name", type:"text", wide:true},
+            {key:"note", label:"Notes", type:"textarea", wide:true},
+            {key:"who", label:"Who", type:"text"},
+            {key:"flag", label:"Priority", type:"select", options: FLAG_OPTS}
+          ],
+          addLabel: "Add task",
+          makeDefault: () => ({name:"New task", note:"", who:"", flag:"normal"})
+        }
+      }
+    };
+    const list = renderEditableList(data.list, schema, () => {});
+    host.appendChild(editPanel(list));
+    host.appendChild(saveBar(
+      () => saveSection("phases", data),
+      () => { editingSet.delete("phases"); updateEditToggles(); renderPhases(); }
+    ));
+    return;
+  }
+  STATE.phases.list.forEach(phase => {
+    const phaseEl = el("div", { class: "phase " + phase.cls });
+    const head = el("div", { class: "phase-head" }, [
+      el("span", { class: "phase-num" }, [phase.num]),
+      el("span", { class: "phase-title" }, [phase.title]),
+      el("span", { class: "phase-dates" }, [phase.dates])
+    ]);
+    const tasksEl = el("div", { class: "tasks" });
+    phase.tasks.forEach(t => {
+      tasksEl.appendChild(el("div", { class: "task" }, [
+        el("div", {}, [
+          el("div", { class: "task-name" }, [t.name]),
+          el("div", { class: "task-note" }, [t.note])
+        ]),
+        el("div", { class: "task-who" }, [t.who]),
+        el("div", {}, [el("span", { class: "flag f-" + t.flag }, [t.flag.charAt(0).toUpperCase() + t.flag.slice(1)])])
+      ]));
+    });
+    phaseEl.appendChild(head);
+    phaseEl.appendChild(tasksEl);
+    host.appendChild(phaseEl);
+  });
+}
+
+/* ============ RENDER: GANTT ============ */
+function renderGantt() {
+  const host = document.getElementById("gantt-body-wrap");
+  host.innerHTML = "";
+  if (editingSet.has("gantt")) {
+    const data = deepClone(STATE.gantt);
+    const alertRow = el("div", { class: "field-row" });
+    alertRow.appendChild(el("label", {}, ["Alert banner"]));
+    const alertInput = el("textarea", {});
+    alertInput.value = data.alert;
+    alertInput.addEventListener("input", () => data.alert = alertInput.value);
+    alertRow.appendChild(alertInput);
+
+    const schema = {
+      fields: [
+        {key:"name", label:"Work package", type:"text", wide:true},
+        {key:"cls", label:"Colour class", type:"select", options:[
+          {value:"bar-critical",label:"Critical (red)"},{value:"bar-demo",label:"Demolition (dark red)"},
+          {value:"bar-struct",label:"Structural (blue)"},{value:"bar-roof",label:"Roof (green)"},
+          {value:"bar-services",label:"Services (orange)"},{value:"bar-finish",label:"Finish (teal)"},
+          {value:"bar-external",label:"External (purple)"}
+        ]},
+        {key:"s", label:"Start (month index, 0-based)", type:"number"},
+        {key:"e", label:"End (month index)", type:"number"}
+      ],
+      addLabel: "Add row",
+      makeDefault: () => ({name:"New item", cls:"bar-struct", s:0, e:1})
+    };
+    const list = renderEditableList(data.rows, schema, () => {});
+    const wrap = el("div", {}, [alertRow, list]);
+    host.appendChild(editPanel(wrap));
+    host.appendChild(saveBar(
+      () => saveSection("gantt", data),
+      () => { editingSet.delete("gantt"); updateEditToggles(); renderGantt(); }
+    ));
+    return;
+  }
+  const g = STATE.gantt;
+  host.appendChild(el("div", { class: "alert" }, [g.alert]));
+  const legend = el("div", { class: "legend" });
+  g.legend.forEach(l => legend.appendChild(el("div", { class: "leg" }, [el("div", { class: "leg-sq", style: "background:" + l.color }), l.label])));
+  host.appendChild(legend);
+
+  const table = el("table", { class: "gantt-table" });
+  const thead = el("thead", {});
+  const headRow = el("tr", {}, [el("th", {}, ["Work package"])]);
+  g.months.forEach(m => headRow.appendChild(el("th", {}, [m])));
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+  const tbody = el("tbody", {});
+  g.rows.forEach(r => {
+    const tr = el("tr", {}, [el("td", {}, [r.name])]);
+    for (let m = 0; m < g.months.length; m++) {
+      const td = el("td", { style: "min-width:58px" });
+      const cellWrap = el("div", { class: "bar-cell" });
+      if (r.e > m && r.s < m + 1) {
+        const left = Math.max(0, r.s - m) * 100;
+        const right = Math.max(0, (m + 1) - r.e) * 100;
+        cellWrap.appendChild(el("div", { class: "bar " + r.cls, style: "left:" + left + "%;right:" + right + "%" }));
+      }
+      if (m === g.deadlineMonth) cellWrap.appendChild(el("div", { class: "deadline-line", title: "Deadline" }));
+      td.appendChild(cellWrap);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  host.appendChild(el("div", { class: "gantt-wrap" }, [table]));
+}
+
+/* ============ RENDER: COMPARE ============ */
+function tagSpan(tag, tagText) {
+  if (!tag) return null;
+  const labelMap = {new:"New", remove:"Remove", change:"Change"};
+  return el("span", { class: "cpill cp-" + tag }, [tagText || labelMap[tag]]);
+}
+function renderCompare() {
+  const host = document.getElementById("compare-body");
+  host.innerHTML = "";
+  if (editingSet.has("compare")) {
+    const data = deepClone(STATE.compare);
+    const introRow = el("div", { class: "field-row" });
+    introRow.appendChild(el("label", {}, ["Intro text"]));
+    const introInput = el("textarea", {});
+    introInput.value = data.intro;
+    introInput.addEventListener("input", () => data.intro = introInput.value);
+    introRow.appendChild(introInput);
+
+    const groupSchema = {
+      fields: [
+        {key:"title", label:"Group title", type:"text", wide:true},
+        {key:"colL", label:"Left column header", type:"text"},
+        {key:"colR", label:"Right column header", type:"text"}
+      ],
+      addLabel: "Add comparison group",
+      makeDefault: () => ({title:"New group", colL:"Existing", colR:"Proposed", rows:[]}),
+      nested: {
+        key: "rows", label: "Rows",
+        schema: {
+          fields: [
+            {key:"label", label:"Row label", type:"text", wide:true},
+            {key:"existing", label:"Existing", type:"textarea"},
+            {key:"proposed", label:"Proposed", type:"textarea"},
+            {key:"tag", label:"Tag", type:"select", options: TAG_OPTS},
+            {key:"tagText", label:"Tag text (optional override)", type:"text"}
+          ],
+          addLabel: "Add row",
+          makeDefault: () => ({label:"New row", existing:"", proposed:"", tag:"", tagText:""})
+        }
+      }
+    };
+    const groupsList = renderEditableList(data.groups, groupSchema, () => {});
+
+    const calloutRow = el("div", { class: "field-grid" });
+    calloutRow.appendChild((() => { const r = el("div",{class:"field-row"}); r.appendChild(el("label",{},["Callout title"])); const i = el("input",{type:"text"}); i.value = data.callout.title; i.addEventListener("input", () => data.callout.title = i.value); r.appendChild(i); return r; })());
+    calloutRow.appendChild((() => { const r = el("div",{class:"field-row", style:"grid-column:1/-1"}); r.appendChild(el("label",{},["Callout text"])); const i = el("textarea",{}); i.value = data.callout.text; i.addEventListener("input", () => data.callout.text = i.value); r.appendChild(i); return r; })());
+
+    const wrap = el("div", {}, [introRow, groupsList, el("div", { class: "nested-label", style:"margin-top:1rem" }, ["Key insight callout"]), calloutRow]);
+    host.appendChild(editPanel(wrap));
+    host.appendChild(saveBar(() => saveSection("compare", data), () => { editingSet.delete("compare"); updateEditToggles(); renderCompare(); }));
+    return;
+  }
+  const c = STATE.compare;
+  host.appendChild(el("p", { class: "compare-intro" }, [c.intro]));
+  c.groups.forEach(g => {
+    const dg = el("div", { class: "delta-group" });
+    dg.appendChild(el("div", { class: "delta-group-title" }, [g.title]));
+    const dt = el("div", { class: "delta-table" });
+    dt.appendChild(el("div", { class: "delta-head-row" }, [
+      el("div", { class: "delta-head" }, [g.colL]),
+      el("div", { class: "delta-head" }, [g.colR])
+    ]));
+    g.rows.forEach(r => {
+      const proposedCell = el("div", { class: "delta-cell" }, [
+        el("div", { class: "d-label" }, [r.label]),
+        el("div", { class: "d-proposed" })
+      ]);
+      const proposedDiv = proposedCell.querySelector(".d-proposed");
+      proposedDiv.appendChild(txt(r.proposed + " "));
+      const tag = tagSpan(r.tag, r.tagText);
+      if (tag) proposedDiv.appendChild(tag);
+      dt.appendChild(el("div", { class: "delta-row" }, [
+        el("div", { class: "delta-cell" }, [el("div", { class: "d-label" }, [r.label]), el("div", { class: "d-existing" }, [r.existing])]),
+        proposedCell
+      ]));
+    });
+    dg.appendChild(dt);
+    host.appendChild(dg);
+  });
+  host.appendChild(el("div", { class: "compare-callout" }, [el("strong", {}, [c.callout.title]), c.callout.text]));
+}
+
+/* ============ RENDER: DECISIONS ============ */
+function renderDecisions() {
+  const host = document.getElementById("decisions-body");
+  host.innerHTML = "";
+  if (editingSet.has("decisions")) {
+    const data = deepClone(STATE.decisions);
+    const schema = {
+      fields: [
+        {key:"title", label:"Title", type:"text", wide:true},
+        {key:"desc", label:"Description", type:"textarea", wide:true},
+        {key:"by", label:"Decide by", type:"text"}
+      ],
+      addLabel: "Add decision",
+      makeDefault: () => ({title:"New decision", desc:"", by:""})
+    };
+    const list = renderEditableList(data.items, schema, () => {});
+    host.appendChild(editPanel(list));
+    host.appendChild(saveBar(() => saveSection("decisions", data), () => { editingSet.delete("decisions"); updateEditToggles(); renderDecisions(); }));
+    return;
+  }
+  const listEl = el("div", { class: "decision-list" });
+  STATE.decisions.items.forEach((d, i) => {
+    listEl.appendChild(el("div", { class: "decision" }, [
+      el("div", { class: "dec-n" }, [String(i + 1).padStart(2, "0")]),
+      el("div", {}, [el("div", { class: "dec-title" }, [d.title]), el("div", { class: "dec-desc" }, [d.desc])]),
+      el("div", { class: "dec-by" }, [d.by])
+    ]));
+  });
+  host.appendChild(listEl);
+}
+
+/* ============ RENDER: RISKS ============ */
+function renderRisks() {
+  const host = document.getElementById("risks-body");
+  host.innerHTML = "";
+  if (editingSet.has("risks")) {
+    const data = deepClone(STATE.risks);
+    const schema = {
+      fields: [
+        {key:"label", label:"Group label", type:"text", wide:true},
+        {key:"level", label:"Severity", type:"select", options: RISK_LEVEL_OPTS}
+      ],
+      addLabel: "Add risk group",
+      makeDefault: () => ({label:"New group", level:"rm", items:[]}),
+      nested: {
+        key: "items", label: "Risks",
+        schema: {
+          fields: [
+            {key:"name", label:"Risk", type:"text", wide:true},
+            {key:"mit", label:"Mitigation", type:"textarea", wide:true}
+          ],
+          addLabel: "Add risk",
+          makeDefault: () => ({name:"New risk", mit:""})
+        }
+      }
+    };
+    const list = renderEditableList(data.groups, schema, () => {});
+    host.appendChild(editPanel(list));
+    host.appendChild(saveBar(() => saveSection("risks", data), () => { editingSet.delete("risks"); updateEditToggles(); renderRisks(); }));
+    return;
+  }
+  STATE.risks.groups.forEach(g => {
+    const grp = el("div", { class: "risk-group" });
+    grp.appendChild(el("div", { class: "risk-label" }, [g.label]));
+    g.items.forEach(it => {
+      grp.appendChild(el("div", { class: "risk-item" }, [
+        el("div", { class: "risk-bar " + g.level }),
+        el("div", {}, [el("div", { class: "risk-name" }, [it.name]), el("div", { class: "risk-mit" }, [it.mit])])
+      ]));
+    });
+    host.appendChild(grp);
+  });
+}
+
+/* ============ RENDER: CONTRACTORS ============ */
+function renderContractors() {
+  const host = document.getElementById("contractors-body");
+  host.innerHTML = "";
+  if (editingSet.has("contractors")) {
+    const data = deepClone(STATE.contractors);
+    const schema = {
+      fields: [
+        {key:"role", label:"Role", type:"text"},
+        {key:"name", label:"Name", type:"text"},
+        {key:"scope", label:"Scope", type:"textarea", wide:true},
+        {key:"status", label:"Status", type:"text"},
+        {key:"level", label:"Priority", type:"select", options: LEVEL_OPTS}
+      ],
+      addLabel: "Add contractor",
+      makeDefault: () => ({role:"", name:"New contractor", scope:"", status:"", level:"norm"})
+    };
+    const list = renderEditableList(data.items, schema, () => {});
+    host.appendChild(editPanel(list));
+    host.appendChild(saveBar(() => saveSection("contractors", data), () => { editingSet.delete("contractors"); updateEditToggles(); renderContractors(); }));
+    return;
+  }
+  const grid = el("div", { class: "contractor-grid" });
+  STATE.contractors.items.forEach(c => {
+    grid.appendChild(el("div", { class: "cc cc-" + c.level }, [
+      el("div", { class: "cc-role" }, [c.role]),
+      el("div", { class: "cc-name" }, [c.name]),
+      el("div", { class: "cc-scope" }, [c.scope]),
+      el("span", { class: "cc-status" }, [c.status])
+    ]));
+  });
+  host.appendChild(grid);
+}
+
+/* ============ RENDER: BUDGET ============ */
+function computeBudgetTotals(b) {
+  let low = 0, mid = 0, high = 0;
+  b.groups.forEach(g => g.rows.forEach(r => { low += num(r.low); mid += num(r.mid); high += num(r.high); }));
+  const pct = num(b.contingencyPct) / 100;
+  const cLow = low * pct, cMid = mid * pct, cHigh = high * pct;
+  return { low, mid, high, cLow, cMid, cHigh, gLow: low + cLow, gMid: mid + cMid, gHigh: high + cHigh };
+}
+function renderBudget() {
+  const host = document.getElementById("budget-body");
+  host.innerHTML = "";
+  if (editingSet.has("budget")) {
+    const data = deepClone(STATE.budget);
+    const parts = [];
+
+    const alertRow = el("div", { class: "field-row" });
+    alertRow.appendChild(el("label", {}, ["Alert banner"]));
+    const alertInput = el("textarea", {}); alertInput.value = data.alert;
+    alertInput.addEventListener("input", () => data.alert = alertInput.value);
+    alertRow.appendChild(alertInput);
+    parts.push(alertRow);
+
+    const contRow = el("div", { class: "field-row" });
+    contRow.appendChild(el("label", {}, ["Contingency %"]));
+    const contInput = el("input", { type: "number" }); contInput.value = data.contingencyPct;
+    contInput.addEventListener("input", () => data.contingencyPct = contInput.value);
+    contRow.appendChild(contInput);
+    parts.push(contRow);
+
+    parts.push(el("div", { class: "nested-label", style:"margin-top:0.5rem" }, ["Live quote — removed items (one per line handled as list)"]));
+    const removedSchema = { fields:[{key:"text",label:"Item",type:"text",wide:true}], addLabel:"Add removed item", makeDefault:()=>({text:""}) };
+    const removedItems = data.removed.map(t => ({text:t}));
+    parts.push(renderEditableList(removedItems, removedSchema, () => { data.removed = removedItems.map(i=>i.text); }));
+    data.removed = removedItems.map(i=>i.text);
+
+    parts.push(el("div", { class: "nested-label", style:"margin-top:0.5rem" }, ["Live quote — added items"]));
+    const addedItems = data.added.map(t => ({text:t}));
+    parts.push(renderEditableList(addedItems, removedSchema, () => { data.added = addedItems.map(i=>i.text); }));
+    data.added = addedItems.map(i=>i.text);
+
+    const groupSchema = {
+      fields: [{key:"phase", label:"Phase / category name", type:"text", wide:true}],
+      addLabel: "Add budget category",
+      makeDefault: () => ({phase:"New category", rows:[]}),
+      nested: {
+        key: "rows", label: "Line items",
+        schema: {
+          fields: [
+            {key:"name", label:"Item", type:"text", wide:true},
+            {key:"note", label:"Detail", type:"textarea", wide:true},
+            {key:"low", label:"Low £", type:"text"},
+            {key:"mid", label:"Mid £", type:"text"},
+            {key:"high", label:"High £", type:"text"},
+            {key:"notes", label:"Side note", type:"text", wide:true}
+          ],
+          addLabel: "Add line item",
+          makeDefault: () => ({name:"New item", note:"", low:"", mid:"", high:"", notes:""})
+        }
+      }
+    };
+    parts.push(el("div", { class: "nested-label", style:"margin-top:1rem" }, ["Budget line items (totals recalculate automatically)"]));
+    parts.push(renderEditableList(data.groups, groupSchema, () => {}));
+
+    parts.push(el("div", { class: "nested-label", style:"margin-top:1rem" }, ["Client-supplied items"]));
+    const supplySchema = {
+      fields: [
+        {key:"who", label:"Supplied by", type:"text"},
+        {key:"name", label:"Item", type:"text"},
+        {key:"note", label:"Note", type:"textarea", wide:true},
+        {key:"excl", label:"Not in scope?", type:"select", options:[{value:"",label:"No"},{value:"true",label:"Yes"}]}
+      ],
+      addLabel: "Add client-supplied item",
+      makeDefault: () => ({who:"", excl:"", name:"New item", note:""})
+    };
+    const supplyItems = data.supply.map(s => ({...s, excl: s.excl ? "true" : ""}));
+    parts.push(renderEditableList(supplyItems, supplySchema, () => {}));
+    data.supply = supplyItems;
+
+    host.appendChild(editPanel(el("div", {}, parts)));
+    host.appendChild(saveBar(() => {
+      data.supply = data.supply.map(s => ({who:s.who, name:s.name, note:s.note, excl: s.excl === "true"}));
+      saveSection("budget", data);
+    }, () => { editingSet.delete("budget"); updateEditToggles(); renderBudget(); }));
+    return;
+  }
+
+  const b = STATE.budget;
+  const totals = computeBudgetTotals(b);
+
+  const summary = el("div", { class: "budget-summary" }, [
+    el("div", { class: "bsum-card bsum-low" }, [el("div", { class: "bsum-label" }, ["Low estimate"]), el("div", { class: "bsum-val" }, [money(totals.gLow)]), el("div", { class: "bsum-note" }, ["Best case — minimal water damage, smooth programme"])]),
+    el("div", { class: "bsum-card bsum-mid" }, [el("div", { class: "bsum-label" }, ["Mid estimate · Use for planning"]), el("div", { class: "bsum-val" }, [money(totals.gMid)]), el("div", { class: "bsum-note" }, ["Realistic Ealing 2026 mid-market with " + b.contingencyPct + "% contingency"])]),
+    el("div", { class: "bsum-card bsum-high" }, [el("div", { class: "bsum-label" }, ["High estimate"]), el("div", { class: "bsum-val" }, [money(totals.gHigh)]), el("div", { class: "bsum-note" }, ["If water damage is extensive and programme runs long"])]),
+    el("div", { class: "bsum-card bsum-cont" }, [el("div", { class: "bsum-label" }, ["+ VAT (20%) on mid"]), el("div", { class: "bsum-val" }, ["+" + money(totals.gMid * 0.2)]), el("div", { class: "bsum-note" }, [b.vatNote])])
+  ]);
+  host.appendChild(summary);
+  host.appendChild(el("div", { class: "alert" }, [b.alert]));
+  host.appendChild(el("div", { class: "delta-group-title", style: "margin-top:0.5rem" }, [b.quoteTitle]));
+
+  const quoteTable = el("div", { class: "delta-table" }, [
+    el("div", { class: "delta-head-row" }, [el("div", { class: "delta-head" }, ["Removed from scope — reduces v4"]), el("div", { class: "delta-head" }, ["Added to scope — increases v4"])])
+  ]);
+  const maxLen = Math.max(b.removed.length, b.added.length);
+  for (let i = 0; i < maxLen; i++) {
+    quoteTable.appendChild(el("div", { class: "delta-row" }, [
+      el("div", { class: "delta-cell" }, [el("div", { class: "d-existing" }, [b.removed[i] || " "])]),
+      el("div", { class: "delta-cell" }, [el("div", { class: "d-proposed" }, [b.added[i] || " "])])
+    ]));
+  }
+  host.appendChild(quoteTable);
+  host.appendChild(el("div", { class: "compare-callout", style: "margin-bottom:1.75rem" }, [el("strong", {}, [b.statusCallout.title]), b.statusCallout.text]));
+
+  const table = el("table", { class: "budget-table" });
+  table.appendChild(el("thead", {}, [el("tr", {}, [
+    el("th", { style: "width:36%" }, ["Work package"]), el("th", {}, ["Low"]), el("th", {}, ["Mid"]), el("th", {}, ["High"]), el("th", {}, ["Notes"])
+  ])]));
+  const tbody = el("tbody", {});
+  b.groups.forEach(g => {
+    tbody.appendChild(el("tr", {}, [el("td", { class: "bt-phase", colspan: "5" }, [g.phase])]));
+    g.rows.forEach(r => {
+      const hasVal = r.low || r.mid || r.high;
+      tbody.appendChild(el("tr", {}, [
+        el("td", {}, [el("div", { class: "bt-name" }, [r.name]), el("div", { class: "bt-note-sm" }, [r.note])]),
+        el("td", { class: "bt-low" }, [hasVal ? money(num(r.low)) : "—"]),
+        el("td", { class: "bt-mid" }, [hasVal ? money(num(r.mid)) : "—"]),
+        el("td", { class: "bt-high" }, [hasVal ? money(num(r.high)) : "—"]),
+        el("td", {}, [r.notes])
+      ]));
+    });
+  });
+  tbody.appendChild(el("tr", { class: "bt-total" }, [
+    el("td", {}, [el("strong", {}, ["Subtotal (ex-contingency, ex-VAT)"])]),
+    el("td", { class: "bt-low" }, [el("strong", {}, [money(totals.low)])]),
+    el("td", { class: "bt-mid" }, [el("strong", {}, [money(totals.mid)])]),
+    el("td", { class: "bt-high" }, [el("strong", {}, [money(totals.high)])]),
+    el("td", {}, [])
+  ]));
+  tbody.appendChild(el("tr", { class: "bt-cont" }, [
+    el("td", {}, [el("strong", {}, ["Contingency " + b.contingencyPct + "%"])]),
+    el("td", { class: "bt-low" }, [el("strong", {}, [money(totals.cLow)])]),
+    el("td", { class: "bt-mid" }, [el("strong", {}, [money(totals.cMid)])]),
+    el("td", { class: "bt-high" }, [el("strong", {}, [money(totals.cHigh)])]),
+    el("td", { style: "color:var(--urgent);font-size:0.72rem" }, ["Primarily for water damage remediation + programme risk"])
+  ]));
+  tbody.appendChild(el("tr", { class: "bt-grand" }, [
+    el("td", {}, [el("strong", {}, ["Total estimate (ex-VAT)"])]),
+    el("td", {}, [el("strong", {}, [money(totals.gLow)])]),
+    el("td", {}, [el("strong", {}, [money(totals.gMid)])]),
+    el("td", {}, [el("strong", {}, [money(totals.gHigh)])]),
+    el("td", {}, [b.grandNote])
+  ]));
+  table.appendChild(tbody);
+  host.appendChild(el("div", { class: "budget-table-wrap" }, [table]));
+
+  host.appendChild(el("div", { class: "sh" }, [el("div", {}, [el("div", { class: "sh-title" }, ["Client-supplied items"]), el("p", { class: "sh-desc" }, [b.supplyDesc])])]));
+  const supplyGrid = el("div", { class: "supply-grid" });
+  b.supply.forEach(s => {
+    supplyGrid.appendChild(el("div", { class: "supply-item" }, [
+      el("div", { class: "supply-who" + (s.excl ? " excl" : "") }, [s.who]),
+      el("div", { class: "supply-name" }, [s.name]),
+      el("div", { class: "supply-note" }, [s.note])
+    ]));
+  });
+  host.appendChild(supplyGrid);
+  host.appendChild(el("div", { class: "compare-callout" }, [el("strong", {}, [b.excludesCallout.title]), b.excludesCallout.text]));
+}
+
+/* ============ RENDER: INSULATION ============ */
+const MAT_LABELS = { wf: "Wood fibre", pir: "PIR", wool: "Sheep's wool" };
+function renderInsulation() {
+  const host = document.getElementById("insulation-body");
+  host.innerHTML = "";
+  if (editingSet.has("insulation")) {
+    const data = deepClone(STATE.insulation);
+    const parts = [];
+    [["alert","Alert banner","textarea"],["approach","Approach paragraph","textarea"],["footnote","Table footnote","textarea"],
+     ["costTitle","Cost callout title","text"],["costText","Cost callout text","textarea"],
+     ["confirmTitle","'Also confirm' title","text"]].forEach(([key,label,type]) => {
+      const row = el("div", { class: "field-row" });
+      row.appendChild(el("label", {}, [label]));
+      const input = el(type === "textarea" ? "textarea" : "input", type === "textarea" ? {} : {type:"text"});
+      input.value = data[key] || "";
+      input.addEventListener("input", () => data[key] = input.value);
+      row.appendChild(input);
+      parts.push(row);
+    });
+
+    parts.push(el("div", { class: "nested-label", style:"margin-top:0.5rem" }, ["Element table"]));
+    const tableSchema = {
+      fields: [
+        {key:"element", label:"Element", type:"text"},
+        {key:"subtitle", label:"Subtitle", type:"text"},
+        {key:"between", label:"Between the timbers", type:"textarea", wide:true},
+        {key:"over", label:"Continuous / over layer", type:"textarea", wide:true},
+        {key:"targetU", label:"Target U", type:"text"},
+        {key:"indicU", label:"Indicative U", type:"text"}
+      ],
+      addLabel: "Add table row",
+      makeDefault: () => ({element:"New element", subtitle:"", mats:["wf"], between:"", over:"", targetU:"", indicU:""})
+    };
+    parts.push(renderEditableList(data.tableRows, tableSchema, () => {}));
+
+    parts.push(el("div", { class: "nested-label", style:"margin-top:0.5rem" }, ["Q&A"]));
+    const qaSchema = { fields:[{key:"title",label:"Question",type:"text",wide:true},{key:"desc",label:"Answer",type:"textarea",wide:true}], addLabel:"Add Q&A", makeDefault:()=>({n:"Q",title:"",desc:""}) };
+    parts.push(renderEditableList(data.qa, qaSchema, () => {}));
+
+    parts.push(el("div", { class: "nested-label", style:"margin-top:0.5rem" }, ["Also confirm — list"]));
+    const confirmSchema = { fields:[{key:"bold",label:"Bold lead-in",type:"text"},{key:"text",label:"Text",type:"textarea",wide:true}], addLabel:"Add item", makeDefault:()=>({bold:"",text:""}) };
+    parts.push(renderEditableList(data.confirmItems, confirmSchema, () => {}));
+
+    host.appendChild(editPanel(el("div", {}, parts)));
+    host.appendChild(saveBar(() => saveSection("insulation", data), () => { editingSet.delete("insulation"); updateEditToggles(); renderInsulation(); }));
+    return;
+  }
+  const ins = STATE.insulation;
+  host.appendChild(el("div", { class: "alert" }, [ins.alert]));
+  host.appendChild(el("p", { class: "compare-intro" }, [ins.approach]));
+  host.appendChild(el("div", { class: "delta-group-title" }, ["Element by element"]));
+  const table = el("table", { class: "itbl" });
+  table.appendChild(el("thead", {}, [el("tr", {}, [
+    el("th", {}, ["Element"]), el("th", {}, ["Insulant"]), el("th", {}, ["Between the timbers"]),
+    el("th", {}, ["Continuous / over layer"]), el("th", {}, ["Target U"]), el("th", {}, ["Indicative U"])
+  ])]));
+  const tbody = el("tbody", {});
+  ins.tableRows.forEach(r => {
+    const elCell = el("td", { class: "itbl-el" }, [r.element]);
+    if (r.subtitle) elCell.appendChild(el("span", {}, [r.subtitle]));
+    const matCell = el("td", {});
+    (r.mats || []).forEach(m => matCell.appendChild(el("span", { class: "imat imat-" + m }, [MAT_LABELS[m] || m])));
+    tbody.appendChild(el("tr", {}, [
+      elCell, matCell,
+      el("td", {}, [r.between]), el("td", {}, [r.over]),
+      el("td", { class: r.na ? "itbl-na" : "itbl-u" }, [r.targetU]),
+      el("td", { class: r.na ? "itbl-na" : "itbl-u" }, [r.indicU])
+    ]));
+  });
+  table.appendChild(tbody);
+  host.appendChild(el("div", { class: "itbl-wrap" }, [table]));
+  host.appendChild(el("p", { class: "sh-desc", style: "margin-bottom:1.75rem" }, [ins.footnote]));
+  host.appendChild(el("div", { class: "delta-group-title" }, ["Cost — relative to ABL's Celotex package"]));
+  host.appendChild(el("div", { class: "compare-callout", style: "margin-top:0;border-left-color:var(--ph3)" }, [el("strong", {}, [ins.costTitle]), ins.costText]));
+  host.appendChild(el("div", { class: "delta-group-title" }, ["ABL's three questions — answered"]));
+  const qaList = el("div", { class: "decision-list" });
+  ins.qa.forEach(q => qaList.appendChild(el("div", { class: "decision" }, [
+    el("div", { class: "dec-n" }, [q.n]),
+    el("div", {}, [el("div", { class: "dec-title" }, [q.title]), el("div", { class: "dec-desc" }, [q.desc])])
+  ])));
+  host.appendChild(qaList);
+  const confirmCallout = el("div", { class: "compare-callout" }, [el("strong", {}, [ins.confirmTitle])]);
+  const ul = el("ul", { class: "qv4-list" });
+  ins.confirmItems.forEach(i => ul.appendChild(el("li", {}, [el("b", {}, [i.bold + " "]), i.text])));
+  confirmCallout.appendChild(ul);
+  host.appendChild(confirmCallout);
+}
+
+/* ============ RENDER: HEADER / FOOTER ============ */
+function renderHeaderFooter() {
+  const m = STATE.meta;
+  const left = document.getElementById("header-left");
+  left.innerHTML = "";
+  left.appendChild(el("div", { class: "header-eyebrow" }, [m.eyebrow]));
+  left.appendChild(el("h1", {}, [m.title1, el("br"), el("span", {}, [m.title2])]));
+  left.appendChild(el("p", { class: "header-sub" }, [m.sub]));
+  const pillsWrap = el("div", { class: "header-pills" });
+  m.pills.forEach(p => pillsWrap.appendChild(el("span", { class: "hpill" }, [el("span", { class: "hpill-dot", style: "background:" + p.color }), p.text])));
+  left.appendChild(pillsWrap);
+
+  const meta = document.getElementById("header-meta");
+  meta.innerHTML = "";
+  m.metaRows.forEach(r => meta.appendChild(el("div", { class: "meta-row" }, [el("strong", {}, [r.label]), " " + r.value])));
+
+  const footer = document.getElementById("site-footer");
+  footer.innerHTML = "";
+  footer.appendChild(el("span", {}, [m.footerLeft]));
+  footer.appendChild(el("span", {}, [m.footerMid]));
+  footer.appendChild(el("span", {}, [m.footerRight]));
+}
+
+/* ============ EDIT TOGGLES ============ */
+const RENDERERS = { phases: renderPhases, gantt: renderGantt, compare: renderCompare, decisions: renderDecisions, risks: renderRisks, contractors: renderContractors, budget: renderBudget, insulation: renderInsulation };
+function toggleEdit(id) {
+  if (!session) { openLogin(); return; }
+  if (editingSet.has(id)) editingSet.delete(id); else editingSet.add(id);
+  updateEditToggles();
+  RENDERERS[id]();
+}
+function updateEditToggles() {
+  document.querySelectorAll(".edit-toggle").forEach(btn => {
+    const id = btn.getAttribute("data-section");
+    btn.style.display = session ? "inline-block" : "none";
+    btn.classList.toggle("on", editingSet.has(id));
+    btn.textContent = editingSet.has(id) ? "Editing…" : "Edit";
+  });
+}
+
+/* ============ SAVE / LOAD ============ */
+async function saveSection(id, data) {
+  STATE[id] = data;
+  editingSet.delete(id);
+  updateEditToggles();
+  RENDERERS[id]();
+  if (id === "meta") renderHeaderFooter();
+  if (!sb || !session) { toast("Saved locally (not connected to database)"); return; }
+  const { error } = await sb.from("sections").upsert({ id, data, updated_at: new Date().toISOString() });
+  if (error) { toast("Save failed: " + error.message); return; }
+  toast("Saved");
+}
+
+async function loadAllSections() {
+  if (!sb) return;
+  try {
+    const { data, error } = await sb.from("sections").select("id,data");
+    if (error || !data) return;
+    data.forEach(row => { if (row.data) STATE[row.id] = row.data; });
+  } catch (e) {}
+}
+
+/* ============ AUTH ============ */
+function openLogin() {
+  const root = document.getElementById("modal-root");
+  root.innerHTML = "";
+  const err = el("div", { class: "modal-err" }, [""]);
+  const emailInput = el("input", { type: "text" });
+  const passInput = el("input", { type: "password" });
+  const overlay = el("div", { class: "modal-overlay", onclick: (e) => { if (e.target === overlay) root.innerHTML = ""; } }, [
+    el("div", { class: "modal" }, [
+      el("h3", {}, ["Sign in to edit"]),
+      err,
+      el("div", { class: "field-row" }, [el("label", {}, ["Email"]), emailInput]),
+      el("div", { class: "field-row" }, [el("label", {}, ["Password"]), passInput]),
+      el("div", { class: "modal-actions" }, [
+        el("button", { class: "cancel-btn", type:"button", onclick: () => { root.innerHTML = ""; } }, ["Cancel"]),
+        el("button", { class: "save-btn", type:"button", onclick: async () => {
+          if (!sb) { err.textContent = "Database not connected yet."; return; }
+          const { error } = await sb.auth.signInWithPassword({ email: emailInput.value, password: passInput.value });
+          if (error) { err.textContent = error.message; return; }
+          root.innerHTML = "";
+        } }, ["Sign in"])
+      ])
+    ])
+  ]);
+  root.appendChild(overlay);
+}
+function onAuthBtn() {
+  if (session) {
+    sb.auth.signOut();
+  } else {
+    openLogin();
+  }
+}
+function updateAuthUI() {
+  const btn = document.getElementById("auth-btn");
+  if (session) {
+    btn.textContent = "Signed in — Sign out";
+    btn.classList.add("signed-in");
+  } else {
+    btn.textContent = "Sign in to edit";
+    btn.classList.remove("signed-in");
+    editingSet.clear();
+  }
+  updateEditToggles();
+  Object.values(RENDERERS).forEach(fn => fn());
+}
+
+/* ============ NAV / PDF (unchanged behaviour) ============ */
+function show(id, btn) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+}
+function loadPdf(btn, filename, title) {
+  document.querySelectorAll(".dwg-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("pdf-embed").src = filename;
+  document.getElementById("viewer-title").innerHTML = title;
+  document.getElementById("viewer-link").href = filename;
+}
+
+/* ============ INIT ============ */
+async function init() {
+  renderHeaderFooter();
+  Object.values(RENDERERS).forEach(fn => fn());
+  updateEditToggles();
+  if (sb) {
+    await loadAllSections();
+    renderHeaderFooter();
+    Object.values(RENDERERS).forEach(fn => fn());
+    const { data: { session: s } } = await sb.auth.getSession();
+    session = s;
+    updateAuthUI();
+    sb.auth.onAuthStateChange((_event, s2) => { session = s2; updateAuthUI(); });
+  }
+}
+init();
 </script>
 </body>
 </html>
